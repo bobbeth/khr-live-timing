@@ -18,3 +18,17 @@
 @media(max-width:680px){.meeting-stage{padding:27px 0}.stage-heading .chip{margin-left:0}.meeting-jump a{font-size:11px}.meeting-intro{font-size:15px}}
 
 .meeting-overview{margin:26px 0;padding:26px 30px;border-left:4px solid var(--orange);background:#191b20}.meeting-overview h3{font:800 clamp(24px,3vw,36px) var(--font);margin:8px 0 20px}.meeting-overview .article-copy{max-width:970px}.meeting-overview .article-copy p{margin:0 0 13px;line-height:1.85}@media(max-width:680px){.meeting-overview{padding:20px 16px}}
+
+/* Mud Mules TV — long-form newspaper-style race-day reporting */
+.longform-story{padding:0 0 26px}
+.longform-head{margin:0 0 32px;padding:0 0 23px;border-bottom:1px solid var(--line)}
+.longform-head h2{font:900 clamp(31px,3.7vw,51px)/1.03 var(--font);text-transform:uppercase;letter-spacing:.015em;margin:10px 0 14px;color:var(--white)}
+.longform-standfirst{font-size:15px;font-weight:600;color:#c9c7c5;letter-spacing:.015em;margin:0 0 15px}
+.longform-meta{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap;color:#aeb1b9;text-transform:uppercase;font-weight:700;letter-spacing:.08em;font-size:10px}
+.longform-meta a{color:#ff925e;text-decoration:underline;text-underline-offset:4px}
+.longform-body{max-width:740px}
+.longform-part{margin:0 0 34px}
+.longform-part h3{font:800 clamp(21px,2.4vw,27px)/1.15 var(--font);text-transform:uppercase;letter-spacing:.03em;color:var(--white);border-left:3px solid var(--orange);padding:0 0 0 13px;margin:0 0 16px}
+.longform-part p{font-size:15.5px;line-height:1.86;color:#dddcd8;margin:0 0 17px}
+.longform-part:first-child p:first-of-type{font-size:17px;color:#f1ede8;font-weight:500}
+@media(max-width:700px){.longform-head h2{font-size:34px}.longform-part{margin-bottom:29px}.longform-part p{font-size:15px}.longform-head{margin-bottom:24px}}
