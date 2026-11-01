@@ -32,3 +32,86 @@
 .longform-part p{font-size:15.5px;line-height:1.86;color:#dddcd8;margin:0 0 17px}
 .longform-part:first-child p:first-of-type{font-size:17px;color:#f1ede8;font-weight:500}
 @media(max-width:700px){.longform-head h2{font-size:34px}.longform-part{margin-bottom:29px}.longform-part p{font-size:15px}.longform-head{margin-bottom:24px}}
+
+/* Fall Fest 2026 homepage — season-first, five poster-ready championship links. */
+.ff-home-hero{position:relative;overflow:hidden;border-top:1px solid #352b2f;background:radial-gradient(ellipse at 83% 12%,rgba(255,51,94,.15),transparent 42%),radial-gradient(ellipse at 13% 80%,rgba(0,215,232,.11),transparent 55%),linear-gradient(122deg,#1b161c 0%,#101016 60%,#1c1018 100%)}
+.ff-home-hero:before{content:'';position:absolute;inset:0;opacity:.45;pointer-events:none;background:repeating-linear-gradient(135deg,transparent 0 38px,rgba(255,255,255,.035) 39px 41px,transparent 42px 65px)}
+.ff-home-hero:after{content:'';position:absolute;width:920px;height:920px;border:105px solid rgba(249,56,107,.065);border-radius:50%;right:-510px;top:-450px;pointer-events:none}
+.ff-home-hero-inner{position:relative;z-index:1;max-width:1340px;margin:0 auto;padding:83px 4.4% 82px;display:grid;grid-template-columns:minmax(0,1.27fr) minmax(280px,.73fr);align-items:center;gap:7%}
+.ff-home-kicker{display:flex;align-items:center;flex-wrap:wrap;gap:10px;letter-spacing:2.1px;font:900 11px var(--body);color:#e7c9bb}
+.ff-kicker-dot{width:8px;height:8px;background:#ff5c5c;border-radius:50%;box-shadow:0 0 0 5px #ff5b5c20}
+.ff-kicker-slash{color:#fb6a80}
+.ff-hero-copy h1{margin:18px 0 23px;font:900 clamp(83px,11.2vw,161px)/.79 Impact,'Arial Narrow',sans-serif;letter-spacing:-2.5px;text-transform:uppercase}
+.ff-hero-copy h1 span,.ff-hero-copy h1 strong{display:block}
+.ff-headline-top{white-space:nowrap;color:#fff}
+.ff-headline-top em{font-style:normal;color:#ff6447}
+.ff-hero-copy h1 strong{font-size:1.1em;margin-top:9px;color:#ffe6c2;text-shadow:5px 5px 0 #a32931;letter-spacing:4px}
+.ff-hero-intro{font:900 clamp(21px,2vw,28px)/1.2 Impact,'Arial Narrow',sans-serif;letter-spacing:.8px;text-transform:uppercase;color:#f5f3ed;margin:22px 0 9px}
+.ff-hero-description{color:#bdbec4;max-width:600px;font-size:15px;line-height:1.75;margin:0}
+.ff-hero-actions{display:flex;gap:25px;align-items:center;flex-wrap:wrap;margin-top:27px}
+.ff-hero-secondary{font:900 11px var(--body);letter-spacing:1px;color:#f5c3b9;border-bottom:1px solid #9d5d60;padding:13px 0;white-space:nowrap}
+.ff-hero-secondary:hover{color:#fff;border-color:#fff}
+.ff-hero-billboard{position:relative;background:linear-gradient(135deg,#20242b,#111218 75%);border:1px solid #64606b;box-shadow:18px 18px 0 #0c0d12,0 20px 70px #09090c8c;padding:28px 25px 20px;min-height:375px;display:flex;flex-direction:column;justify-content:space-between;transform:rotate(2deg);overflow:hidden}
+.ff-hero-billboard:before{content:'';position:absolute;width:300px;height:320px;right:-50px;top:-90px;transform:rotate(38deg);background:linear-gradient(90deg,transparent 0 25%,#ff326a34 25% 40%,transparent 40% 60%,#27d6e23d 60% 75%,transparent 75%)}
+.ff-billboard-top,.ff-billboard-middle,.ff-billboard-footer,.ff-billboard-lines{position:relative;z-index:1}
+.ff-billboard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;font:900 19px/1 Impact,'Arial Narrow',sans-serif;letter-spacing:2px;color:#fff}
+.ff-billboard-top span:first-child{color:#f7eded;background:#e9364b;padding:9px 11px;transform:skew(-6deg);font-size:28px;letter-spacing:-1px}
+.ff-billboard-top span:last-child{text-align:right;font-size:15px;line-height:1.1;color:#e2c5be}
+.ff-billboard-lines{display:flex;gap:9px;align-items:center;transform:skew(-12deg);margin:30px -15px 14px}
+.ff-billboard-lines i{height:14px;flex:1;background:#fa455b}
+.ff-billboard-lines i:nth-child(2),.ff-billboard-lines i:nth-child(5){background:#33c8d9}
+.ff-billboard-lines i:nth-child(3){background:#ffbd3a}
+.ff-billboard-middle{display:flex;align-items:center;gap:16px}
+.ff-billboard-middle>span{font:900 116px/.8 Impact,'Arial Narrow',sans-serif;color:#fff;text-shadow:5px 5px 0 #f9445e}
+.ff-billboard-middle strong{display:block;max-width:160px;font:900 26px/1 Impact,'Arial Narrow',sans-serif;color:#fff}
+.ff-billboard-middle small{display:block;font:800 9px/1.6 var(--body);letter-spacing:.8px;color:#aeb5bf;margin-top:10px}
+.ff-billboard-footer{border-top:1px solid #52525c;margin-top:27px;padding-top:20px;color:#adb1bb;font:800 10px/1.8 var(--body);letter-spacing:2px}
+.ff-billboard-footer strong{color:#fff;font:900 19px Impact,'Arial Narrow',sans-serif;letter-spacing:1px}
+.ff-home-statbar{padding:21px max(4.4%,calc((100% - 1220px)/2));display:grid;grid-template-columns:155px 155px 155px minmax(0,1fr);align-items:center;gap:24px;background:#1b1d23;border-top:1px solid #42313b;border-bottom:1px solid #3d3e46}
+.ff-home-statbar>div{display:flex;align-items:center;gap:12px;border-right:1px solid #45464d;padding-right:13px}
+.ff-home-statbar strong{font:900 31px/.9 Impact,'Arial Narrow',sans-serif;color:#ff9b64}
+.ff-home-statbar span{font:900 9px/1.35 var(--body);letter-spacing:1px;color:#d3cbd1}
+.ff-home-statbar p{font:500 12px/1.6 var(--body);color:#aeb0b9;margin:0}
+.ff-series-section{padding-top:68px;padding-bottom:80px;scroll-margin-top:12px}
+.ff-section-intro{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:30px}
+.ff-section-intro h2{font:900 clamp(39px,4vw,58px)/.96 Impact,'Arial Narrow',sans-serif;margin:11px 0 0;letter-spacing:.25px}
+.ff-section-intro h2 em,.ff-home-end h2 em{font-style:normal;color:#ff7951}
+.ff-section-intro p{font-size:14px;color:#adb0b8;max-width:365px;margin:0 0 4px}
+.ff-championship-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.ff-championship-card{display:flex;flex-direction:column;min-width:0;background:#1a1c21;border:1px solid #333640;overflow:hidden;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease}
+.ff-championship-card:hover{transform:translateY(-6px);box-shadow:0 16px 44px #0008;border-color:#f0805b}
+.ff-championship-card:focus-visible{outline-offset:4px}
+.ff-poster-visual{position:relative;aspect-ratio:0.78;background:#1c141a;overflow:hidden}
+.ff-poster-visual:after{content:'';position:absolute;inset:auto 0 0;height:31%;background:linear-gradient(transparent,#0c0c10a6);pointer-events:none}
+.ff-poster-placeholder{position:absolute;inset:0;padding:18px 12px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;overflow:hidden;background:radial-gradient(ellipse at 70% 55%,#82293c 0%,#372030 57%,#15151b 100%)}
+.ff-poster-placeholder:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(142deg,transparent 0 16px,#ffffff09 17px 20px,transparent 21px 29px)}
+.ff-cushion-kings .ff-poster-placeholder{background:radial-gradient(ellipse at 65% 60%,#69451a,#2c2924 60%,#13151c)}
+.ff-mini-menaces .ff-poster-placeholder{background:radial-gradient(ellipse at 60% 65%,#762a23,#38261d 64%,#1a1518)}
+.ff-yota-outlawz .ff-poster-placeholder{background:radial-gradient(ellipse at 62% 55%,#6b5420,#2e2825 63%,#14161b)}
+.ff-wide-open-revival .ff-poster-placeholder{background:radial-gradient(ellipse at 65% 60%,#59294a,#232332 65%,#15151b)}
+.ff-poster-khr{font:900 12px/1.08 Impact,'Arial Narrow',sans-serif;color:#fff;text-shadow:2px 2px #000;position:relative}
+.ff-poster-khr i{display:block;font-style:normal;color:#e5d0c7;font-size:9px;letter-spacing:1px;margin-top:4px}
+.ff-poster-flags{font:900 37px Impact,'Arial Narrow',sans-serif;letter-spacing:3px;line-height:1;color:#ffffff3a;align-self:flex-end}
+.ff-poster-title{font:italic 900 clamp(31px,3.4vw,45px)/.98 Impact,'Arial Narrow',sans-serif;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 #f33b63,-1px -1px #333;position:relative;max-width:100%}
+.ff-mini-menaces .ff-poster-title{color:#ffe25d;text-shadow:3px 3px #b03525}
+.ff-yota-outlawz .ff-poster-title{color:#f6ee70;text-shadow:3px 3px #ab2b22}
+.ff-wide-open-revival .ff-poster-title{color:#fff;text-shadow:3px 3px #ca226c}
+.ff-poster-sponsor{position:relative;font:900 10px/1.3 var(--body);letter-spacing:.7px;text-transform:uppercase;color:#e3e4e8;background:#080a0bbd;padding:6px 8px;max-width:100%}
+.ff-official-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.ff-poster-ordinal{position:absolute;z-index:2;top:8px;right:9px;font:900 13px Impact,'Arial Narrow',sans-serif;letter-spacing:1px;background:#121216cc;color:#ffded0;padding:6px 9px;border:1px solid #ffffff32}
+.ff-championship-copy{padding:18px 15px 20px;display:flex;flex-direction:column;flex:1}
+.ff-championship-type{font:900 9px/1.6 var(--body);color:#ffa76e;letter-spacing:1px}
+.ff-championship-type span{color:#80818a;margin:0 2px}
+.ff-championship-copy h3{font:900 clamp(24px,2.2vw,31px)/1.03 Impact,'Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.2px;margin:9px 0 7px}
+.ff-championship-copy p{font-size:11px;color:#abaeb6;line-height:1.6;margin:0 0 20px}
+.ff-explore{margin-top:auto;padding-top:13px;border-top:1px solid #34343c;font:900 10px var(--body);letter-spacing:.9px;text-transform:uppercase;color:#f8cab0;display:flex;justify-content:space-between;gap:6px}
+.ff-explore span{font-size:17px;line-height:.7;color:#fc805d}
+.ff-home-end{background:linear-gradient(110deg,#2c2022,#19191e 65%);border-block:1px solid #4b3537}
+.ff-home-end-inner{padding-top:49px;padding-bottom:50px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+.ff-home-end h2{font:900 clamp(35px,3.8vw,55px)/.95 Impact,'Arial Narrow',sans-serif;text-transform:uppercase;margin:14px 0}
+.ff-home-end p{color:#c0bbc0;font-size:13px;max-width:630px;line-height:1.7;margin:0}
+.ff-home-end .button-link{flex-shrink:0}
+@media(max-width:1140px){.ff-championship-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.ff-home-statbar{grid-template-columns:repeat(3,minmax(0,1fr))}.ff-home-statbar p{grid-column:1/-1;border-top:1px solid #3b3d45;padding-top:14px}.ff-poster-title{font-size:49px}.ff-home-hero-inner{gap:30px}.ff-hero-copy h1{font-size:clamp(73px,11vw,125px)}}
+@media(max-width:780px){.ff-home-hero-inner{grid-template-columns:1fr;padding-top:58px;padding-bottom:54px}.ff-hero-copy h1{font-size:clamp(67px,14vw,120px)}.ff-hero-billboard{transform:none;min-height:245px;max-width:460px;padding:22px}.ff-billboard-middle>span{font-size:94px}.ff-billboard-footer{margin-top:13px}.ff-section-intro{align-items:flex-start;flex-direction:column;gap:15px}.ff-home-end-inner{flex-direction:column;align-items:flex-start}.ff-championship-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ff-poster-title{font-size:clamp(32px,5.5vw,48px)}}
+@media(max-width:480px){.ff-home-hero-inner{padding-top:46px}.ff-hero-copy h1{font-size:clamp(60px,16vw,83px);letter-spacing:-1.5px}.ff-home-kicker{font-size:9px}.ff-home-statbar{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:18px 4%}.ff-home-statbar>div{flex-direction:column;align-items:flex-start;gap:4px;padding-right:7px}.ff-home-statbar strong{font-size:30px}.ff-home-statbar span{font-size:8px}.ff-home-statbar p{font-size:11px}.ff-championship-grid{grid-template-columns:1fr;gap:18px}.ff-poster-visual{aspect-ratio:1.16}.ff-poster-title{font-size:48px}.ff-section-intro h2{font-size:43px}.ff-series-section{padding-top:45px;padding-bottom:55px}.ff-home-end-inner{padding-block:40px}.ff-home-end h2{font-size:40px}}
+@media(prefers-reduced-motion:reduce){.ff-championship-card{transition:none}.ff-championship-card:hover{transform:none}}
