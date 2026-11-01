@@ -109,7 +109,7 @@ async function getBroadcast(id){
  if(!link||typeof link!=='object'||!/^[a-zA-Z0-9_-]{11}$/.test(link.video_id||''))return null;
  const seconds=Number(link.start_seconds);
  const start=Number.isSafeInteger(seconds)&&seconds>=0&&seconds<=86400?seconds:0;
- return {video_id:link.video_id,start_seconds:start,title:String(link.title||'Full race broadcast').slice(0,160)};
+ return {video_id:link.video_id,start_seconds:start,title:String(link.title||'Full race broadcast').slice(0,160),match_status:String(link.match_status||'verified')};
 }
 function broadcastHtml(id,entry,broadcast){
  const head=`<div class="broadcast-heading"><div><span class="eyebrow">MUD MULES TV · THE ORIGINAL COVERAGE</span><h2>WATCH THE RACE BROADCAST</h2></div><span class="chip">ROUND ${esc(entry.round)} / ${esc(entry.series)}</span></div>`;
@@ -119,7 +119,7 @@ function broadcastHtml(id,entry,broadcast){
  const vid=broadcast.video_id,start=broadcast.start_seconds;
  const src=`https://www.youtube-nocookie.com/embed/${vid}?rel=0${start?`&amp;start=${start}`:''}`;
  const watch=`https://www.youtube.com/watch?v=${vid}${start?`&amp;t=${start}s`:''}`;
- return `<section class="race-broadcast" id="race-broadcast">${head}<div class="broadcast-player"><iframe src="${src}" title="${esc(broadcast.title)} — ${esc(entry.series)} Round ${esc(entry.round)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="broadcast-footer"><p>The original Mud Mules TV coverage of this KHR event. Press play to watch the recording.</p><a href="${watch}" target="_blank" rel="noopener noreferrer">WATCH ON YOUTUBE ↗</a></div></section>`;
+ return `<section class="race-broadcast" id="race-broadcast">${head}<div class="broadcast-player"><iframe src="${src}" title="${esc(broadcast.title)} — ${esc(entry.series)} Round ${esc(entry.round)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="broadcast-footer"><p>${broadcast.match_status==='schedule_inferred'?'Broadcast matched using the weekly series schedule and stream listing order. Exact video content and race starting timestamp have not yet been independently verified.':'The original Mud Mules TV coverage of this KHR event. Press play to watch the recording.'}</p><a href="${watch}" target="_blank" rel="noopener noreferrer">WATCH ON YOUTUBE ↗</a></div></section>`;
 }
 const stageNames={practice:'PRACTICE',qualifying:'QUALIFYING',heat:'HEAT RACING',consolation:'CONSOLATION / B-MAIN',twin_feature_1:'TWIN FEATURE 1',twin_feature_2:'TWIN FEATURE 2',feature:'FEATURE',warmup:'WARM-UP',race:'RACE SESSION',other:'OTHER OFFICIAL SESSION'};
 const stageStat = (r,k) => Number.isFinite(Number(r[k])) && r[k]!==null ? Number(r[k]) : null;
