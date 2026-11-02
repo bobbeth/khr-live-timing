@@ -24,7 +24,10 @@ const data=await stats.load();
 assert.equal(data.failures.length,0);
 assert.ok(data.drivers.length>20);
 const allRaces=new Set(data.drivers.flatMap(d=>d.races.map(r=>r.entry.subsession_id)));
-assert.equal(allRaces.size,27);
+const historical=JSON.parse(await read('archive/index.json')).events;
+const live=JSON.parse(await read('news/data/live/index.json')).events;
+const expected=new Set([...historical,...live].map(e=>e.subsession_id));
+assert.equal(allRaces.size,expected.size);
 assert.equal(stats.points('Bomber Stocks','qualifying',1),10);
 assert.equal(stats.points('Bomber Stocks','heat',1),8);
 assert.equal(stats.points('Bomber Stocks','twin_feature_1',1),20);
@@ -78,4 +81,4 @@ for(const id of allRaces){context.location.hash='#race/'+id;await context.window
 // A failed result fetch is reported, not silently treated as a zero-point round.
 const broken=context.window.createMMTVStats({app:node('app'),entries:()=>[{subsession_id:1,series:'Bomber Stocks'}],seasonName:()=> 'Fall Fest 2026',esc:String,displayName:String,getEvent:async()=>null,getMeeting:async()=>null});
 assert.equal((await broken.load()).failures.length,1);
-console.log(`PASS: ${data.drivers.length} profiles, 27 race pages, five standings tables, scoring boundaries, saved points, search, aliases, links and fetch failure handling.`);
+console.log(`PASS: ${data.drivers.length} profiles, ${allRaces.size} race pages, five standings tables, scoring boundaries, saved points, search, aliases, links and fetch failure handling.`);
