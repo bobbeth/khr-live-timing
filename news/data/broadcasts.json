@@ -252,6 +252,36 @@
       "broadcast_group": "Wide Open Revival",
       "match_status": "schedule_inferred",
       "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89810317": {
+      "video_id": "IyXQ4OjSR3Y",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "round": 6,
+      "series": "Bomber Stocks",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "metadata_matched",
+      "match_method": "channel_completed_stream_release_date_hobart_weekly_schedule_and_series_description",
+      "source_url": "https://www.youtube.com/watch?v=IyXQ4OjSR3Y",
+      "source_release_timestamp": 1793579439,
+      "source_live_status": "post_live",
+      "broadcast_date": "2026-11-02",
+      "broadcast_timezone": "Australia/Hobart",
+      "timestamp_note": "Race start offset unknown; link opens the full broadcast."
+    },
+    "89812470": {
+      "video_id": "IyXQ4OjSR3Y",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "round": 6,
+      "series": "Cushion Kings",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "metadata_matched",
+      "match_method": "channel_completed_stream_release_date_hobart_weekly_schedule_and_series_description",
+      "source_url": "https://www.youtube.com/watch?v=IyXQ4OjSR3Y",
+      "source_release_timestamp": 1793579439,
+      "source_live_status": "post_live",
+      "broadcast_date": "2026-11-02",
+      "broadcast_timezone": "Australia/Hobart",
+      "timestamp_note": "Race start offset unknown; link opens the full broadcast."
     }
   }
 }

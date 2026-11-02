@@ -1,0 +1,257 @@
+{
+  "schema_version": "MMTV-broadcast-links-v1",
+  "channel_url": "https://www.youtube.com/@bobbethTV/streams",
+  "mapping_note": "25 schedule/order-inferred event links across 15 channel recordings; no individual video dates, viewing confirmation, or second-race timestamps were available in the source inventory.",
+  "events": {
+    "88961208": {
+      "video_id": "m1ujm3C8Bp4",
+      "title": "KHR Fall Fest 2026 — Round 1 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 1,
+      "series": "Bomber Stocks",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "88962942": {
+      "video_id": "m1ujm3C8Bp4",
+      "title": "KHR Fall Fest 2026 — Round 1 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 4560,
+      "round": 1,
+      "series": "Cushion Kings",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "88985308": {
+      "video_id": "2BZVa09TltA",
+      "title": "KHR Fall Fest 2026 — Round 1 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 1,
+      "series": "Mini Menaces",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "88987054": {
+      "video_id": "2BZVa09TltA",
+      "title": "KHR Fall Fest 2026 — Round 1 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 1,
+      "series": "Yota Outlawz",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89009401": {
+      "video_id": "MOX_cOwBYNQ",
+      "title": "KHR Fall Fest 2026 — Round 1 — Wide Open Revival",
+      "start_seconds": 0,
+      "round": 1,
+      "series": "Wide Open Revival",
+      "broadcast_group": "Wide Open Revival",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89130026": {
+      "video_id": "09oZlGRE2vI",
+      "title": "KHR Fall Fest 2026 — Round 2 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 2,
+      "series": "Bomber Stocks",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89131794": {
+      "video_id": "09oZlGRE2vI",
+      "title": "KHR Fall Fest 2026 — Round 2 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 2,
+      "series": "Cushion Kings",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89153778": {
+      "video_id": "8ubfIiFCj7U",
+      "title": "KHR Fall Fest 2026 — Round 2 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 2,
+      "series": "Mini Menaces",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89155471": {
+      "video_id": "8ubfIiFCj7U",
+      "title": "KHR Fall Fest 2026 — Round 2 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 2,
+      "series": "Yota Outlawz",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89178640": {
+      "video_id": "gLNcg3o9RYQ",
+      "title": "KHR Fall Fest 2026 — Round 2 — Wide Open Revival",
+      "start_seconds": 0,
+      "round": 2,
+      "series": "Wide Open Revival",
+      "broadcast_group": "Wide Open Revival",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89302439": {
+      "video_id": "47q3yLk0B3w",
+      "title": "KHR Fall Fest 2026 — Round 3 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 3,
+      "series": "Bomber Stocks",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89303933": {
+      "video_id": "47q3yLk0B3w",
+      "title": "KHR Fall Fest 2026 — Round 3 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 3,
+      "series": "Cushion Kings",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89327096": {
+      "video_id": "Z35Zptq1B88",
+      "title": "KHR Fall Fest 2026 — Round 3 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 3,
+      "series": "Mini Menaces",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89328837": {
+      "video_id": "Z35Zptq1B88",
+      "title": "KHR Fall Fest 2026 — Round 3 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 3,
+      "series": "Yota Outlawz",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89351486": {
+      "video_id": "u6GqXjKyskc",
+      "title": "KHR Fall Fest 2026 — Round 3 — Wide Open Revival",
+      "start_seconds": 0,
+      "round": 3,
+      "series": "Wide Open Revival",
+      "broadcast_group": "Wide Open Revival",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89471712": {
+      "video_id": "luCDUCzX3ws",
+      "title": "KHR Fall Fest 2026 — Round 4 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 4,
+      "series": "Bomber Stocks",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89473591": {
+      "video_id": "luCDUCzX3ws",
+      "title": "KHR Fall Fest 2026 — Round 4 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 4,
+      "series": "Cushion Kings",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89495168": {
+      "video_id": "fccuZBjKa2g",
+      "title": "KHR Fall Fest 2026 — Round 4 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 4,
+      "series": "Mini Menaces",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89496902": {
+      "video_id": "fccuZBjKa2g",
+      "title": "KHR Fall Fest 2026 — Round 4 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 4,
+      "series": "Yota Outlawz",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89519810": {
+      "video_id": "FPb8AQdoQsU",
+      "title": "KHR Fall Fest 2026 — Round 4 — Wide Open Revival",
+      "start_seconds": 0,
+      "round": 4,
+      "series": "Wide Open Revival",
+      "broadcast_group": "Wide Open Revival",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89643227": {
+      "video_id": "s9P7d2nEnaI",
+      "title": "KHR Fall Fest 2026 — Round 5 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 5,
+      "series": "Bomber Stocks",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89644712": {
+      "video_id": "s9P7d2nEnaI",
+      "title": "KHR Fall Fest 2026 — Round 5 — Bomber Stocks / Cushion Kings",
+      "start_seconds": 0,
+      "round": 5,
+      "series": "Cushion Kings",
+      "broadcast_group": "Bomber Stocks / Cushion Kings",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89668025": {
+      "video_id": "opn8pRjNeBo",
+      "title": "KHR Fall Fest 2026 — Round 5 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 5,
+      "series": "Mini Menaces",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89666377": {
+      "video_id": "opn8pRjNeBo",
+      "title": "KHR Fall Fest 2026 — Round 5 — Mini Menaces / Yota Outlawz",
+      "start_seconds": 0,
+      "round": 5,
+      "series": "Yota Outlawz",
+      "broadcast_group": "Mini Menaces / Yota Outlawz",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    },
+    "89690728": {
+      "video_id": "OB8UBfH64FM",
+      "title": "KHR Fall Fest 2026 — Round 5 — Wide Open Revival",
+      "start_seconds": 0,
+      "round": 5,
+      "series": "Wide Open Revival",
+      "broadcast_group": "Wide Open Revival",
+      "match_status": "schedule_inferred",
+      "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order"
+    }
+  }
+}
