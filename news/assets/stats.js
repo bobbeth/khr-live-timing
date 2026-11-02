@@ -134,7 +134,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
  async function profile(id){
   const hash=location.hash,version=++renderVersion;app.innerHTML=banner('DRIVER<br>PROFILE','Their season, race by race.')+'<div class="container section loading">Loading the driver…</div>';
   const data=await load();if(location.hash!==hash||version!==renderVersion)return;
-  const d=data.drivers.find(d=>d.id===key(id));if(!d){app.innerHTML=banner('DRIVER NOT FOUND','<a href="#drivers">Back to the roster ↗</a>');return;}
+  const d=data.drivers.find(d=>d.id===key(id)||(d.iracing_id&&String(d.iracing_id)===String(id)));if(!d){app.innerHTML=banner('DRIVER NOT FOUND','<a href="#drivers">Back to the roster ↗</a>');return;}
   const races=[...d.races].sort((a,b)=>a.entry.event_date.localeCompare(b.entry.event_date)||a.entry.subsession_id-b.entry.subsession_id);
   const groups=[...new Set(races.map(r=>seasonName(r.entry)+' / '+r.entry.series))];
   const navigation=profileNavigation(data.drivers,d);
