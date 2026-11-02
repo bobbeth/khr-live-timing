@@ -19,7 +19,7 @@
   if(path.endsWith('/privacy.html'))return {key:path,section:'Privacy',title:'Privacy and analytics choices',hash:''};
   if(!/\/news\/?$/.test(path))return {key:path,section:'Live timing',title:'Live timing',hash:''};
   let bits;try{bits=decodeURIComponent(parsed.hash.slice(1)||'home').split('/');}catch{bits=['unknown'];}
-  const names={rounds:'Round reviews',round:'Round review',calendar:'Season calendar',tracks:'Track directory',track:'Track page','track-name':'Track page',home:'Newsroom',results:'Race results',championships:'Championships',standings:'Standings',drivers:'Driver roster',driver:'Driver profile',broadcasts:'Broadcast library',broadcast:'Broadcast recording',records:'Season records',compare:'Driver comparison'};
+  const names={commentary:'Commentary desk',rounds:'Round reviews',round:'Round review',calendar:'Season calendar',tracks:'Track directory',track:'Track page','track-name':'Track page',home:'Newsroom',results:'Race results',championships:'Championships',standings:'Standings',drivers:'Driver roster',driver:'Driver profile',broadcasts:'Broadcast library',broadcast:'Broadcast recording',records:'Season records',compare:'Driver comparison'};
   const section=names[bits[0]]||'Other page';let hash=names[bits[0]]?'#'+bits[0]:'#other',title=section;
   if(bits[0]==='race'&&/^\d{7,12}$/.test(bits[1]||'')){hash='#race/'+bits[1];title='Race report '+bits[1];}
   if(bits[0]==='broadcast'&&/^[A-Za-z0-9_-]{11}$/.test(bits[1]||'')){hash='#broadcast/'+bits[1];title='Broadcast '+bits[1];}

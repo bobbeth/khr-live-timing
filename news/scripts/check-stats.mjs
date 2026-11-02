@@ -15,9 +15,9 @@ const context={URL,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addE
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
-vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route};\n})();'),context);
+vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues};\n})();'),context);
 await context.window.tests.init();
 const stats=context.window.tests.driverStats;
 const insights=context.window.tests.raceInsights;
@@ -164,3 +164,27 @@ for(const round of [1,5,6]){context.location.hash='#round/Fall%20Fest%202026/'+r
 context.location.hash='#round/Fall%20Fest%202026/99';await reviews.review(99,'Fall Fest 2026');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
 context.location.hash='#round/Unknown/1';await reviews.review(1,'Unknown');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
 console.log('PASS: six round reviews, partial Round 6, source-scoped climbs, broadcast links, deduplication, missing-data states and previous/next boundaries.');
+
+// Commentary briefings must exclude the selected round and all later results.
+const desk=context.window.tests.commentary;
+const venueData=await context.window.tests.venues.load();
+const bomberSix=venueData.rows.find(r=>r.series==='Bomber Stocks'&&r.round===6);
+const briefing=desk.build(data,bomberSix,venueData.trackFor);
+assert.ok(briefing.rankings.length>0);
+for(const row of briefing.rankings){assert.ok(row.races.every(r=>r.entry.series==='Bomber Stocks'&&r.entry.round<6));assert.equal(row.points,row.races.reduce((sum,r)=>sum+r.points,0));}
+assert.ok(!briefing.rankings.flatMap(r=>r.races).some(r=>r.entry.subsession_id===89810317));
+assert.equal(desk.build(data,{...bomberSix,round:1},venueData.trackFor).rankings.length,0);
+const seventh=desk.build(data,{...bomberSix,round:7},venueData.trackFor);
+assert.ok(seventh.rankings.flatMap(r=>r.races).some(r=>r.entry.subsession_id===89810317));
+const mixed={...data,drivers:data.drivers.map(d=>({...d,races:[...d.races,...d.races.map(r=>({...r,entry:{...r.entry,competition:'Other season'}}))]}))};
+assert.equal(desk.build(mixed,bomberSix,venueData.trackFor).rankings.reduce((s,r)=>s+r.points,0),briefing.rankings.reduce((s,r)=>s+r.points,0));
+const store=new Map();context.localStorage={getItem:key=>store.get(key)||null,setItem:(key,value)=>store.set(key,value)};
+context.location.hash='#commentary';await desk.screen();
+assert.ok(node('desk-context').innerHTML.includes('Pre-race briefing'));assert.ok(node('desk-context').innerHTML.includes('before Round'));assert.ok(node('desk-driver').innerHTML.includes('YOUR COMMENTARY NOTES'));
+node('desk-notes').value='Private <script> note';node('desk-notes').oninput();assert.equal(store.size,1);
+await desk.screen();assert.equal(node('desk-notes').value,'Private <script> note');assert.ok(!node('desk-driver').innerHTML.includes('Private <script> note'));
+node('desk-meeting').onchange({target:{value:[bomberSix.season,bomberSix.series,1].join('|')}});assert.ok(node('desk-context').innerHTML.includes('No earlier results'));
+node('desk-meeting').onchange({target:{value:[bomberSix.season,bomberSix.series,6].join('|')}});assert.ok(node('desk-driver').innerHTML.includes('RECENT FORM'));assert.equal(node('desk-notes').value,'');
+node('desk-search').oninput({target:{value:'no such driver'}});assert.ok(node('desk-drivers').innerHTML.includes('No drivers match'));
+const failedDesk=context.window.createMMTVCommentary({app:node('app'),driverStats:{load:async()=>{throw Error();}},venues:{load:async()=>{throw Error();}},broadcastLibrary:{load:async()=>[]}});await failedDesk.screen();assert.ok(node('app').innerHTML.includes('could not be loaded'));
+console.log('PASS: commentary pre-race cutoffs, season separation, opening-round empty state, browser-only notes, search and loading failure.');
