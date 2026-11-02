@@ -105,7 +105,8 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
   return '<div class="championship-leaders"><span class="sub">CURRENT TOP 3</span>'+ (leaders.length?'<ol>'+leaders.map(r=>'<li><span class="leader-position">'+r.rank+'</span>'+driverLink(r.d.name)+'<strong>'+r.points+(r.estimated?'*':'')+' <small>PTS</small></strong></li>').join('')+'</ol>':'<p class="result-note">No points yet.</p>')+'<p class="result-note">Provisional · Before drops'+(leaders.some(r=>r.estimated)?' · * Calculated points':'')+(data.sessionGaps.length?' · Some session results missing':'')+'</p></div>';
  }
  let selectedSeason='Fall Fest 2026',selectedSeries='Bomber Stocks',search='',rosterSeries='All series';
- async function standings(){
+ async function standings(preferredSeries){
+  if(preferredSeries)selectedSeries=preferredSeries;
   const hash=location.hash,version=++renderVersion;app.innerHTML=banner('THE POINTS<br>CHASE','Five championships. Every point counts.')+'<div class="container section loading">Loading the standings…</div>';
   const data=await load();if(location.hash!==hash||version!==renderVersion)return;
   if(!seasons().includes(selectedSeason))selectedSeason=seasons()[0];
@@ -141,5 +142,5 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
   const progressionGroups=[...new Map(races.map(r=>[seasonName(r.entry)+' / '+r.entry.series,{season:seasonName(r.entry),series:r.entry.series}])).values()];
   window.MMTVProgression.mount({element:document.getElementById('profile-progression'),data,groups:progressionGroups,driverId:d.id,seasonName,esc});
  }
- return {standings,roster,profile,driverLink,load,points,metrics,key,championshipLeaders,safeProfileUrl,profileDetails};
+ return {standings,roster,profile,driverLink,load,points,metrics,key,championshipLeaders,safeProfileUrl,profileDetails,rankings};
 };

@@ -1,0 +1,394 @@
+{
+  "schema_version": "MMTV-schedule-v1",
+  "season": "Fall Fest 2026",
+  "timezone": "Australia/Hobart",
+  "source": "Existing Fall Fest weekly date anchors and track list in 131DB. US Eastern start times confirmed by owner on 2026-11-02; upcoming dates use EST (-05:00), with Hobart display calculated automatically.",
+  "status": "weekly_schedule",
+  "events": [
+    {
+      "series": "Bomber Stocks",
+      "round": 1,
+      "date": "2026-09-28",
+      "track": "Oswego",
+      "start_at": null
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 2,
+      "date": "2026-10-05",
+      "track": "Fairbury",
+      "start_at": null
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 3,
+      "date": "2026-10-12",
+      "track": "Huset's",
+      "start_at": null
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 4,
+      "date": "2026-10-19",
+      "track": "USA International",
+      "start_at": null
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 5,
+      "date": "2026-10-26",
+      "track": "Limaland",
+      "start_at": null
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 6,
+      "date": "2026-11-02",
+      "track": "Kevin Harvick's Kern",
+      "start_at": "2026-11-01T19:30:00-05:00"
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 7,
+      "date": "2026-11-09",
+      "track": "Bristol",
+      "start_at": "2026-11-08T19:30:00-05:00"
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 8,
+      "date": "2026-11-16",
+      "track": "Port Royal",
+      "start_at": "2026-11-15T19:30:00-05:00"
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 9,
+      "date": "2026-11-23",
+      "track": "Lanier",
+      "start_at": "2026-11-22T19:30:00-05:00"
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 10,
+      "date": "2026-11-30",
+      "track": "Lucas Oil",
+      "start_at": "2026-11-29T19:30:00-05:00"
+    },
+    {
+      "series": "Bomber Stocks",
+      "round": 11,
+      "date": "2026-12-07",
+      "track": "Lernerville",
+      "start_at": "2026-12-06T19:30:00-05:00"
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 1,
+      "date": "2026-09-28",
+      "track": "Eldora",
+      "start_at": null
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 2,
+      "date": "2026-10-05",
+      "track": "Limaland",
+      "start_at": null
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 3,
+      "date": "2026-10-12",
+      "track": "Dirt Track at Charlotte",
+      "start_at": null
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 4,
+      "date": "2026-10-19",
+      "track": "Lanier",
+      "start_at": null
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 5,
+      "date": "2026-10-26",
+      "track": "Volusia",
+      "start_at": null
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 6,
+      "date": "2026-11-02",
+      "track": "Lucas Oil",
+      "start_at": "2026-11-01T20:45:00-05:00"
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 7,
+      "date": "2026-11-09",
+      "track": "I-55",
+      "start_at": "2026-11-08T20:45:00-05:00"
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 8,
+      "date": "2026-11-16",
+      "track": "Lernerville",
+      "start_at": "2026-11-15T20:45:00-05:00"
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 9,
+      "date": "2026-11-23",
+      "track": "Cedar Lake",
+      "start_at": "2026-11-22T20:45:00-05:00"
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 10,
+      "date": "2026-11-30",
+      "track": "Fairbury",
+      "start_at": "2026-11-29T20:45:00-05:00"
+    },
+    {
+      "series": "Cushion Kings",
+      "round": 11,
+      "date": "2026-12-07",
+      "track": "Kokomo",
+      "start_at": "2026-12-06T20:45:00-05:00"
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 1,
+      "date": "2026-09-29",
+      "track": "Millbridge - Non-Winged",
+      "start_at": null
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 2,
+      "date": "2026-10-06",
+      "track": "Limaland - Winged",
+      "start_at": null
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 3,
+      "date": "2026-10-13",
+      "track": "Lanier Dirt - Non-Winged",
+      "start_at": null
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 4,
+      "date": "2026-10-20",
+      "track": "Chili Bowl - Winged",
+      "start_at": null
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 5,
+      "date": "2026-10-27",
+      "track": "Millbridge - Non-Winged",
+      "start_at": null
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 6,
+      "date": "2026-11-03",
+      "track": "Kern Dirt Mini Oval - Winged",
+      "start_at": "2026-11-02T19:30:00-05:00"
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 7,
+      "date": "2026-11-10",
+      "track": "Limaland - Non-Winged",
+      "start_at": "2026-11-09T19:30:00-05:00"
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 8,
+      "date": "2026-11-17",
+      "track": "Millbridge - Winged",
+      "start_at": "2026-11-16T19:30:00-05:00"
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 9,
+      "date": "2026-11-24",
+      "track": "Lanier Dirt - Non-Winged",
+      "start_at": "2026-11-23T19:30:00-05:00"
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 10,
+      "date": "2026-12-01",
+      "track": "Chili Bowl - Winged",
+      "start_at": "2026-11-30T19:30:00-05:00"
+    },
+    {
+      "series": "Mini Menaces",
+      "round": 11,
+      "date": "2026-12-08",
+      "track": "Millbridge - Non-Winged",
+      "start_at": "2026-12-07T19:30:00-05:00"
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 1,
+      "date": "2026-09-29",
+      "track": "South Boston - Asphalt Mini",
+      "start_at": null
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 2,
+      "date": "2026-10-06",
+      "track": "Lanier Dirt - Dirt Legends",
+      "start_at": null
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 3,
+      "date": "2026-10-13",
+      "track": "USA International - Asphalt Legends",
+      "start_at": null
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 4,
+      "date": "2026-10-20",
+      "track": "Limaland - Dirt Mini",
+      "start_at": null
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 5,
+      "date": "2026-10-27",
+      "track": "Langley - Asphalt Mini",
+      "start_at": null
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 6,
+      "date": "2026-11-03",
+      "track": "Kern Dirt - Dirt Legends",
+      "start_at": "2026-11-02T20:35:00-05:00"
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 7,
+      "date": "2026-11-10",
+      "track": "Oxford Plains - Asphalt Legends",
+      "start_at": "2026-11-09T20:35:00-05:00"
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 8,
+      "date": "2026-11-17",
+      "track": "Fairbury - Dirt Mini",
+      "start_at": "2026-11-16T20:35:00-05:00"
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 9,
+      "date": "2026-11-24",
+      "track": "Lanier - Asphalt Mini",
+      "start_at": "2026-11-23T20:35:00-05:00"
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 10,
+      "date": "2026-12-01",
+      "track": "Lincoln - Dirt Mini",
+      "start_at": "2026-11-30T20:35:00-05:00"
+    },
+    {
+      "series": "Yota Outlawz",
+      "round": 11,
+      "date": "2026-12-08",
+      "track": "Chili Bowl - Dirt Legends",
+      "start_at": "2026-12-07T20:35:00-05:00"
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 1,
+      "date": "2026-09-30",
+      "track": "Lucas Oil",
+      "start_at": null
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 2,
+      "date": "2026-10-07",
+      "track": "Port Royal",
+      "start_at": null
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 3,
+      "date": "2026-10-14",
+      "track": "Weedsport",
+      "start_at": null
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 4,
+      "date": "2026-10-21",
+      "track": "Volusia",
+      "start_at": null
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 5,
+      "date": "2026-10-28",
+      "track": "Lernerville",
+      "start_at": null
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 6,
+      "date": "2026-11-04",
+      "track": "Knoxville",
+      "start_at": "2026-11-03T19:45:00-05:00"
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 7,
+      "date": "2026-11-11",
+      "track": "Cedar Lake",
+      "start_at": "2026-11-10T19:45:00-05:00"
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 8,
+      "date": "2026-11-18",
+      "track": "Oswego Dirt",
+      "start_at": "2026-11-17T19:45:00-05:00"
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 9,
+      "date": "2026-11-25",
+      "track": "Dirt Track at Charlotte",
+      "start_at": "2026-11-24T19:45:00-05:00"
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 10,
+      "date": "2026-12-02",
+      "track": "Williams Grove",
+      "start_at": "2026-12-01T19:45:00-05:00"
+    },
+    {
+      "series": "Wide Open Revival",
+      "round": 11,
+      "date": "2026-12-09",
+      "track": "Eldora",
+      "start_at": "2026-12-08T19:45:00-05:00"
+    }
+  ]
+}
