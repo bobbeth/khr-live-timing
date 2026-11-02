@@ -15,9 +15,9 @@ const context={URL,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addE
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
-vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights};\n})();'),context);
+vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route};\n})();'),context);
 await context.window.tests.init();
 const stats=context.window.tests.driverStats;
 const insights=context.window.tests.raceInsights;
@@ -138,3 +138,29 @@ for(const id of allRaces){context.location.hash='#race/'+id;await context.window
 const broken=context.window.createMMTVStats({app:node('app'),entries:()=>[{subsession_id:1,series:'Bomber Stocks'}],seasonName:()=> 'Fall Fest 2026',esc:String,displayName:String,getEvent:async()=>null,getMeeting:async()=>null});
 assert.equal((await broken.load()).failures.length,1);
 console.log(`PASS: ${data.drivers.length} profiles, ${allRaces.size} race pages, five standings tables, scoring boundaries, saved points, search, aliases, links and fetch failure handling.`);
+
+// Round reviews stay within the selected round and preserve partial coverage.
+const reviews=context.window.tests.roundReviews;
+const entries=[...new Map([...historical,...live].map(e=>[e.subsession_id,e])).values()];
+const schedule=JSON.parse(await read('news/data/schedule.json'));
+const rounds=reviews.build(entries,schedule,data,'Fall Fest 2026');
+assert.equal(rounds.length,6);
+const six=rounds.find(r=>r.round===6);assert.equal(six.events.length,2);assert.equal(six.missing.length,3);assert.equal(six.expected.length,5);assert.equal(six.book.movers[0].gain,10);
+for(const round of rounds){
+ assert.equal(round.statsComplete,true);
+ assert.ok(round.book.movers.every(m=>Number(m.race.entry.round)===round.round));
+ if(round.round<6){assert.equal(round.missing.length,0);assert.equal(round.events.length,5);}
+}
+assert.equal(reviews.build([...entries,...entries],schedule,data,'Fall Fest 2026').find(r=>r.round===6).events.length,2);
+assert.equal(reviews.build(entries,schedule,data,'Other season').length,0);
+assert.equal(reviews.build(entries,schedule,{...data,failures:[89810317]},'Fall Fest 2026').find(r=>r.round===6).statsComplete,false);
+context.location.hash='#rounds';await reviews.index();assert.equal((node('app').innerHTML.match(/class="round-review-card"/g)||[]).length,6);
+for(const round of [1,5,6]){context.location.hash='#round/Fall%20Fest%202026/'+round;await reviews.review(round,'Fall Fest 2026');
+ assert.equal((node('app').innerHTML.match(/class="round-series-report"/g)||[]).length,round===6?2:5);
+ assert.ok(node('app').innerHTML.includes('THE BROADCASTS'));assert.ok(!node('app').innerHTML.includes('undefined'));
+ if(round===6){assert.ok(node('app').innerHTML.includes('Reports still to come:'));assert.ok(node('app').innerHTML.includes('#broadcast/IyXQ4OjSR3Y'));assert.ok(!node('app').innerHTML.includes('/7'));}
+ if(round===1)assert.ok(!node('app').innerHTML.includes('/0'));
+}
+context.location.hash='#round/Fall%20Fest%202026/99';await reviews.review(99,'Fall Fest 2026');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
+context.location.hash='#round/Unknown/1';await reviews.review(1,'Unknown');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
+console.log('PASS: six round reviews, partial Round 6, source-scoped climbs, broadcast links, deduplication, missing-data states and previous/next boundaries.');

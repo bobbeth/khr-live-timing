@@ -28,3 +28,8 @@ const config=Array.from(t.context.window.dataLayer,a=>Array.from(a)).find(a=>a[0
 assert.equal(t.api.routeInfo('https://bobbeth.github.io/khr-live-timing/news/#home').section,'Newsroom');
 assert.equal(t.api.routeInfo('https://bobbeth.github.io/khr-live-timing/').section,'Live timing');
 console.log('PASS: new KHR ID, opt-in gating, decline/withdrawal, owner exclusion, DNT/GPC, localhost exclusion, pageview deduplication, sanitized content IDs/referrers and outbound events.');
+
+const reviewUrl='https://bobbeth.github.io/khr-live-timing/news/#round/Fall%20Fest%202026/6';
+assert.equal(t.api.routeInfo(reviewUrl).hash,'#round/Fall%20Fest%202026/6');
+assert.notEqual(t.api.routeInfo(reviewUrl).key,t.api.routeInfo(reviewUrl.replace('/6','/5')).key);
+assert.equal(t.api.routeInfo('https://bobbeth.github.io/khr-live-timing/news/#round/private%40example.com/6').hash,'#rounds');

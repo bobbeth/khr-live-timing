@@ -19,10 +19,11 @@
   if(path.endsWith('/privacy.html'))return {key:path,section:'Privacy',title:'Privacy and analytics choices',hash:''};
   if(!/\/news\/?$/.test(path))return {key:path,section:'Live timing',title:'Live timing',hash:''};
   let bits;try{bits=decodeURIComponent(parsed.hash.slice(1)||'home').split('/');}catch{bits=['unknown'];}
-  const names={calendar:'Season calendar',tracks:'Track directory',track:'Track page','track-name':'Track page',home:'Newsroom',results:'Race results',championships:'Championships',standings:'Standings',drivers:'Driver roster',driver:'Driver profile',broadcasts:'Broadcast library',broadcast:'Broadcast recording',records:'Season records',compare:'Driver comparison'};
+  const names={rounds:'Round reviews',round:'Round review',calendar:'Season calendar',tracks:'Track directory',track:'Track page','track-name':'Track page',home:'Newsroom',results:'Race results',championships:'Championships',standings:'Standings',drivers:'Driver roster',driver:'Driver profile',broadcasts:'Broadcast library',broadcast:'Broadcast recording',records:'Season records',compare:'Driver comparison'};
   const section=names[bits[0]]||'Other page';let hash=names[bits[0]]?'#'+bits[0]:'#other',title=section;
   if(bits[0]==='race'&&/^\d{7,12}$/.test(bits[1]||'')){hash='#race/'+bits[1];title='Race report '+bits[1];}
   if(bits[0]==='broadcast'&&/^[A-Za-z0-9_-]{11}$/.test(bits[1]||'')){hash='#broadcast/'+bits[1];title='Broadcast '+bits[1];}
+  if(bits[0]==='round'){hash='#rounds';if(/^Fall Fest \d{4}$/.test(bits[1]||'')&&/^[1-9]\d?$/.test(bits[2]||'')){hash='#round/'+encodeURIComponent(bits[1])+'/'+bits[2];title=bits[1]+' Round '+bits[2];}}
   if(bits[0]==='track'||bits[0]==='track-name')hash='#tracks';
   if(bits[0]==='driver'){
    hash='#drivers';
@@ -31,7 +32,7 @@
    // Customer IDs identify public race content, never a visitor account.
    if(Number.isSafeInteger(id)&&id>0){hash='#driver/'+id;title='Driver profile '+id;}
   }
-  return {key:path+'|'+bits[0]+'|'+String(bits[1]||'').slice(0,100),section:bits[0]==='race'?'Race report':section,title,hash};
+  return {key:path+'|'+bits[0]+'|'+String(bits[1]||'').slice(0,100)+'|'+(bits[0]==='round'?hash:''),section:bits[0]==='race'?'Race report':section,title,hash};
  }
  function cleanUrl(url,info){const u=new URL(url);return u.origin+u.pathname+(info?.hash||'');}
  function referrer(url){try{const u=new URL(url);return /^https?:$/.test(u.protocol)?u.origin+'/':'';}catch{return '';}}
