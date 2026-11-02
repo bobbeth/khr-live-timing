@@ -111,6 +111,12 @@ assert.ok(node('driver-grid').innerHTML.includes('Chad Puterbaugh'));
 for(const d of data.drivers){
  context.location.hash='#driver/'+encodeURIComponent(d.id);await stats.profile(d.id);
  assert.ok(node('app').innerHTML.includes('RACE HISTORY'));
+ const i=data.drivers.indexOf(d),previous=data.drivers[(i+data.drivers.length-1)%data.drivers.length],next=data.drivers[(i+1)%data.drivers.length];
+ assert.equal((node('app').innerHTML.match(/aria-label="Driver profiles"/g)||[]).length,2);
+ assert.ok(node('app').innerHTML.includes('class="profile-previous')||node('app').innerHTML.includes('profile-neighbour profile-previous'));
+ assert.ok(node('app').innerHTML.includes('href="#driver/'+encodeURIComponent(previous.id)+'" aria-label="Previous driver:'));
+ assert.ok(node('app').innerHTML.includes('href="#driver/'+encodeURIComponent(next.id)+'" aria-label="Next driver:'));
+ assert.ok(node('app').innerHTML.includes('class="profile-all" href="#drivers"'));
  for(const race of d.races)assert.ok(node('app').innerHTML.includes(`#race/${race.entry.subsession_id}`));
 }
 context.location.hash='#driver/unknown';await stats.profile('unknown');assert.ok(node('app').innerHTML.includes('DRIVER NOT FOUND'));
