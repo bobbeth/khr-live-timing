@@ -167,28 +167,50 @@ function TryDate($s){
     return $null
 }
 function BuildArticle($feature,$meta,$rows){
-    $win=$rows[0];$second=$rows[1];$third=if($rows.Count -gt 2){$rows[2]}else{$null}
+    $win=$rows[0];$second=$rows[1]
     $track=$meta.track;$series=$meta.series;$round=$meta.round
-    $fast=@($rows | Where-Object {$null -ne $_.best_lap_seconds -and $_.best_lap_seconds -gt 0} | Sort-Object best_lap_seconds | Select-Object -First 1)
-    $gained=@($rows | Where-Object {$null -ne $_.positions_gained} | Sort-Object positions_gained -Descending | Select-Object -First 1)
-    $headline="$($win.driver) wins $series Round $round at $track"
-    $thirdText=if($null -ne $third){' and '+$third.driver}else{''}
-    $deck="$($win.driver) takes the Feature ahead of $($second.driver)$thirdText."
+    $start=$win.start_position
+    $gain=$win.positions_gained
+    $headline="$($win.driver) takes $series Round $round at $track"
+    $lead="$($win.driver) took $series Round $round at $track in the #$($win.car_number)."
+    if($null -ne $start -and $start -gt 0){
+        if($null -ne $gain -and $gain -ge 5){
+            $headline="$($win.driver) comes from P$start to win at $track"
+            $lead="P$start to the win. $($win.driver) gained $gain places to take $series Round $round at $track in the #$($win.car_number)."
+        } elseif($start -eq 1){
+            $lead="$($win.driver) took $series Round $round at $track, starting on pole and bringing the #$($win.car_number) home first."
+        } else {
+            $lead="$($win.driver) won $series Round $round at $track, bringing the #$($win.car_number) from P$start to first."
+        }
+    }
+    $third=if($rows.Count -gt 2){$rows[2]}else{$null}
+    $deck="$($second.driver) takes second"
+    if($null -ne $third){$deck+=", with $($third.driver) third"}
+    $deck+='.'
     $paragraphs=New-Object System.Collections.Generic.List[string]
-    $p1="$($win.driver) has won the $Competition $series Round $round Feature at $track. The completed KHR classification puts the #$($win.car_number) first out of $($rows.Count) classified drivers. $($second.driver) finished second"
-    if($null -ne $third){$p1+=", with $($third.driver) third"};$paragraphs.Add($p1+'.')
-    $p2=''
-    if($null -ne $win.start_position){$p2+="The winner started P$($win.start_position) and finished P1";if($win.positions_gained -gt 0){$p2+=", a gain of $($win.positions_gained) places"};$p2+='. '}
-    if($null -ne $second.start_position){$p2+="$($second.driver) started P$($second.start_position) and finished second. "}
-    if($null -ne $third -and $null -ne $third.start_position){$p2+="$($third.driver) moved from P$($third.start_position) to P3. "}
-    if(-not $p2){$p2='The Feature finishing order is taken from the completed race capture.'}
-    $paragraphs.Add($p2.Trim())
-    $p3=''
-    if($fast.Count -gt 0){$p3+="The fastest available Feature lap was $([math]::Round($fast[0].best_lap_seconds,4).ToString('0.0000',[Globalization.CultureInfo]::InvariantCulture)) seconds, recorded by $($fast[0].driver). "}
-    if($gained.Count -gt 0 -and $gained[0].positions_gained -gt 0){$p3+="The largest net gain was $($gained[0].positions_gained) places for $($gained[0].driver), from P$($gained[0].start_position) to P$($gained[0].finish_position). "}
-    if($null -ne $win.laps_completed){$p3+="The winning classification records $($win.laps_completed) laps completed. "}
-    if(-not $p3){$p3='The results and available meeting session classifications are listed below.'}
-    $paragraphs.Add($p3.Trim())
+    $paragraphs.Add($lead)
+    $podium="$($second.driver) finished second"
+    if($null -ne $second.start_position -and $second.start_position -gt 2){$podium+=" from P$($second.start_position)"}
+    if($null -ne $third){
+        $podium+=", with $($third.driver) third"
+        if($null -ne $third.start_position -and $third.start_position -gt 3){$podium+=" from P$($third.start_position)"}
+    }
+    $podium+='.'
+    if($rows.Count -gt 3){
+        $podium+=" $($rows[3].driver) took fourth"
+        if($rows.Count -gt 4){$podium+=" ahead of $($rows[4].driver)"}
+        $podium+='.'
+    }
+    $paragraphs.Add($podium)
+    $notes=New-Object System.Collections.Generic.List[string]
+    $gained=@($rows | Where-Object {$null -ne $_.positions_gained -and $_.positions_gained -gt 0} | Sort-Object positions_gained -Descending | Select-Object -First 1)
+    if($gained.Count -gt 0 -and $gained[0].driver -ne $win.driver){
+        $m=$gained[0]
+        $notes.Add("$($m.driver) made up $($m.positions_gained) places to finish P$($m.finish_position).")
+    }
+    $fast=@($rows | Where-Object {$null -ne $_.best_lap_seconds -and $_.best_lap_seconds -gt 0} | Sort-Object best_lap_seconds | Select-Object -First 1)
+    if($fast.Count -gt 0){$notes.Add("$($fast[0].driver) set the fastest lap at $([math]::Round($fast[0].best_lap_seconds,4).ToString('0.0000',[Globalization.CultureInfo]::InvariantCulture)) seconds.")}
+    if($notes.Count -gt 0){$paragraphs.Add(($notes.ToArray() -join ' '))}
     return [pscustomobject]@{headline=$headline;deck=$deck;kicker='MUD MULES TV RACE REPORT';paragraphs=$paragraphs.ToArray()}
 }
 

@@ -1,1 +1,249 @@
-window.MMTV_EDITORIAL = {"schema_version":"MMTV-editorial-articles-v1","editorial_count":25,"events":{"88961208":{"headline":"Reavis Charges from Fourteenth to Win Bomber Stocks Opener at Oswego","deck":"The #57 produces a 13-place climb in the second twin feature as Craig Schmidt leads the most laps.","paragraphs":["Jim Reavis came from fourteenth on the Feature grid to win the opening Davis Property Management Bomber Stocks round at Oswego Speedway. The #57 gained 13 positions in the 25-lap classification, completing an eye-catching turnaround from the back half of the starting order.","Craig Schmidt was second in the #85 after starting fourth, and the official classification credits Schmidt with 20 laps led and the fastest Feature lap of 19.0042 seconds. Mikey Mixter completed the podium from eleventh on the grid, with Mike Maddog Davis fourth and Chad Puterbaugh fifth.","The feature record lists three cautions. Oswego also hosted the opening twin race before the final Feature; the complete official session breakdown below covers the preliminary running and both twin classifications. Reavis’s charge is the standout Feature result, without assuming when individual positions were gained."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"88962942":{"headline":"Roberts Controls Eldora Opener as Angell and Mcdonald Storm onto Podium","deck":"Josh Roberts3 leads 35 of 41 laps while two rivals climb eight positions apiece.","paragraphs":["Josh Roberts3 opened the KP Plumbing Service Cushion Kings Tour with victory at Eldora Speedway, converting a second-place grid position into the Feature win. The #42 was credited with 35 laps led across the 41 recorded laps, delivering the night’s most sustained front-running performance.","Brian Angell surged from tenth to second in the #7, and Travis Mcdonald2 made the same eight-place gain from eleventh to third. Mikey Mixter finished fourth after starting seventh; Brent Vanderwood completed the top five.","Angell also logged the fastest classified Feature lap at 16.4728 seconds. Six cautions appear in the official race summary. The finishing order shows just how much ground the podium challengers made up, though the archive does not establish the precise sequence of their overtakes."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"88985308":{"headline":"Mixter Wins from Ninth in 60-Lap Mini Menaces Opener at Millbridge","deck":"An eight-position climb carries the #69 to victory in a 13-caution Feature.","paragraphs":["Mikey Mixter launched the Bottom Feeder Speed Company 600cc Mini Menaces championship with a victory from ninth on the grid at Millbridge Speedway. His #69 finished first after gaining eight positions in the 60-lap Feature classification.","Travis Mcdonald2 took second from fourth, with Brian Angell third after starting fifth. Wayne Bridges rose from eighth to fourth and Chris Parrotta rounded out the top five. Mcdonald2 recorded the fastest classified Feature lap at 9.2904 seconds.","The event summary records 13 cautions. Tom Land was credited with the most laps led at 15, followed by Angell with 13 and Mcdonald2 with 12. Mixter led seven laps, demonstrating that the winning classification and the longest spell out front belonged to different drivers."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"88987054":{"headline":"McClain Opens Yota Outlawz Season with South Boston Victory","deck":"The #75 leads 24 of 30 laps in a caution-free championship opener.","paragraphs":["Kent McClain took the first Yota Outlawz Dirt Cheap... Asphalt Fast victory of Fall Fest 2026 at South Boston Speedway. Starting second, the #75 climbed one place to claim the 30-lap Feature, leading 24 laps according to the official result.","Pole starter Brent Vanderwood completed the race in second, credited with the remaining six laps led. Brian Angell finished third from third on the grid, followed by Joey Brewer and Tom Land.","The official summary records zero cautions. Land posted the fastest classified lap at 16.5930 seconds despite finishing fifth, while McClain’s substantial lap-lead total remains the clearest measure of his race at the front."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89009401":{"headline":"McClain Completes Round 1 Double in Wide Open Revival at Lucas Oil","deck":"A 36-lap lead and fastest lap put the #75 on top in the Dirt Pro Late Models.","paragraphs":["Kent McClain made it two opening-round Feature victories across the Fall Fest championships by taking the Baptist Bullet Cheater Engines Wide Open Revival at Lucas Oil Speedway. Having also won the Yota Outlawz opener, McClain moved from third to first in the Dirt Pro Late Models.","The #75 was credited with 36 laps led from the 40-lap race and set the fastest classified lap at 14.2169 seconds. Brian Angell finished second from pole position, with Jonathon Foxworth advancing from fourth to third. Mikey Mixter climbed from twelfth to fourth and Jim Reavis finished fifth.","Two cautions were recorded in the official summary. The winner’s lead tally and best lap put McClain at the centre of the opening Wide Open Revival result, while Mixter’s eight-position charge supplied another substantial gain elsewhere in the field."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89130026":{"headline":"Puterbaugh Comes from Twelfth for Fairbury Bomber Stocks Victory","deck":"The #20 takes Round 2 ahead of Vanderwood and Mixter after gaining 11 positions.","paragraphs":["Chad Puterbaugh won the Round 2 Bomber Stocks Feature at Fairbury Speedway after starting twelfth and gaining 11 places. The #20 took the top spot in the 30-lap final classification, turning a deep starting position into a victory.","Brent Vanderwood finished second from third on the grid, with Mikey Mixter third from eleventh. Both Vanderwood and Mixter were credited with 11 laps led, while Puterbaugh led four. Travis Mcdonald2 climbed from fourteenth to fourth, and Craig Schmidt finished fifth.","Schmidt recorded the fastest classified Feature lap at 12.5937 seconds. Four cautions are recorded. Although the final result shows a large climb by the winner, the official classification does not by itself say which lap brought the decisive change of position."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89131794":{"headline":"McClain Leads 32 Laps to Claim Cushion Kings Round 2 at Limaland","deck":"Pole-to-flag classification for the #75, with a ten-place charge by Mcdonald2.","paragraphs":["Kent McClain converted pole position into victory in the Cushion Kings Round 2 Feature at Limaland Motorsports Park. The #75 held first in the official 40-lap classification and was credited with 32 laps led.","Mikey Mixter moved from ninth to second, Brian Angell advanced from sixth to third, and Travis Mcdonald2 climbed from fourteenth to fourth for the largest net improvement among the top finishers. Chris Parrotta completed the top five.","Angell produced the fastest classified Feature lap at 13.3575 seconds. The official event summary lists eight cautions, but the final result alone does not establish how the lead changed hands during the interruptions."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89153778":{"headline":"Mcdonald2 Wins from Ninth as Mini Menaces Visit Limaland","deck":"Travis Mcdonald2 takes Round 2, despite Wayne Bridges leading more than half the race.","paragraphs":["Travis Mcdonald2 took Round 2 Mini Menaces honours at Limaland Motorsports Park after starting ninth in the nine-driver Feature field. The #88 gained eight positions to win the 40-lap race, also posting the fastest classified lap of 11.9460 seconds.","Wayne Bridges finished runner-up from fourth and was credited with 23 laps led — the highest total in the Feature. Tom Land finished third from fifth, with Round 1 winner Mikey Mixter fourth and Brian Angell fifth.","Five cautions appear in the official event summary. Bridges led more recorded laps than the eventual winner, while the final classification gives Mcdonald2 the win and the largest net gain of the meeting’s Feature."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89155471":{"headline":"Puterbaugh Takes Yota Outlawz Round 2 from Tenth at Lanier","deck":"A nine-place recovery wins the Feature after Kent McClain leads 31 laps.","paragraphs":["Chad Puterbaugh claimed the second Yota Outlawz Feature at Lanier National Speedway, advancing from tenth on the grid to first in the 40-lap classification. The #20 gained nine positions to take the result.","Joey Brewer finished second from fourth, while Travis Mcdonald2 recovered from eighth to third. Chris Parrotta and Brian Angell completed the top five. Brent Vanderwood set the fastest classified lap at 15.9359 seconds.","The lap-lead totals add an important distinction: Round 1 winner Kent McClain was credited with 31 laps led, compared with two for Puterbaugh, despite the latter taking the chequered flag in first place. Seven cautions were recorded, though the published statistics cannot tell us exactly when the winner took command."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89178640":{"headline":"Reavis Commands Port Royal Wide Open Revival with 44 Laps Led","deck":"The #57 wins Round 2 from second on the grid and sets the fastest Feature lap.","paragraphs":["Jim Reavis delivered the Round 2 Wide Open Revival victory at Port Royal Speedway, moving from second on the grid to win the 60-lap Dirt Pro Late Model Feature. The #57 led 44 laps and set the fastest classified lap at 18.5301 seconds.","Joey Brewer advanced from fifth to second, while Mikey Mixter finished third from fourth and led ten laps. Travis Mcdonald2 completed the race in fourth and Mike Maddog Davis took fifth.","The official event summary lists four cautions. Reavis combined the victory, largest individual lap-lead total and fastest lap; Brewer’s three-place rise supplied another notable move into the podium."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89302439":{"headline":"Puterbaugh Makes It Back-to-Back Bomber Stocks Wins at Huset’s","deck":"A seven-to-first move and 21 laps led secure another Round 3 result for the #20.","paragraphs":["Chad Puterbaugh followed his Fairbury victory with another Bomber Stocks Feature win at Huset’s Speedway in Round 3. Starting seventh, the #20 moved up six places and was credited with 21 laps led in the 30-lap final classification.","Brian Angell produced a strong run from ninth to second, Michael Butler14 finished third from fifth, and Mikey Mixter climbed from tenth to fourth. Joey Brewer completed the top five.","Puterbaugh’s 12.6166-second lap was also the fastest in the classified Feature field. Four cautions were recorded. Across Rounds 2 and 3 the official records show Puterbaugh winning from starting positions of twelfth and seventh, respectively."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89303933":{"headline":"McClain Adds Charlotte Victory to Cushion Kings Campaign","deck":"The #75 leads 36 of 45 laps while Bryce Fries climbs seven places to second.","paragraphs":["Kent McClain claimed a second straight Cushion Kings Feature victory, adding a Round 3 result at The Dirt Track at Charlotte to his Round 2 success at Limaland. McClain started from pole and finished first after leading 36 of 45 recorded laps.","Bryce Fries came from ninth to second in the #11, with Mikey Mixter taking third from third on the grid. Tim L Brown finished fourth, and Mike Maddog Davis climbed from tenth to fifth.","Chad Puterbaugh recorded the fastest classified Feature lap at 16.3153 seconds, although his final classification was twelfth after 30 laps completed. The event summary lists nine cautions. The result combines a dominant lap-lead total for McClain with a substantial charge by Fries."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89327096":{"headline":"Puterbaugh Leads 33 Laps to Take Mini Menaces Round 3 at Lanier","deck":"The #20 starts first, finishes first and sets the Feature’s quickest lap.","paragraphs":["Chad Puterbaugh won the Round 3 Mini Menaces Feature at Lanier National Speedway, converting pole position into the win over 40 recorded laps. The #20 was credited with 33 laps led and the fastest classified lap, a 15.0525-second effort.","Mikey Mixter finished second from third, and Mike Maddog Davis moved from eighth to third. Brian Angell was fourth and Bryce Fries climbed from tenth to fifth.","Seven cautions were recorded. With pole, the win, fastest lap and the highest lap-lead count all appearing alongside Puterbaugh’s name, the official result paints a notably complete statistical performance."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89328837":{"headline":"Puterbaugh Wins Again as Yota Outlawz Tackles Concord","deck":"The #20 leads 18 laps and moves from second to first in an 11-caution Feature.","paragraphs":["Chad Puterbaugh followed his Round 2 Yota Outlawz win with another in Round 3 at Concord Speedway. The #20 started second and finished first, credited with 18 laps led in the 40-lap Feature classification.","Tom Land moved from fifth to second and Brent Vanderwood came from eighth to third. Chris Parrotta advanced six places from tenth to fourth, while Brian Angell finished fifth from ninth.","The official event summary lists 11 cautions. Mikey Mixter recorded the fastest classified lap at 18.1665 seconds even though he was not among the podium finishers. Parrotta’s six-place gain was the largest in the top five."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89351486":{"headline":"McClain Leads 40 of 45 to Conquer Wide Open Revival at Weedsport","deck":"A pole-start victory and fastest Feature lap define Round 3 for the #75.","paragraphs":["Kent McClain returned to the top of the Wide Open Revival Feature classification at Weedsport Speedway in Round 3. The #75 won from pole and was credited with 40 of the 45 laps led, adding the fastest classified lap at 15.1784 seconds.","Mikey Mixter finished runner-up from second, Chad Puterbaugh took third from third, and Brian Angell finished fourth. Brent Vanderwood moved from eighth to fifth.","Five cautions were recorded in the official race summary. With victory, pole, most laps led and the quickest lap, McClain’s second Wide Open Revival win in three rounds was backed by several separate performance measures."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89471712":{"headline":"Puterbaugh Extends Bomber Stocks Run with USA International Victory","deck":"A ten-to-first charge delivers a third consecutive Feature win for the #20.","paragraphs":["Chad Puterbaugh made it three successive Bomber Stocks Feature wins in Rounds 2 through 4, taking the fourth round at USA International Speedway. He started tenth and finished first in the 25-lap official classification, gaining nine positions.","Wayne Bridges was second from third and led 14 laps — more than Puterbaugh’s 11 — while Brian Angell rose from eleventh to third. Brent Vanderwood finished fourth and Mikey Mixter completed the top five.","Craig Schmidt set the fastest classified lap at 23.7652 seconds. The event summary records zero cautions. The final standings underline Puterbaugh’s repeated ability to win from deep on the grid, while Bridges carried the largest lap-lead total."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89473591":{"headline":"Angell Takes Lanier Cushion Kings Win with 36 Laps Led","deck":"The #7 controls the Round 4 classification from pole as Mixter and Parrotta complete the podium.","paragraphs":["Brian Angell won Cushion Kings Round 4 at Lanier National Speedway, taking the 40-lap Feature from pole position. The #7 was credited with 36 laps led, the largest share of the official race distance.","Mikey Mixter finished second after starting second and recorded the fastest classified Feature lap at 14.5808 seconds. Chris Parrotta climbed from seventh to third, with Chad Puterbaugh fourth and Brent Vanderwood fifth.","Four cautions appear in the official summary. Angell’s win breaks the sequence of Cushion Kings victories taken by Kent McClain in Rounds 2 and 3, while Parrotta supplied the largest gain among the podium finishers."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89495168":{"headline":"Angell Claims Chili Bowl Mini Menaces Feature in Round 4","deck":"A 35-lap lead and victory from second on the grid for the #7.","paragraphs":["Brian Angell emerged as the Round 4 Mini Menaces Feature winner at the Chili Bowl, moving from second on the grid to first in the 45-lap official classification. The #7 was credited with 35 laps led.","Pole starter Mikey Mixter finished second, and Mike Maddog Davis climbed from fifth to third. Mathew Land was fourth from third and Tom Land advanced from sixth to fifth.","Chad Puterbaugh set the fastest classified Feature lap at 10.4289 seconds. Ten cautions were recorded in the event summary. Angell’s extensive lap-lead total gave the result its defining statistic, while Davis made up two places to reach the podium."],"kicker":"OFFICIAL-BACKED FEATURE REPORT"},"89496902":{"headline":"Puterbaugh Heads Bridge-Captured Yota Outlawz Result at Limaland","deck":"The #20 wins from pole in the reviewed Round 4 live classification.","paragraphs":["Chad Puterbaugh is classified first in the Round 4 Yota Outlawz Feature at Limaland Motorsports Park, according to the completed KHR Bridge capture. The #20 started from pole and is recorded as completing 41 laps in the published capture.","Mikey Mixter climbed from seventh to second and Joey Brewer moved from ninth to third. Tom Land finished fourth and Brian Angell fifth. Puterbaugh recorded the fastest classified Feature lap at 14.7746 seconds; Brewer’s six-position climb was a standout net gain.","This report uses a reviewed live Bridge classification, not an independently verified official iRacing event result. Lap-lead and caution totals are not established by this published capture, so no claims about the precise on-track sequence or official final lap count are made."],"kicker":"BRIDGE-CAPTURED RACE REPORT"},"89519810":{"headline":"Puterbaugh Climbs from Seventh to Win Volusia Wide Open Revival","deck":"Reviewed Round 4 Bridge data places the #20 first after a six-position rise.","paragraphs":["Chad Puterbaugh heads the completed KHR Bridge classification for the Wide Open Revival Round 4 Feature at Volusia Speedway Park. The #20 started seventh and finished first, recorded with 40 laps completed.","Brian Angell climbed from sixth to second, while Mikey Mixter completed the podium from second on the grid. Travis Mcdonald was fourth and Mike Davis fifth. Puterbaugh set the quickest available classified Feature lap at 14.8464 seconds.","This is a reviewed live-capture report, not an independently verified official result. The published Bridge classification does not provide a reliable lap-lead or caution count, and those figures have deliberately been left out of the race account."],"kicker":"BRIDGE-CAPTURED RACE REPORT"},"89643227":{"headline":"Mcdonald Wins Limaland Bomber Stocks Round 5 as McClain Rises from Rear","deck":"The #88 takes the completed Bridge result while McClain climbs eleven positions to second.","paragraphs":["Travis Mcdonald is classified as the Round 5 Bomber Stocks winner at Limaland Motorsports Park in the completed KHR Bridge race capture. The #88 started fifth and finished first over 30 recorded laps.","Kent McClain made a major charge from thirteenth on the grid to second in the #75, gaining eleven places, and set the fastest captured Feature lap at 12.5007 seconds. Tye Dalman moved from sixth to third, Mikey Mixter from twelfth to fourth, and Mike Davis finished fifth.","This is a reviewed live-capture classification rather than an independently verified official event result. The capture establishes finishing positions and available lap times, but not a complete lap-lead or caution breakdown."],"kicker":"BRIDGE-CAPTURED RACE REPORT"},"89644712":{"headline":"Mcdonald Tops Volusia Cushion Kings Round 5 Bridge Classification","deck":"The #88 finishes first ahead of McClain and Puterbaugh in the captured Feature.","paragraphs":["Travis Mcdonald is listed first in the reviewed KHR Bridge classification for the Cushion Kings Round 5 Feature at Volusia Speedway Park. He started second and finished first, with 35 completed laps shown for the leading cars.","Kent McClain finished second from pole, Chad Puterbaugh advanced from fifth to third, and Mikey Mixter took fourth. Brian Angell rounded out the top five. Puterbaugh recorded the fastest classified lap available in the capture, at 16.1173 seconds.","The published live material contains differences between some participant and classified-row counts. This account therefore uses the displayed classification only and does not infer an independently verified official finishing order, caution count or complete lap-lead history."],"kicker":"BRIDGE-CAPTURED RACE REPORT"},"89666377":{"headline":"Mathew Land Leads 22 Laps to Win Langley Yota Outlawz Round 5","deck":"The #091 takes the Bridge-captured Feature ahead of Schmidt and Mcdonald.","paragraphs":["Mathew Land heads the reviewed Round 5 Yota Outlawz classification at Langley Speedway. The #091 started third and finished first, with the published KHR Bridge capture crediting him with 22 laps led in the 30-lap Feature.","Craig Schmidt surged from ninth to second and recorded the fastest available classified lap at 17.5193 seconds. Travis Mcdonald was third after starting from pole and was credited with eight laps led; Tom Land finished fourth and Brent Vanderwood fifth.","This result is based on a completed Bridge capture rather than an independently verified official iRacing result. Unlike several other live-captured races, this record includes lap-lead figures, but its caution total has not been established."],"kicker":"BRIDGE-CAPTURED RACE REPORT"},"89668025":{"headline":"Tom Land Wins Millbridge Mini Menaces Round 5 from Pole","deck":"The #91 leads the reviewed Bridge classification as Fries climbs from tenth to fourth.","paragraphs":["Tom Land is recorded as the Round 5 Mini Menaces winner at Millbridge Speedway in the completed KHR Bridge capture. Starting from pole in the #91, Land finished first with 30 completed laps and posted the fastest available classified lap at 8.8790 seconds.","Chad Puterbaugh finished second from second on the grid, Kent McClain advanced from eighth to third, and Bryce Fries climbed six places from tenth to fourth. Mathew Land completed the top five.","The report reflects the published reviewed Bridge classification, not an independently verified official result. Its lap-lead and caution totals are unavailable, so the article records the finishing and pace statistics without reconstructing unverified on-track events."],"kicker":"BRIDGE-CAPTURED RACE REPORT"},"89690728":{"headline":"Hurst Tops Lernerville Wide Open Revival Round 5 Feature","deck":"Blake Hurst2 wins the reviewed Bridge classification ahead of Mcdonald and Puterbaugh.","paragraphs":["Blake Hurst2 is classified first in the Wide Open Revival Round 5 Feature at The Lernerville Speedway, according to the completed KHR Bridge race capture. The #15 started third and finished first, with 50 laps completed in the published result.","Travis Mcdonald advanced from fifth to second, and Chad Puterbaugh climbed from eleventh to third — the largest net gain among the podium finishers. Kent McClain was fourth and Mikey Mixter fifth. Brian Angell produced the fastest available classified Feature lap at 14.3698 seconds.","This is a reviewed live-capture classification, not an independently verified official event result. The captured data does not establish the full lap-lead totals or caution count, and the report does not infer details of passes or incidents."],"kicker":"BRIDGE-CAPTURED RACE REPORT"}}};
+window.MMTV_EDITORIAL = {
+  "schema_version": "MMTV-editorial-articles-v1",
+  "editorial_count": 27,
+  "events": {
+    "88961208": {
+      "headline": "Reavis Charges from Fourteenth to Win Bomber Stocks Opener at Oswego",
+      "deck": "The #57 produces a 13-place climb in the second twin feature as Craig Schmidt leads the most laps.",
+      "paragraphs": [
+        "Fourteenth on the grid, first at the flag. Jim Reavis brought the #57 through to win the Bomber Stocks opener at Oswego, making up 13 places in the 25-lap second twin feature.",
+        "Craig Schmidt took second after leading 20 laps and setting the quickest lap of the feature. Mikey Mixter came from eleventh to third, with Mike Maddog Davis fourth and Chad Puterbaugh fifth. Three cautions broke up the race, but Reavis left with the win."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "88962942": {
+      "headline": "Roberts Controls Eldora Opener as Angell and Mcdonald Storm onto Podium",
+      "deck": "Josh Roberts3 leads 35 of 41 laps while two rivals climb eight positions apiece.",
+      "paragraphs": [
+        "Josh Roberts3 took the Cushion Kings opener at Eldora, leading 35 laps in the #42 after starting second. That left the rest fighting for a way onto the podium.",
+        "Brian Angell came from tenth to second and Travis Mcdonald2 from eleventh to third, both gaining eight places. Angell also had the fastest lap. Mikey Mixter and Brent Vanderwood completed the top five in a race with six cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "88985308": {
+      "headline": "Mixter Wins from Ninth in 60-Lap Mini Menaces Opener at Millbridge",
+      "deck": "An eight-position climb carries the #69 to victory in a 13-caution Feature.",
+      "paragraphs": [
+        "Mikey Mixter started ninth and finished with the Mini Menaces opener in his pocket. The #69 gained eight places to win the 60-lap feature at Millbridge.",
+        "Travis Mcdonald2 finished second and set the fastest lap, with Brian Angell third. Wayne Bridges climbed from eighth to fourth ahead of Chris Parrotta. Tom Land led the most laps with 15; Mixter led seven, but took the win in a race interrupted by 13 cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "88987054": {
+      "headline": "McClain Opens Yota Outlawz Season with South Boston Victory",
+      "deck": "The #75 leads 24 of 30 laps in a caution-free championship opener.",
+      "paragraphs": [
+        "Kent McClain got his Yota Outlawz season off to a winning start at South Boston. The #75 started second, led 24 of the 30 laps and took the chequered flag in a race without a caution.",
+        "Brent Vanderwood started on pole and led the other six laps before finishing second. Brian Angell took third ahead of Joey Brewer and Tom Land. Land finished fifth with the quickest lap of the race."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89009401": {
+      "headline": "McClain Completes Round 1 Double in Wide Open Revival at Lucas Oil",
+      "deck": "A 36-lap lead and fastest lap put the #75 on top in the Dirt Pro Late Models.",
+      "paragraphs": [
+        "Two series, two opening-round wins for Kent McClain. After taking the Yota Outlawz opener, the #75 added Wide Open Revival at Lucas Oil Speedway, winning from third on the grid.",
+        "McClain led 36 of the 40 laps and set the fastest lap. Brian Angell finished second and Jonathon Foxworth third, while Mikey Mixter made up eight places to finish fourth from twelfth. Jim Reavis rounded out the top five. The race had two cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89130026": {
+      "headline": "Puterbaugh Comes from Twelfth for Fairbury Bomber Stocks Victory",
+      "deck": "The #20 takes Round 2 ahead of Vanderwood and Mixter after gaining 11 positions.",
+      "paragraphs": [
+        "Chad Puterbaugh came from twelfth to win Bomber Stocks Round 2 at Fairbury. The #20 made up 11 places in the 30-lap feature to finish ahead of Brent Vanderwood and Mikey Mixter.",
+        "Vanderwood and Mixter each led 11 laps; Puterbaugh led four and took the win. Travis Mcdonald2 gained ten places to finish fourth from fourteenth, with Craig Schmidt fifth. Schmidt had the fastest lap in a race with four cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89131794": {
+      "headline": "McClain Leads 32 Laps to Claim Cushion Kings Round 2 at Limaland",
+      "deck": "A win from pole for the #75, with a ten-place charge by Mcdonald2.",
+      "paragraphs": [
+        "Kent McClain put the #75 on pole and took the Cushion Kings Round 2 win at Limaland. He led 32 of the 40 laps, with Mikey Mixter coming from ninth to finish second.",
+        "Brian Angell climbed from sixth to third and set the fastest lap. Travis Mcdonald2 made up ten places to finish fourth from fourteenth, while Chris Parrotta completed the top five. Eight cautions interrupted the feature."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89153778": {
+      "headline": "Mcdonald2 Wins from Ninth as Mini Menaces Visit Limaland",
+      "deck": "Travis Mcdonald2 takes Round 2, despite Wayne Bridges leading more than half the race.",
+      "paragraphs": [
+        "Travis Mcdonald2 started at the back of the nine-car Mini Menaces field and finished first at Limaland. The #88 gained eight places in the 40-lap Round 2 feature and added the fastest lap.",
+        "Wayne Bridges led 23 laps but finished second. Tom Land took third, with opening-round winner Mikey Mixter fourth and Brian Angell fifth. Five cautions broke up the race."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89155471": {
+      "headline": "Puterbaugh Takes Yota Outlawz Round 2 from Tenth at Lanier",
+      "deck": "A nine-place recovery wins the Feature after Kent McClain leads 31 laps.",
+      "paragraphs": [
+        "Tenth on the grid was no barrier for Chad Puterbaugh at Lanier. The #20 gained nine places to take Yota Outlawz Round 2 ahead of Joey Brewer and Travis Mcdonald2.",
+        "Kent McClain led 31 of the 40 laps, while Puterbaugh led two and came away with the win. Chris Parrotta and Brian Angell completed the top five, and Brent Vanderwood set the fastest lap. The feature had seven cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89178640": {
+      "headline": "Reavis Commands Port Royal Wide Open Revival with 44 Laps Led",
+      "deck": "The #57 wins Round 2 from second on the grid and sets the fastest Feature lap.",
+      "paragraphs": [
+        "Jim Reavis took charge of Wide Open Revival Round 2 at Port Royal. The #57 won from second on the grid, led 44 of the 60 laps and set the fastest lap.",
+        "Joey Brewer moved from fifth to second, with Mikey Mixter third after leading ten laps. Travis Mcdonald2 and Mike Maddog Davis completed the top five. Four cautions interrupted the feature."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89302439": {
+      "headline": "Puterbaugh Makes It Back-to-Back Bomber Stocks Wins at Huset’s",
+      "deck": "A seven-to-first move and 21 laps led secure another Round 3 result for the #20.",
+      "paragraphs": [
+        "Back-to-back Bomber Stocks wins for Chad Puterbaugh. After winning at Fairbury, the #20 came from seventh to take Round 3 at Huset’s, leading 21 of the 30 laps and setting the fastest lap.",
+        "Brian Angell gained seven places to finish second from ninth. Michael Butler14 took third, Mikey Mixter climbed from tenth to fourth and Joey Brewer finished fifth. The feature had four cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89303933": {
+      "headline": "McClain Adds Charlotte Victory to Cushion Kings Campaign",
+      "deck": "The #75 leads 36 of 45 laps while Bryce Fries climbs seven places to second.",
+      "paragraphs": [
+        "Kent McClain made it two straight Cushion Kings wins with victory at Charlotte. Starting on pole, the #75 led 36 of the 45 laps to follow up his Limaland success.",
+        "Bryce Fries came from ninth to second ahead of Mikey Mixter. Tim L Brown took fourth, with Mike Maddog Davis gaining five places to finish fifth. Chad Puterbaugh set the fastest lap but finished twelfth. Nine cautions interrupted the race."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89327096": {
+      "headline": "Puterbaugh Leads 33 Laps to Take Mini Menaces Round 3 at Lanier",
+      "deck": "The #20 starts first, finishes first and sets the Feature’s quickest lap.",
+      "paragraphs": [
+        "Pole, the fastest lap and the win: Chad Puterbaugh took all three in Mini Menaces Round 3 at Lanier. The #20 led 33 of the 40 laps to finish ahead of Mikey Mixter.",
+        "Mike Maddog Davis climbed from eighth to third. Brian Angell finished fourth, with Bryce Fries coming from tenth to fifth. The feature had seven cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89328837": {
+      "headline": "Puterbaugh Wins Again as Yota Outlawz Tackles Concord",
+      "deck": "The #20 leads 18 laps and moves from second to first in an 11-caution Feature.",
+      "paragraphs": [
+        "Chad Puterbaugh kept the Yota Outlawz wins coming at Concord. The #20 started second and led 18 laps on the way to a second straight victory in the series.",
+        "Tom Land moved from fifth to second, with Brent Vanderwood coming from eighth to third. Chris Parrotta gained six places to finish fourth ahead of Brian Angell. Mikey Mixter had the fastest lap in a 40-lap feature with 11 cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89351486": {
+      "headline": "McClain Leads 40 of 45 to Conquer Wide Open Revival at Weedsport",
+      "deck": "A pole-start victory and fastest Feature lap define Round 3 for the #75.",
+      "paragraphs": [
+        "Kent McClain was back on top in Wide Open Revival at Weedsport. The #75 won from pole, led 40 of the 45 laps and set the quickest lap to claim his second win in three rounds.",
+        "Mikey Mixter finished second, Chad Puterbaugh third and Brian Angell fourth. Brent Vanderwood climbed from eighth to complete the top five. The race had five cautions."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89471712": {
+      "headline": "Puterbaugh Extends Bomber Stocks Run with USA International Victory",
+      "deck": "A ten-to-first charge delivers a third consecutive Feature win for the #20.",
+      "paragraphs": [
+        "Three straight Bomber Stocks wins for Chad Puterbaugh. The #20 came from tenth to take Round 4 at USA International, gaining nine places in a caution-free 25-lap feature.",
+        "Wayne Bridges led 14 laps to Puterbaugh’s 11 but finished second. Brian Angell came from eleventh to third, with Brent Vanderwood fourth and Mikey Mixter fifth. Craig Schmidt set the fastest lap."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89473591": {
+      "headline": "Angell Takes Lanier Cushion Kings Win with 36 Laps Led",
+      "deck": "Angell leads 36 laps from pole, with Mixter second and Parrotta third.",
+      "paragraphs": [
+        "Brian Angell broke Kent McClain’s Cushion Kings winning run with victory at Lanier. The #7 started on pole and led 36 of the 40 laps to take Round 4.",
+        "Mikey Mixter finished second with the fastest lap. Chris Parrotta came from seventh to third, ahead of Chad Puterbaugh and Brent Vanderwood. Four cautions interrupted the feature."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89495168": {
+      "headline": "Angell Claims Chili Bowl Mini Menaces Feature in Round 4",
+      "deck": "A 35-lap lead and victory from second on the grid for the #7.",
+      "paragraphs": [
+        "Brian Angell took Mini Menaces Round 4 at the Chili Bowl, winning from second on the grid. The #7 led 35 of the 45 laps, with pole starter Mikey Mixter finishing runner-up.",
+        "Mike Maddog Davis climbed from fifth to third ahead of Mathew Land and Tom Land. Chad Puterbaugh set the fastest lap. Ten cautions broke up the feature."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89496902": {
+      "headline": "Puterbaugh takes Yota Outlawz Round 4 at Limaland",
+      "deck": "The #20 wins from pole as Mixter and Brewer climb onto the podium.",
+      "paragraphs": [
+        "Chad Puterbaugh took Yota Outlawz Round 4 at Limaland, starting on pole and bringing the #20 home first. He also had the fastest lap of the feature.",
+        "Mikey Mixter climbed from seventh to second, while Joey Brewer gained six places to finish third from ninth. Tom Land took fourth ahead of Brian Angell."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89519810": {
+      "headline": "Puterbaugh Climbs from Seventh to Win Volusia Wide Open Revival",
+      "deck": "The #20 comes from seventh to take Round 4 ahead of Angell and Mixter.",
+      "paragraphs": [
+        "Chad Puterbaugh came from seventh to win Wide Open Revival Round 4 at Volusia. The #20 gained six places and set the quickest lap of the feature.",
+        "Brian Angell made up four places to finish second from sixth. Mikey Mixter completed the podium, with Travis Mcdonald fourth and Mike Davis fifth."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89643227": {
+      "headline": "Mcdonald Wins Limaland Bomber Stocks Round 5 as McClain Rises from Rear",
+      "deck": "Mcdonald takes the win as McClain gains eleven places to finish second.",
+      "paragraphs": [
+        "Travis Mcdonald took Bomber Stocks Round 5 at Limaland, bringing the #88 from fifth on the grid to the win.",
+        "Kent McClain made up 11 places to finish second from thirteenth and set the fastest lap. Tye Dalman moved from sixth to third, while Mikey Mixter came from twelfth to fourth. Mike Davis rounded out the top five."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89644712": {
+      "headline": "Mcdonald doubles up with Cushion Kings win at Volusia",
+      "deck": "The #88 adds a second Round 5 victory ahead of McClain and Puterbaugh.",
+      "paragraphs": [
+        "Travis Mcdonald doubled up in Round 5, adding the Cushion Kings win at Volusia to his Bomber Stocks victory. The #88 started second and finished ahead of pole starter Kent McClain.",
+        "Chad Puterbaugh moved from fifth to third and set the fastest lap. Mikey Mixter finished fourth, with Brian Angell completing the top five."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89666377": {
+      "headline": "Mathew Land Leads 22 Laps to Win Langley Yota Outlawz Round 5",
+      "deck": "Land leads 22 laps, with Schmidt coming from ninth to second.",
+      "paragraphs": [
+        "Mathew Land took Yota Outlawz Round 5 at Langley, winning from third in the #091. Land led 22 of the 30 laps to finish ahead of Craig Schmidt.",
+        "Schmidt came from ninth to second and set the fastest lap. Travis Mcdonald started on pole and led eight laps before finishing third, with Tom Land fourth and Brent Vanderwood fifth."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89668025": {
+      "headline": "Tom Land Wins Millbridge Mini Menaces Round 5 from Pole",
+      "deck": "Land takes the win and fastest lap as Fries climbs from tenth to fourth.",
+      "paragraphs": [
+        "Tom Land took the Mini Menaces Round 5 win at Millbridge, starting on pole in the #91 and setting the fastest lap.",
+        "Chad Puterbaugh finished second, while Kent McClain came from eighth to third. Bryce Fries gained six places to finish fourth from tenth, ahead of Mathew Land."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89690728": {
+      "headline": "Hurst Tops Lernerville Wide Open Revival Round 5 Feature",
+      "deck": "Hurst takes the win ahead of Mcdonald, with Puterbaugh gaining eight places for third.",
+      "paragraphs": [
+        "Blake Hurst2 took Wide Open Revival Round 5 at Lernerville, bringing the #15 from third on the grid to the win.",
+        "Travis Mcdonald moved from fifth to second. Chad Puterbaugh came from eleventh to third, gaining eight places to join them on the podium. Kent McClain finished fourth ahead of Mikey Mixter, while Brian Angell set the fastest lap."
+      ],
+      "kicker": "MUD MULES TV RACE REPORT"
+    },
+    "89810317": {
+      "headline": "Puterbaugh comes from eleventh to take Kern Raceway win",
+      "deck": "Ten places gained for the #20, with Jordan Mackie second and Brian Angell charging from thirteenth to third.",
+      "kicker": "MUD MULES TV RACE REPORT",
+      "paragraphs": [
+        "Eleventh on the grid, first at the flag. Chad Puterbaugh gained ten places to win Bomber Stocks Round 6 at Kern Raceway in the #20.",
+        "Jordan Mackie came from seventh to second. Brian Angell matched the winner’s ten-place gain, climbing from thirteenth to third, while Travis Mcdonald took fourth ahead of Chris Parrotta. The 30-lap feature had three cautions."
+      ]
+    },
+    "89812470": {
+      "headline": "McClain wins at Lucas Oil as Mcdonald and Angell charge onto the podium",
+      "deck": "The #75 takes Cushion Kings Round 6, with nine-place gains for both drivers behind him.",
+      "kicker": "MUD MULES TV RACE REPORT",
+      "paragraphs": [
+        "Kent McClain took Cushion Kings Round 6 at Lucas Oil Speedway, starting on pole and bringing the #75 home first in the 50-lap feature.",
+        "Travis Mcdonald gained nine places to finish second from eleventh. Brian Angell did the same from twelfth to third, with Joey Brewer fourth and Mike Davis fifth. Six cautions interrupted the race."
+      ]
+    }
+  }
+};
