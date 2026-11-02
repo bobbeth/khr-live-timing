@@ -17,7 +17,7 @@ const context={window:{scrollTo(){},addEventListener(){}},location:{protocol:'ht
 vm.createContext(context);
 for(const name of ['seed','editorial','stats'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
-vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init};\n})();'),context);
+vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships};\n})();'),context);
 await context.window.tests.init();
 const stats=context.window.tests.driverStats;
 const data=await stats.load();
@@ -81,6 +81,17 @@ for(const series of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlaw
  // Event handlers start an async render; await the same cached-data render explicitly.
  await stats.standings();
  assert.ok(node('app').innerHTML.includes(`<h2>${series}</h2>`));
+}
+context.location.hash='#championships';await context.window.tests.championships();
+for(const [i,series] of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlawz','Wide Open Revival'].entries()){
+ const box=node('championship-leaders-'+i).innerHTML;
+ assert.ok(box.includes('CURRENT TOP 3'));
+ const totals=data.drivers.map(d=>({d,total:d.races.filter(r=>r.entry.series===series).reduce((a,r)=>a+r.points,0)})).sort((a,b)=>b.total-a.total||a.d.name.localeCompare(b.d.name));
+ for(const leader of totals.slice(0,3)){
+  assert.ok(box.includes(leader.d.name));
+  assert.ok(box.includes('<strong>'+leader.total));
+ }
+ assert.ok(box.includes('Provisional'));
 }
 context.location.hash='#drivers';await stats.roster();
 assert.ok(node('driver-grid').innerHTML.includes('Chad Puterbaugh'));
