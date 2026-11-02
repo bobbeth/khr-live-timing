@@ -1,0 +1,102 @@
+name: Mud Mules TV - Auto-index Completed Races
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'news/data/live/events/*.json'
+      - 'news/data/live/meetings/*.json'
+      - 'archive/index.json'
+      - 'news/scripts/rebuild-live-index.mjs'
+      - '.github/workflows/mmtv-auto-publish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mmtv-auto-index
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4name: Mud Mules TV - Auto-index Completed Races
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'news/data/live/events/*.json'
+      - 'news/data/live/meetings/*.json'
+      - 'archive/index.json'
+      - 'news/scripts/rebuild-live-index.mjs'
+      - '.github/workflows/mmtv-auto-publish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mmtv-auto-index
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate and index paired race exports
+        run: node news/scripts/rebuild-live-index.mjs
+      - name: Publish updated race index
+        shell: bash
+        run: |
+          if git diff --quiet -- news/data/live/index.json; then
+            echo 'Index already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add news/data/live/index.json
+          git commit -m 'MMTV: automatically index completed race reports'
+          for attempt in $(seq 1 30); do
+            git pull --rebase origin main || exit 1
+            if git push origin HEAD:main; then exit 0; fi
+            echo "Main branch advanced; retrying publish ($attempt/30)"
+            sleep 4
+          done
+          echo 'Failed to publish index after 30 attempts'
+          exit 1
+
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate and index paired race exports
+        run: node news/scripts/rebuild-live-index.mjs
+      - name: Publish updated race index
+        shell: bash
+        run: |
+          if git diff --quiet -- news/data/live/index.json; then
+            echo 'Index already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add news/data/live/index.json
+          git commit -m 'MMTV: automatically index completed race reports'
+          for attempt in $(seq 1 30); do
+            git pull --rebase origin main || exit 1
+            if git push origin HEAD:main; then exit 0; fi
+            echo "Main branch advanced; retrying publish ($attempt/30)"
+            sleep 4
+          done
+          echo 'Failed to publish index after 30 attempts'
+          exit 1
