@@ -15,7 +15,7 @@ const context={URL,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addE
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
 vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights};\n})();'),context);
 await context.window.tests.init();
