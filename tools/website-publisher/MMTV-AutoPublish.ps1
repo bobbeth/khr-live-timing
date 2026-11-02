@@ -7,6 +7,8 @@ param(
     [switch]$Status,
     [switch]$CheckBroadcasts,
     [switch]$SkipBroadcasts,
+    [switch]$CheckDriverProfiles,
+    [switch]$SkipDriverProfiles,
     [string]$WorkRoot = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast'),
     [string]$StagePath = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Race Archives\Unified\live-staging'),
     [int]$MinStableSeconds = 90,
@@ -14,6 +16,8 @@ param(
     [int]$SeasonYear = 2026
 )
 . (Join-Path $PSScriptRoot 'BroadcastLinks.ps1')
+. (Join-Path $PSScriptRoot 'DriverProfiles.ps1')
+$lookupProfiles = -not $SkipDriverProfiles -and ($CheckDriverProfiles -or $CheckBroadcasts -or ([Environment]::CommandLine -notmatch '(?i)-NonInteractive'))
 $lookupBroadcasts = -not $SkipBroadcasts -and ($CheckBroadcasts -or ([Environment]::CommandLine -notmatch '(?i)-NonInteractive'))
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
@@ -221,13 +225,13 @@ try {
     if(-not $locked){Note '[SKIP] Another publisher instance is running.';return}
     Require ($MinStableSeconds -ge 30) 'MinStableSeconds must be at least 30.'
     Require ($Competition -match '\S') 'Competition name is required.'
-    if(-not (Test-Path -LiteralPath $StagePath -PathType Container) -and -not $lookupBroadcasts){Note '[WAIT] Finished-session staging directory not present yet.';return}
+    if(-not (Test-Path -LiteralPath $StagePath -PathType Container) -and -not ($lookupBroadcasts -or $lookupProfiles)){Note '[WAIT] Finished-session staging directory not present yet.';return}
     $files=@(); if(Test-Path -LiteralPath $StagePath -PathType Container){$files=@(Get-ChildItem -LiteralPath $StagePath -Recurse -File -Filter 'session-*-finished-live.json' -ErrorAction Stop)}
-    if($files.Count -eq 0 -and -not $lookupBroadcasts){Note '[WAIT] No completed-session snapshots staged yet.';return}
+    if($files.Count -eq 0 -and -not ($lookupBroadcasts -or $lookupProfiles)){Note '[WAIT] No completed-session snapshots staged yet.';return}
     $captures=New-Object System.Collections.Generic.List[object]
     foreach($f in $files){$info=SourceInfo $f;if($null -ne $info){$captures.Add($info)}}
     $features=@($captures | Where-Object {($_.kind -eq 'feature' -or $_.kind -eq 'twin_feature_2')} | Group-Object id | ForEach-Object {$_.Group | Sort-Object modified -Descending | Select-Object -First 1} | Sort-Object date)
-    if($features.Count -eq 0 -and -not $lookupBroadcasts){Note "[WAIT] $($captures.Count) identified session captures; no settled, verified KHR Feature yet.";return}
+    if($features.Count -eq 0 -and -not ($lookupBroadcasts -or $lookupProfiles)){Note "[WAIT] $($captures.Count) identified session captures; no settled, verified KHR Feature yet.";return}
     Note "[CHECK] $($features.Count) stable, identified KHR Feature capture(s) found."
     if($Status){foreach($f in $features){Note "[READY] $($f.id) $($f.series) $($f.name) at $($f.date)"};return}
     $gitCmd=Get-Command git.exe -CommandType Application -ErrorAction SilentlyContinue
@@ -332,7 +336,16 @@ try {
             Note "[BROADCASTS] $broadcastCount new subsession link(s); existing mappings retained."
         } catch { Note ('[YOUTUBE SKIP] '+$_.Exception.Message) }
     }
-    if($new.Count -eq 0 -and $broadcastCount -eq 0){Note '[PASS] No new completed races or reliably matched broadcasts to publish.';return}
+    $profileChanged=$false
+    if($lookupProfiles){
+        try{
+            $profileUpdate=Update-MMTVDriverProfiles -RepositoryPath $repo
+            $profileChanged=$profileUpdate.changed
+            if($profileChanged){$allowed.Add('news/data/driver-profiles.json')}
+            Note "[DRIVER PROFILES] $($profileUpdate.available) supplied profiles / $($profileUpdate.identified) verified driver IDs."
+        }catch{Note ('[PROFILE SKIP] '+$_.Exception.Message)}
+    }
+    if($new.Count -eq 0 -and $broadcastCount -eq 0 -and -not $profileChanged){Note '[PASS] No new races, broadcasts or driver profile updates to publish.';return}
     if($new.Count -gt 0){
     $idx.events=@($idx.events)+$new.ToArray()
     $idx.event_count=@($idx.events).Count
@@ -357,7 +370,7 @@ try {
     Note "[PASS] $($new.Count) new completed races; $($changed.Count) allowlisted website files staged; no historical results altered."
     Note "[STAGING] $repo"
     if(-not $Publish){Note '[DRY RUN] No GitHub push. Add -Publish for automatic publication.';return}
-    & $gitExe -C $repo -c user.name='Mud Mules TV Auto Publisher' -c user.email='mmtv-auto-publisher@users.noreply.github.com' commit --quiet -m ("MMTV: publish $($new.Count) race(s), $broadcastCount broadcast link(s)")
+    & $gitExe -C $repo -c user.name='Mud Mules TV Auto Publisher' -c user.email='mmtv-auto-publisher@users.noreply.github.com' commit --quiet -m ("MMTV: publish $($new.Count) race(s), $broadcastCount broadcast link(s), profiles=$profileChanged")
     Require ($LASTEXITCODE -eq 0) 'Git commit failed; no push performed.'
     & $gitExe -C $repo push origin HEAD:main
     Require ($LASTEXITCODE -eq 0) 'GitHub push failed; canonical archive remains unchanged. Run the publisher again to retry.'

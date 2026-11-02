@@ -10,7 +10,7 @@ const node=id=>{
  if(!elements.has(id))elements.set(id,{innerHTML:'',value:'',textContent:'',addEventListener(){},querySelectorAll(){return [];}});
  return elements.get(id);
 };
-const context={window:{scrollTo(){},addEventListener(){}},location:{protocol:'https:',hash:'#home'},document:{getElementById:node,querySelectorAll(){return [];},addEventListener(){}},navigator:{},console,fetch:async url=>{
+const context={URL,window:{scrollTo(){},addEventListener(){}},location:{protocol:'https:',hash:'#home'},document:{getElementById:node,querySelectorAll(){return [];},addEventListener(){}},navigator:{},console,fetch:async url=>{
  try {const rel=url.startsWith('../')?url.slice(3):'news/'+url;return {ok:true,json:async()=>JSON.parse(await read(rel))};}
  catch{return {ok:false};}
 }};
@@ -56,6 +56,15 @@ for(const [name,variants] of [['Mike Maddog Davis',['Mike Davis','Mike Maddog Da
  assert.equal(driver.races.length,expectedRaces.size);
  assert.equal(new Set(driver.races.map(r=>r.entry.subsession_id)).size,driver.races.length);
 }
+const profileFile=JSON.parse(await read('news/data/driver-profiles.json'));
+assert.equal(data.drivers.find(d=>d.name==='Mike Maddog Davis').iracing_id,536465);
+assert.ok(data.drivers.find(d=>d.name==='Kent McClain').profile.bio);
+assert.equal(stats.safeProfileUrl('javascript:alert(1)'), '');
+assert.equal(stats.safeProfileUrl('data:text/html,bad'), '');
+assert.equal(stats.safeProfileUrl('/images/example'),'https://profiles.sdk-gaming.co.uk/images/example');
+const escapedProfile=stats.profileDetails({name:'Example',profile:{bio:'<script>alert(1)</script>',website:'javascript:bad',pictureUrl:'javascript:bad'}});
+assert.ok(escapedProfile.includes('&lt;script&gt;'));assert.ok(!escapedProfile.includes('href="javascript:'));
+for(const d of data.drivers){if(!d.profile)continue;const fragment=stats.profileDetails(d);for(const field of ['country','hometown','team','header','info','bio','latestNews']){if(d.profile[field])assert.ok(fragment.includes(String(d.profile[field]).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))));}}
 const chad=data.drivers.find(d=>d.id===stats.key('Chad Puterbaugh'));
 const r6=chad.races.find(r=>r.entry.subsession_id===89810317);
 assert.equal(r6.finish,1);
