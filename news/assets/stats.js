@@ -79,7 +79,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
  const starts=races=>races.filter(r=>r.feature);
  function metrics(races){const f=starts(races);return {starts:f.length,wins:f.filter(r=>Number(r.finish)===1).length,podiums:f.filter(r=>Number(r.finish)<=3).length,top5:f.filter(r=>Number(r.finish)<=5).length,average:f.length?(f.reduce((a,r)=>a+Number(r.finish),0)/f.length).toFixed(1):'—',laps:f.filter(r=>valid(r.laps)).reduce((a,r)=>a+Number(r.laps),0)};}
  function safeProfileUrl(value,base=''){
-  const raw=String(value||'').trim();if(!raw||(!/^https?:\/\//i.test(raw)&&/\s/.test(raw)))return ''; 
+  const raw=String(value||'').trim();if(!raw||(!/^https?:\/\//i.test(raw)&&/\s/.test(raw)))return '';
   try{const url=new URL(/^https?:\/\//i.test(raw)?raw:raw.startsWith('/')?new URL(raw,'https://profiles.sdk-gaming.co.uk').href:raw.includes(':')?'':base?base+raw:'https://'+raw);return ['http:','https:'].includes(url.protocol)?url.href:'';}catch{return '';}
  }
  function profileDetails(d){
