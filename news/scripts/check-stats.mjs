@@ -15,7 +15,7 @@ const context={URL,window:{scrollTo(){},addEventListener(){}},location:{protocol
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','progression','stats'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['seed','editorial','progression','stats','broadcasts'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
 vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships};\n})();'),context);
 await context.window.tests.init();
