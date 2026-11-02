@@ -41,7 +41,7 @@ for (const filename of readdirSync(eventsDir).filter(x => /^\d{7,12}\.json$/.tes
     const wins = event.feature_results.filter(r => Number(r.finish_position) === 1);
     if (wins.length !== 1 || !safeText(wins[0].driver) || !safeText(String(wins[0].car_number ?? '')))
       throw Error('unambiguous Feature winner missing');
-    const features = (meeting.sessions||[]).filter(s => s.available && s.kind === 'feature' && Array.isArray(s.classification));
+    const features = (meeting.sessions||[]).filter(s => s.available && (s.kind === 'feature' || (event.series === 'Bomber Stocks' && s.kind === 'twin_feature_2')) && Array.isArray(s.classification));
     if (!features.length) throw Error('completed Feature meeting session missing');
     const finalFeature = features.at(-1);
     const meetingWins = finalFeature.classification.filter(r => Number(r.position) === 1);
