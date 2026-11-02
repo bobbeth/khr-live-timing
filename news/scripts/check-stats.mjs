@@ -15,11 +15,12 @@ const context={URL,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addE
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
-vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships};\n})();'),context);
+vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights};\n})();'),context);
 await context.window.tests.init();
 const stats=context.window.tests.driverStats;
+const insights=context.window.tests.raceInsights;
 const data=await stats.load();
 assert.equal(data.failures.length,0);
 assert.ok(data.drivers.length>20);
@@ -69,6 +70,14 @@ for(const series of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlaw
  const progression=context.window.MMTVProgression.build(data,'Fall Fest 2026',series,e=>e.competition||'Fall Fest 2026');
  for(const driver of progression.drivers){const original=data.drivers.find(d=>d.id===driver.id);const total=original.races.filter(r=>r.entry.series===series).reduce((sum,r)=>sum+r.points,0);assert.equal(driver.history.at(-1).points,total);}
 }
+for(const series of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlawz','Wide Open Revival']){
+ const book=insights.records(data,'Fall Fest 2026',series);
+ const expectedWins=data.drivers.flatMap(d=>d.races).filter(r=>r.entry.series===series&&r.feature&&Number(r.finish)===1).length;
+ assert.equal(book.drivers.reduce((sum,d)=>sum+d.wins,0),expectedWins);
+ assert.equal(book.tracks.flatMap(([,wins])=>wins).length,expectedWins);
+}
+context.location.hash='#compare';await insights.comparison();assert.ok(node('app').innerHTML.includes('THE SHARED RACES'));
+context.location.hash='#records';await insights.seasonRecords();assert.ok(node('app').innerHTML.includes('TRACK WINNERS'));
 const chad=data.drivers.find(d=>d.id===stats.key('Chad Puterbaugh'));
 const r6=chad.races.find(r=>r.entry.subsession_id===89810317);
 assert.equal(r6.finish,1);

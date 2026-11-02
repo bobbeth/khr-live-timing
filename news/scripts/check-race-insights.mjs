@@ -1,0 +1,43 @@
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const nodes=new Map();const node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:''});return nodes.get(id);};
+const context={window:{},location:{hash:'#compare'},document:{getElementById:node}};
+vm.createContext(context);vm.runInContext(await fs.readFile(new URL('../assets/race-insights.js',import.meta.url),'utf8'),context);
+const entry=(id,round=1,series='Example',season='2026')=>({subsession_id:id,round,series,season,event_date:'2026-10-'+String(round).padStart(2,'0'),track:'Track '+round});
+const race=(e,finish,start=null,gain=null,feature=true,led=null)=>({entry:e,finish,start,gain,feature,led});
+const a={id:'a',name:'Alpha',races:[race(entry(1),1,4,3,true,4),race(entry(2,2),3,null,null),race(entry(3,3),1,1,0),race(entry(4,4),9,2,-7),race(entry(5,5),2,1,-1,false)]};
+const b={id:'b',name:'Bravo',races:[race(entry(1),2,1,-1,true,6),race(entry(2,2),1,2,1),race(entry(9,3),2,2,0),race(entry(5,5),1,1,0)]};
+const c={id:'c',name:'Charlie',races:[race(entry(10),5,5,0,false)]};
+const data={drivers:[a,b,c],failures:[],meetings:[
+ {entry:entry(1),event:{feature_results:[{driver:'Alpha',best_lap_seconds:12},{driver:'Bravo',best_lap_seconds:11}]},meeting:{sessions:[{simsession_number:1,kind:'heat',available:true,classification:[{driver:'Alpha',position:1},{driver:'Bravo',position:2},{driver:'Bravo',position:2}]},{simsession_number:1,kind:'heat',available:true,classification:[{driver:'Alpha',position:1}]},{simsession_number:2,kind:'twin_feature_1',available:true,classification:[{driver:'Bravo',position:1}]}]}},
+ {entry:entry(2,2),event:{feature_results:[{driver:'Alpha',best_lap_seconds:10},{driver:'Bravo',best_lap_seconds:10}]},meeting:{sessions:[{simsession_number:2,kind:'heat',available:true,classification:[{driver:'Charlie',position:1}]}]}}
+]};
+const settings={app:node('app'),entries:()=>a.races.map(r=>r.entry),seasonName:e=>e.season,esc:String,driverStats:{key:n=>n.toLowerCase()==='alpha'?'a':n.toLowerCase()==='bravo'?'b':'c',load:async()=>data}};
+const insights=context.window.createMMTVRaceInsights(settings);
+const pair=insights.compare(a,b,'2026','Example');
+assert.equal(pair.shared.length,2,'Use exact subsession IDs, not matching round numbers');
+assert.equal(pair.aheadA,1);assert.equal(pair.aheadB,1);assert.equal(pair.ties,0);
+assert.equal(pair.sharedA.starts,2);assert.equal(pair.a.starts,4,'DNS/non-feature entry excluded');
+assert.equal(pair.a.wins,2);assert.equal(pair.a.average,3.5);assert.equal(pair.a.startCoverage,3);assert.equal(pair.a.gainCoverage,3);assert.equal(pair.a.gained,-4);
+assert.equal(insights.compare(a,b,'2025','Example').shared.length,0);
+assert.equal(insights.compare(a,b,'2026','Other').shared.length,0);
+assert.equal(insights.compare(a,a,'2026','Example').ties,4);
+assert.equal(insights.summary([]).average,null);assert.equal(insights.summary([]).best,null);
+const book=insights.records(data,'2026','Example');
+const alpha=book.drivers.find(d=>d.d.id==='a'),bravo=book.drivers.find(d=>d.d.id==='b');
+assert.equal(alpha.heats,1,'Duplicate session must not add another heat win');assert.equal(bravo.heatStarts,1,'Duplicate driver row must not add another heat start');
+assert.equal(book.drivers.find(d=>d.d.id==='c').heats,1,'Heat winner without a final start still counts');
+assert.equal(alpha.fastest,1);assert.equal(bravo.fastest,2,'Tied quickest laps count for both drivers');
+assert.equal(alpha.lapLed,4);assert.equal(alpha.ledCoverage,1,'Unknown laps led must remain missing');
+assert.equal(book.movers[0].gain,3);assert.equal(book.tracks.length,4);
+await insights.comparison();assert.ok(node('app').innerHTML.includes('SHARED FEATURES'));
+assert.ok(!node('app').innerHTML.includes('CHAMPIONSHIP POINTS'));
+node('compare-scope').onchange({target:{value:'all'}});await insights.comparison();assert.ok(node('app').innerHTML.includes('all selected appearances'));
+context.location.hash='#records';await insights.seasonRecords();
+for(const label of ['MOST FEATURE WINS','MOST PODIUMS','MOST HEAT WINS','BIGGEST FEATURE CLIMBS','TRACK WINNERS'])assert.ok(node('app').innerHTML.includes(label));
+assert.ok(node('app').innerHTML.includes('Minimum three final-feature starts'));
+assert.ok(node('app').innerHTML.includes('laps led known in 1/4'));
+assert.ok(node('app').innerHTML.includes('Charlie'));
+assert.ok(node('app').innerHTML.includes('#race/1'));
+console.log('PASS: shared subsessions, DNS exclusion, season/series filters, averages and coverage, ties, heat deduplication, preliminary-only winners, quickest laps, missing laps led and screen rendering.');
