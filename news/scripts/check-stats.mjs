@@ -7,7 +7,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const read=rel=>fs.readFile(path.join(root,rel),'utf8');
 const elements=new Map();
 const node=id=>{
- if(!elements.has(id))elements.set(id,{innerHTML:'',value:'',textContent:'',addEventListener(){},querySelectorAll(){return [];}});
+ if(!elements.has(id))elements.set(id,{innerHTML:'',value:'',textContent:'',addEventListener(){},querySelector(selector){return node(id+' '+selector);},querySelectorAll(){return [];}});
  return elements.get(id);
 };
 const context={URL,window:{scrollTo(){},addEventListener(){}},location:{protocol:'https:',hash:'#home'},document:{getElementById:node,querySelectorAll(){return [];},addEventListener(){}},navigator:{},console,fetch:async url=>{
@@ -15,7 +15,7 @@ const context={URL,window:{scrollTo(){},addEventListener(){}},location:{protocol
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','stats'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['seed','editorial','progression','stats'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
 vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships};\n})();'),context);
 await context.window.tests.init();
@@ -65,6 +65,10 @@ assert.equal(stats.safeProfileUrl('/images/example'),'https://profiles.sdk-gamin
 const escapedProfile=stats.profileDetails({name:'Example',profile:{bio:'<script>alert(1)</script>',website:'javascript:bad',pictureUrl:'javascript:bad'}});
 assert.ok(escapedProfile.includes('&lt;script&gt;'));assert.ok(!escapedProfile.includes('href="javascript:'));
 for(const d of data.drivers){if(!d.profile)continue;const fragment=stats.profileDetails(d);for(const field of ['country','hometown','team','header','info','bio','latestNews']){if(d.profile[field])assert.ok(fragment.includes(String(d.profile[field]).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))));}}
+for(const series of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlawz','Wide Open Revival']){
+ const progression=context.window.MMTVProgression.build(data,'Fall Fest 2026',series,e=>e.competition||'Fall Fest 2026');
+ for(const driver of progression.drivers){const original=data.drivers.find(d=>d.id===driver.id);const total=original.races.filter(r=>r.entry.series===series).reduce((sum,r)=>sum+r.points,0);assert.equal(driver.history.at(-1).points,total);}
+}
 const chad=data.drivers.find(d=>d.id===stats.key('Chad Puterbaugh'));
 const r6=chad.races.find(r=>r.entry.subsession_id===89810317);
 assert.equal(r6.finish,1);
