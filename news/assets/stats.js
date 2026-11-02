@@ -1,9 +1,12 @@
 /* Season statistics use published results only. Null points are never zero-filled. */
 window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEvent,getMeeting}) {
- const aliases={'travis mcdonald':'travis mcdonald2','tina davis':'tina davis3'};
+ // Explicit identity matches; Davis and Butler variants confirmed by the owner.
+ const aliases={'travis mcdonald':'travis mcdonald2','tina davis':'tina davis3','mike davis':'mike maddog davis','michael butler14':'michael butler','mike butler':'michael butler'};
  const key=name=>{const n=String(name||'').trim().toLowerCase().replace(/\s+/g,' ');return aliases[n]||n;};
+ const preferredNames={'mike maddog davis':'Mike Maddog Davis','michael butler':'Michael Butler'};
+ const friendlyName=name=>preferredNames[key(name)]||displayName(name);
  const slug=name=>encodeURIComponent(key(name));
- const driverLink=name=>`<a class="driver-link" href="#driver/${slug(name)}">${esc(displayName(name))}</a>`;
+ const driverLink=name=>`<a class="driver-link" href="#driver/${slug(name)}">${esc(friendlyName(name))}</a>`;
  const valid=n=>n!==null&&n!==undefined&&n!==''&&Number.isFinite(Number(n));
  const scoringKinds=['qualifying','heat','consolation','twin_feature_1','twin_feature_2','feature'];
  function points(series,kind,p){
@@ -36,7 +39,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
     const touch=name=>{
      if(!name)return null;
      const id=key(name);
-     if(!drivers.has(id))drivers.set(id,{id,name:displayName(name),names:new Set(),numbers:new Set(),races:[]});
+     if(!drivers.has(id))drivers.set(id,{id,name:friendlyName(name),names:new Set(),numbers:new Set(),races:[]});
      const d=drivers.get(id);d.names.add(name);
      if(!participation.has(id))participation.set(id,{entry,finish:null,start:null,laps:null,led:null,gain:null,points:0,scored:0,estimated:0,breakdown:[],feature:false});
      return {d,r:participation.get(id)};

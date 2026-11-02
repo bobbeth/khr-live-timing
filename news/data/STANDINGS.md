@@ -22,3 +22,5 @@ Wins, podiums, starts and average finish use the final feature only. They exclud
 Names use whitespace/case normalization and a small explicit alias list in `assets/stats.js`. Numeric iRacing suffixes are not stripped globally. Confirm ambiguous identities before adding an alias, then rerun the checks. No personal biographies, photos, nationality or teams are invented.
 
 Run `node news/scripts/check-stats.mjs` from the repository root to verify scoring boundaries, saved points, aliases, all profiles and races, search, links and fetch failures.
+
+Owner-confirmed identity matches: Mike Davis = Mike Maddog Davis; Michael Butler = Michael Butler14 = mike butler. These names share points, stats and race histories. Profile display names are Mike Maddog Davis and Michael Butler; source result names remain intact.

@@ -39,6 +39,23 @@ assert.equal(stats.points('Cushion Kings','consolation',1),11);
 assert.equal(stats.points('Cushion Kings','feature',1),43);
 assert.equal(stats.points('Cushion Kings','feature',0),null);
 assert.equal(stats.key('Travis Mcdonald'),stats.key('Travis Mcdonald2'));
+assert.equal(stats.key('Mike Davis'),stats.key('Mike Maddog Davis'));
+assert.equal(stats.key('Michael Butler14'),stats.key('Michael Butler'));
+assert.equal(stats.key('mike butler'),stats.key('Michael Butler'));
+for(const [name,variants] of [['Mike Maddog Davis',['Mike Davis','Mike Maddog Davis']],['Michael Butler',['Michael Butler','Michael Butler14','mike butler']]]){
+ const driver=data.drivers.find(d=>d.name===name);
+ assert.ok(driver);
+ for(const variant of variants)assert.ok(driver.names.has(variant));
+ assert.equal(data.drivers.filter(d=>variants.some(v=>stats.key(v)===d.id)).length,1);
+ const expectedRaces=new Set();
+ for(const e of [...JSON.parse(await read('archive/index.json')).events,...JSON.parse(await read('news/data/live/index.json')).events]){
+  if(expectedRaces.has(e.subsession_id))continue;
+  const m=await read(`news/data/live/meetings/${e.subsession_id}.json`).catch(()=>read(`news/data/meetings/${e.subsession_id}.json`));
+  if(JSON.parse(m).sessions.some(s=>(s.classification||[]).some(r=>variants.includes(r.driver))))expectedRaces.add(e.subsession_id);
+ }
+ assert.equal(driver.races.length,expectedRaces.size);
+ assert.equal(new Set(driver.races.map(r=>r.entry.subsession_id)).size,driver.races.length);
+}
 const chad=data.drivers.find(d=>d.id===stats.key('Chad Puterbaugh'));
 const r6=chad.races.find(r=>r.entry.subsession_id===89810317);
 assert.equal(r6.finish,1);
