@@ -1,0 +1,557 @@
+{
+  "schema_version": "MMTV-broadcast-audit-v1",
+  "checked_at": "2026-11-02T23:02:29.556Z",
+  "scope": "Previously schedule-inferred Round 1–5 mappings. Metadata and selected footage checks; not a complete watch-through or race-start bookmark audit.",
+  "videos": {
+    "m1ujm3C8Bp4": {
+      "source_url": "https://www.youtube.com/watch?v=m1ujm3C8Bp4",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1790552101,
+      "broadcast_date_hobart": "2026-09-28",
+      "duration": 10380,
+      "description_excerpt": "Davis Property Management Bomber Stocks Presented by Motowear International\nStreet Stock - Casino M2s at Oswego Speedway\n\n&\n\nKP Plumbing Services Presents The Cushion Kings Tour\nDirt UMP Modifieds at Eldora Speedway"
+    },
+    "2BZVa09TltA": {
+      "source_url": "https://www.youtube.com/watch?v=2BZVa09TltA",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1790638571,
+      "broadcast_date_hobart": "2026-09-29",
+      "duration": 9349,
+      "description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon Winged Outlaw Micro Sprints at Millbridge Speedway\n\n&\n\nYOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nAsphalt Mini Stocks at South Boston Speedway"
+    },
+    "MOX_cOwBYNQ": {
+      "source_url": "https://www.youtube.com/watch?v=MOX_cOwBYNQ",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1790725418,
+      "broadcast_date_hobart": "2026-09-30",
+      "duration": 6268,
+      "description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Lucas Oil Speedway"
+    },
+    "09oZlGRE2vI": {
+      "source_url": "https://www.youtube.com/watch?v=09oZlGRE2vI",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1791156827,
+      "broadcast_date_hobart": "2026-10-05",
+      "duration": 11278,
+      "description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at Fairbury Speedway\n\n&\n\nKP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at Limaland Motorsports Park"
+    },
+    "8ubfIiFCj7U": {
+      "source_url": "https://www.youtube.com/watch?v=8ubfIiFCj7U",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1791242978,
+      "broadcast_date_hobart": "2026-10-06",
+      "duration": 9980,
+      "description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nWinged Outlaw Micro Sprints at Limaland Motorsports Park\n\n&\n\nYOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nDirt Legends at Lanier National Speeday - Dirt"
+    },
+    "gLNcg3o9RYQ": {
+      "source_url": "https://www.youtube.com/watch?v=gLNcg3o9RYQ",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1791330437,
+      "broadcast_date_hobart": "2026-10-07",
+      "duration": 7570,
+      "description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Port Royal Speedway"
+    },
+    "47q3yLk0B3w": {
+      "source_url": "https://www.youtube.com/watch?v=47q3yLk0B3w",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1791761273,
+      "broadcast_date_hobart": "2026-10-12",
+      "duration": 12743,
+      "description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at Huset's Speedway\n\n&\n\nKP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at The Dirt Track at Charlotte"
+    },
+    "Z35Zptq1B88": {
+      "source_url": "https://www.youtube.com/watch?v=Z35Zptq1B88",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1791847958,
+      "broadcast_date_hobart": "2026-10-13",
+      "duration": 12135,
+      "description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon-Winged Outlaw Micro Sprints at Lanier National Speedway\n\n&\n\nYOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nLegends Ford '34 Coupe at Concord Speedway - Asphalt"
+    },
+    "u6GqXjKyskc": {
+      "source_url": "https://www.youtube.com/watch?v=u6GqXjKyskc",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1791935211,
+      "broadcast_date_hobart": "2026-10-14",
+      "duration": 7333,
+      "description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Weedsport Speedway"
+    },
+    "luCDUCzX3ws": {
+      "source_url": "https://www.youtube.com/watch?v=luCDUCzX3ws",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1792366456,
+      "broadcast_date_hobart": "2026-10-19",
+      "duration": 9539,
+      "description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at USA International Speedway\n\n&\n\nKP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at Lanier National Speedway"
+    },
+    "fccuZBjKa2g": {
+      "source_url": "https://www.youtube.com/watch?v=fccuZBjKa2g",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1792452665,
+      "broadcast_date_hobart": "2026-10-20",
+      "duration": 10037,
+      "description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon-Winged Outlaw Micro Sprints at The Chili Bowl\n\n&\n\nYOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nDirt Mini Stocks at Limaland Motorsports Park"
+    },
+    "FPb8AQdoQsU": {
+      "source_url": "https://www.youtube.com/watch?v=FPb8AQdoQsU",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1792539894,
+      "broadcast_date_hobart": "2026-10-21",
+      "duration": 7377,
+      "description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Weedsport Speedway"
+    },
+    "s9P7d2nEnaI": {
+      "source_url": "https://www.youtube.com/watch?v=s9P7d2nEnaI",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1792971010,
+      "broadcast_date_hobart": "2026-10-26",
+      "duration": 11379,
+      "description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at Limaland Motorsports Park\n\n&\n\nKP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at Volusia Speedway Park"
+    },
+    "opn8pRjNeBo": {
+      "source_url": "https://www.youtube.com/watch?v=opn8pRjNeBo",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1793057380,
+      "broadcast_date_hobart": "2026-10-27",
+      "duration": 8555,
+      "description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon-Winged Outlaw Micro Sprints at Kevin Harvick's Kern Raceway\n\n&\n\nYOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nAsphalt Mini Stocks at Langley Speedway"
+    },
+    "OB8UBfH64FM": {
+      "source_url": "https://www.youtube.com/watch?v=OB8UBfH64FM",
+      "title": "Knuckleheadz iRacing League: Fall Fest 2026",
+      "channel_id": "UCdp4gP29AQWrMdoubvgekyA",
+      "live_status": "was_live",
+      "release_timestamp": 1793144840,
+      "broadcast_date_hobart": "2026-10-28",
+      "duration": 6962,
+      "description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Lernerville Speedway"
+    }
+  },
+  "events": {
+    "88961208": {
+      "video_id": "m1ujm3C8Bp4",
+      "series": "Bomber Stocks",
+      "round": 1,
+      "track": "Oswego Speedway",
+      "report_date": "2026-09-27",
+      "broadcast_date_hobart": "2026-09-28",
+      "series_description_excerpt": "Davis Property Management Bomber Stocks Presented by Motowear International\nStreet Stock - Casino M2s at Oswego Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 1 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "88962942": {
+      "video_id": "m1ujm3C8Bp4",
+      "series": "Cushion Kings",
+      "round": 1,
+      "track": "Eldora Speedway",
+      "report_date": "2026-09-28",
+      "broadcast_date_hobart": "2026-09-28",
+      "series_description_excerpt": "KP Plumbing Services Presents The Cushion Kings Tour\nDirt UMP Modifieds at Eldora Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 1 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "88985308": {
+      "video_id": "2BZVa09TltA",
+      "series": "Mini Menaces",
+      "round": 1,
+      "track": "Millbridge Speedway",
+      "report_date": "2026-09-28",
+      "broadcast_date_hobart": "2026-09-29",
+      "series_description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon Winged Outlaw Micro Sprints at Millbridge Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 1 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "88987054": {
+      "video_id": "2BZVa09TltA",
+      "series": "Yota Outlawz",
+      "round": 1,
+      "track": "South Boston Speedway",
+      "report_date": "2026-09-29",
+      "broadcast_date_hobart": "2026-09-29",
+      "series_description_excerpt": "YOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nAsphalt Mini Stocks at South Boston Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 1 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89009401": {
+      "video_id": "MOX_cOwBYNQ",
+      "series": "Wide Open Revival",
+      "round": 1,
+      "track": "Lucas Oil Speedway",
+      "report_date": "2026-09-29",
+      "broadcast_date_hobart": "2026-09-30",
+      "series_description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Lucas Oil Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 1 — Wide Open Revival"
+      }
+    },
+    "89130026": {
+      "video_id": "09oZlGRE2vI",
+      "series": "Bomber Stocks",
+      "round": 2,
+      "track": "Fairbury Speedway",
+      "report_date": "2026-10-04",
+      "broadcast_date_hobart": "2026-10-05",
+      "series_description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at Fairbury Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 2 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89131794": {
+      "video_id": "09oZlGRE2vI",
+      "series": "Cushion Kings",
+      "round": 2,
+      "track": "Limaland Motorsports Park",
+      "report_date": "2026-10-05",
+      "broadcast_date_hobart": "2026-10-05",
+      "series_description_excerpt": "KP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at Limaland Motorsports Park",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 2 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89153778": {
+      "video_id": "8ubfIiFCj7U",
+      "series": "Mini Menaces",
+      "round": 2,
+      "track": "Limaland Motorsports Park",
+      "report_date": "2026-10-05",
+      "broadcast_date_hobart": "2026-10-06",
+      "series_description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nWinged Outlaw Micro Sprints at Limaland Motorsports Park",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 2 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89155471": {
+      "video_id": "8ubfIiFCj7U",
+      "series": "Yota Outlawz",
+      "round": 2,
+      "track": "Lanier National Speedway",
+      "report_date": "2026-10-06",
+      "broadcast_date_hobart": "2026-10-06",
+      "series_description_excerpt": "YOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nDirt Legends at Lanier National Speeday - Dirt",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 2 — Mini Menaces / Yota Outlawz"
+      },
+      "source_spelling_note": "Source description spells Lanier National Speedway as Lanier National Speeday."
+    },
+    "89178640": {
+      "video_id": "gLNcg3o9RYQ",
+      "series": "Wide Open Revival",
+      "round": 2,
+      "track": "Port Royal Speedway",
+      "report_date": "2026-10-06",
+      "broadcast_date_hobart": "2026-10-07",
+      "series_description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Port Royal Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 2 — Wide Open Revival"
+      }
+    },
+    "89302439": {
+      "video_id": "47q3yLk0B3w",
+      "series": "Bomber Stocks",
+      "round": 3,
+      "track": "Huset's Speedway",
+      "report_date": "2026-10-11",
+      "broadcast_date_hobart": "2026-10-12",
+      "series_description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at Huset's Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 3 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89303933": {
+      "video_id": "47q3yLk0B3w",
+      "series": "Cushion Kings",
+      "round": 3,
+      "track": "The Dirt Track at Charlotte",
+      "report_date": "2026-10-12",
+      "broadcast_date_hobart": "2026-10-12",
+      "series_description_excerpt": "KP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at The Dirt Track at Charlotte",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 3 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89327096": {
+      "video_id": "Z35Zptq1B88",
+      "series": "Mini Menaces",
+      "round": 3,
+      "track": "Lanier National Speedway",
+      "report_date": "2026-10-12",
+      "broadcast_date_hobart": "2026-10-13",
+      "series_description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon-Winged Outlaw Micro Sprints at Lanier National Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 3 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89328837": {
+      "video_id": "Z35Zptq1B88",
+      "series": "Yota Outlawz",
+      "round": 3,
+      "track": "Concord Speedway",
+      "report_date": "2026-10-13",
+      "broadcast_date_hobart": "2026-10-13",
+      "series_description_excerpt": "YOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nLegends Ford '34 Coupe at Concord Speedway - Asphalt",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 3 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89351486": {
+      "video_id": "u6GqXjKyskc",
+      "series": "Wide Open Revival",
+      "round": 3,
+      "track": "Weedsport Speedway",
+      "report_date": "2026-10-13",
+      "broadcast_date_hobart": "2026-10-14",
+      "series_description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Weedsport Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 3 — Wide Open Revival"
+      }
+    },
+    "89471712": {
+      "video_id": "luCDUCzX3ws",
+      "series": "Bomber Stocks",
+      "round": 4,
+      "track": "USA International Speedway",
+      "report_date": "2026-10-19",
+      "broadcast_date_hobart": "2026-10-19",
+      "series_description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at USA International Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 4 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89473591": {
+      "video_id": "luCDUCzX3ws",
+      "series": "Cushion Kings",
+      "round": 4,
+      "track": "Lanier National Speedway",
+      "report_date": "2026-10-19",
+      "broadcast_date_hobart": "2026-10-19",
+      "series_description_excerpt": "KP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at Lanier National Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 4 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89495168": {
+      "video_id": "fccuZBjKa2g",
+      "series": "Mini Menaces",
+      "round": 4,
+      "track": "Chili Bowl",
+      "report_date": "2026-10-20",
+      "broadcast_date_hobart": "2026-10-20",
+      "series_description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon-Winged Outlaw Micro Sprints at The Chili Bowl",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 4 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89496902": {
+      "video_id": "fccuZBjKa2g",
+      "series": "Yota Outlawz",
+      "round": 4,
+      "track": "Limaland Motorsports Park",
+      "report_date": "2026-10-20",
+      "broadcast_date_hobart": "2026-10-20",
+      "series_description_excerpt": "YOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nDirt Mini Stocks at Limaland Motorsports Park",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 4 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89519810": {
+      "video_id": "FPb8AQdoQsU",
+      "series": "Wide Open Revival",
+      "round": 4,
+      "track": "Volusia Speedway Park",
+      "report_date": "2026-10-21",
+      "broadcast_date_hobart": "2026-10-21",
+      "series_description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Weedsport Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 4 — Wide Open Revival"
+      },
+      "footage_observation": {
+        "observed_at_seconds": 5903,
+        "track": "Volusia Speedway Park",
+        "series": "Wide Open Revival",
+        "podium": [
+          "Chad Puterbaugh",
+          "Brian Angell",
+          "Mikey Mixter"
+        ],
+        "description_conflict": "Description lists Weedsport Speedway; the on-screen feature results say Volusia Speedway Park and match this subsession."
+      }
+    },
+    "89643227": {
+      "video_id": "s9P7d2nEnaI",
+      "series": "Bomber Stocks",
+      "round": 5,
+      "track": "Limaland Motorsports Park",
+      "report_date": "2026-10-26",
+      "broadcast_date_hobart": "2026-10-26",
+      "series_description_excerpt": "DAVIS PROPERTY MANAGEMENT PRESENTS BOMBER STOCKS PRESENTED BY MOTOWEAR INTERNATIONAL\nDirt Micro Street Stocks at Limaland Motorsports Park",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 5 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89644712": {
+      "video_id": "s9P7d2nEnaI",
+      "series": "Cushion Kings",
+      "round": 5,
+      "track": "Volusia Speedway Park",
+      "report_date": "2026-10-26",
+      "broadcast_date_hobart": "2026-10-26",
+      "series_description_excerpt": "KP PLUMBING SERVICES PRESENTS THE CUSHION KING TOUR\nDirt UMP Modifieds at Volusia Speedway Park",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 5 — Bomber Stocks / Cushion Kings"
+      }
+    },
+    "89666377": {
+      "video_id": "opn8pRjNeBo",
+      "series": "Yota Outlawz",
+      "round": 5,
+      "track": "Langley Speedway",
+      "report_date": "2026-10-27",
+      "broadcast_date_hobart": "2026-10-27",
+      "series_description_excerpt": "YOTA OUTLAWZ PRESENTS DIRT CHEAP - ASPHALT FAST\nAsphalt Mini Stocks at Langley Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 5 — Mini Menaces / Yota Outlawz"
+      }
+    },
+    "89668025": {
+      "video_id": "opn8pRjNeBo",
+      "series": "Mini Menaces",
+      "round": 5,
+      "track": "Millbridge Speedway",
+      "report_date": "2026-10-27",
+      "broadcast_date_hobart": "2026-10-27",
+      "series_description_excerpt": "BOTTOM FEEDER SPEED COMPANY PRESENTS 600cc MINI MENACES\nNon-Winged Outlaw Micro Sprints at Kevin Harvick's Kern Raceway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 5 — Mini Menaces / Yota Outlawz"
+      },
+      "footage_observation": {
+        "observed_at_seconds": 6843,
+        "track": "Millbridge Speedway",
+        "series": "Mini Menaces",
+        "podium": [
+          "Tom Land",
+          "Chad Puterbaugh",
+          "Kent McClain"
+        ],
+        "description_conflict": "Description lists Kevin Harvick’s Kern Raceway; the on-screen feature results say Millbridge Speedway and match this subsession."
+      }
+    },
+    "89690728": {
+      "video_id": "OB8UBfH64FM",
+      "series": "Wide Open Revival",
+      "round": 5,
+      "track": "The Lernerville Speedway",
+      "report_date": "2026-10-28",
+      "broadcast_date_hobart": "2026-10-28",
+      "series_description_excerpt": "BAPTIST BULLET CHEATER ENGINES PRESENTS THE WIDE OPEN REVIVAL TOUR\nDirt Pro Late Models at Lernerville Speedway",
+      "date_basis": "Broadcast release in Australia/Hobart matches the configured championship and round date. Archived report dates retain their original UTC/local conventions.",
+      "previous_mapping": {
+        "match_status": "schedule_inferred",
+        "match_method": "user_weekly_broadcast_pattern_plus_youtube_stream_list_order",
+        "title": "KHR Fall Fest 2026 — Round 5 — Wide Open Revival"
+      }
+    }
+  }
+}

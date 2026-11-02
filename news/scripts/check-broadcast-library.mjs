@@ -20,7 +20,8 @@ assert.equal(videos.length,new Set(validMappings.map(e=>index.events[e.subsessio
 assert.equal(videos.flatMap(v=>v.races).length,validMappings.length);
 assert.equal(lib.build(index,[...entries,...entries]).length,videos.length);
 assert.equal(videos.find(v=>v.id==='IyXQ4OjSR3Y').races.length,2);
-assert.ok(videos.some(v=>v.inferred));
+assert.ok(videos.every(v=>!v.inferred));
+const inferredFixture=lib.build({...index,events:{...index.events,'88961208':{...index.events['88961208'],match_status:'schedule_inferred'}}},entries);assert.ok(inferredFixture.some(v=>v.inferred));
 assert.throws(()=>lib.build({schema_version:'wrong'},entries));
 const filters={season:'all',series:'Bomber Stocks',round:'6',search:'',order:'newest'};
 assert.equal(videos.filter(v=>lib.matches(v,filters)).length,1);
@@ -39,6 +40,7 @@ assert.ok(node('broadcast-grid').innerHTML.includes('No recordings match'));
 for(const video of videos){
  location.hash='#broadcast/'+video.id;await lib.recording(video.id);
  assert.ok(app.innerHTML.includes('youtube-nocookie.com/embed/'+video.id));
+ for(const r of video.races)if(r.link.verification_note)assert.ok(app.innerHTML.includes(esc(r.link.verification_note)));
  for(const r of video.races)assert.ok(app.innerHTML.includes('#race/'+r.entry.subsession_id));
  assert.equal((app.innerHTML.match(/<iframe/g)||[]).length,1);
  const saved=video.races.filter(r=>Number.isSafeInteger(r.link.start_seconds)&&r.link.start_seconds>0);
