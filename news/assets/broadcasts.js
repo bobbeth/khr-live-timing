@@ -1,5 +1,35 @@
 window.createMMTVBroadcastLibrary=function({app,entries,seasonName,esc,fmtDay}){
- let pending,renderVersion=0;
+ let pending,chapterPending,renderVersion=0;
+ const chapterTime=seconds=>{const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),s=seconds%60;return (h?h+':':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');};
+ function validateChapters(index,id){
+  const source=index?.schema_version==='MMTV-broadcast-chapters-v1'&&index.videos?.[id];
+  if(!source||source.status!=='video_checked_trial'||!Number.isSafeInteger(source.duration_seconds)||!Array.isArray(source.chapters)||source.chapters.length<3)return null;
+  const list=source.chapters,knownIds=new Set(entries().map(e=>Number(e.subsession_id)));
+  if(list[0].start_seconds!==0||list.some((c,i)=>c.verification!=='video_checked'||!Number.isSafeInteger(c.start_seconds)||c.start_seconds<0||c.start_seconds>source.duration_seconds-10||(i&&c.start_seconds-list[i-1].start_seconds<10)||!knownIds.has(c.subsession_id)||typeof c.title!=='string'||!c.title.trim()))return null;
+  return source;
+ }
+ async function chaptersForVideo(id){
+  if(!/^[A-Za-z0-9_-]{11}$/.test(id))return null;
+  if(!chapterPending)chapterPending=fetch('data/broadcast-chapters.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  return validateChapters(await chapterPending,id);
+ }
+ const chapterText=data=>data.chapters.map(c=>chapterTime(c.start_seconds)+' '+c.title).join('\n');
+ function chaptersHtml(id,data,raceId){
+  if(!data)return '';const list=data.chapters.filter(c=>!raceId||Number(c.subsession_id)===Number(raceId));if(!list.length)return '';
+  return '<section class="broadcast-chapters"><span class="eyebrow">SKIP TO THE ACTION</span><h3>BROADCAST CHAPTERS</h3><p class="result-note">'+esc(data.coverage_note)+'</p><div class="chapter-list">'+list.map(c=>'<button type="button" data-chapter-start="'+c.start_seconds+'" aria-pressed="false"><time>'+chapterTime(c.start_seconds)+'</time><span>'+esc(c.title)+'</span></button>').join('')+'</div><p class="result-note chapter-status" id="chapter-status" role="status"></p><details class="chapter-copy"><summary>YOUTUBE CHAPTER TEXT · FULL RECORDING</summary><p class="result-note">Paste this into the YouTube video description to add chapters there. The website buttons work immediately.</p><pre>'+esc(chapterText(data))+'</pre><button type="button" id="copy-broadcast-chapters">COPY YOUTUBE CHAPTERS</button></details></section>';
+ }
+ function bindChapters(id,data){
+  if(!data)return;
+  for(const button of document.querySelectorAll('[data-chapter-start]'))button.onclick=()=>{
+   const seconds=Number(button.dataset.chapterStart),chapter=data.chapters.find(c=>c.start_seconds===seconds);if(!chapter)return;
+   const player=document.querySelector('.library-player iframe, .broadcast-player iframe');if(!player)return;
+   player.src='https://www.youtube-nocookie.com/embed/'+id+'?rel=0&autoplay=1&start='+seconds;
+   document.querySelectorAll('[data-chapter-start]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+   document.getElementById('chapter-status').textContent='Playing '+chapter.title+' at '+chapterTime(seconds)+'.';player.scrollIntoView?.({behavior:'smooth',block:'center'});
+  };
+  const copy=document.getElementById('copy-broadcast-chapters');if(copy)copy.onclick=async()=>{try{await navigator.clipboard.writeText(chapterText(data));copy.textContent='COPIED ✓';}catch{copy.textContent='SELECT AND COPY THE TEXT ABOVE';}};
+ }
+
  const filters={season:'all',series:'all',round:'all',search:'',order:'newest'};
  function build(index,races){
   const videos=new Map();
@@ -53,8 +83,10 @@ window.createMMTVBroadcastLibrary=function({app,entries,seasonName,esc,fmtDay}){
   const version=++renderVersion,hash=location.hash;app.innerHTML=header('THE<br>BROADCAST','The original Mud Mules TV coverage.')+'<div class="container section loading">Loading the recording…</div>';
   let videos;try{videos=await load();}catch{if(version===renderVersion&&location.hash===hash)errorPage(()=>recording(id));return;}
   if(version!==renderVersion||location.hash!==hash)return;
+  const chapters=await chaptersForVideo(id);if(version!==renderVersion||location.hash!==hash)return;
   const v=videos.find(v=>v.id===id);if(!v){app.innerHTML=header('RECORDING<br>NOT FOUND','<a href="#broadcasts">Back to the broadcast library ↗</a>');return;}
-  app.innerHTML=header(esc(title(v)),esc(roundLabel(v))+` · <a href="#broadcasts">ALL BROADCASTS ↗</a>`)+`<div class="container section"><div class="library-player"><iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" title="${esc(title(v))} — ${esc(roundLabel(v))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="broadcast-footer"><p>Race dates: ${esc(dates(v))}</p><a href="${watch(v.id)}" target="_blank" rel="noopener noreferrer">WATCH ON YOUTUBE ↗</a></div>${v.inferred?'<p class="stats-notice">This recording was matched using the weekly series schedule and stream listing order. Its race coverage has not been independently checked.</p>':''}<div class="section-head"><div><span class="eyebrow">IN THIS RECORDING</span><h2>THE RACES</h2></div></div><div class="library-coverage">${v.races.map(({entry:e,link})=>{const offset=Number.isSafeInteger(link.start_seconds)&&link.start_seconds>0&&link.start_seconds<=86400?link.start_seconds:null;return `<div class="series-card"><span class="sub">ROUND ${esc(e.round)} · ${esc(fmtDay(e.event_date))}</span><h3>${esc(e.series)}</h3><p>${esc(e.track)}</p><a class="series-go" href="#race/${e.subsession_id}" data-series="${esc(e.series)}">RACE REPORT & RESULTS ↗</a>${link.verification_note?`<p class="result-note">${esc(link.verification_note)}</p>`:''}${offset?`<p><a class="broadcast-watch" href="${watch(v.id)}&amp;t=${offset}s" target="_blank" rel="noopener noreferrer">OPEN SAVED RACE START ↗</a></p>`:'<p class="result-note">Full recording · Race start not bookmarked.</p>'}</div>`;}).join('')}</div><p class="result-note">Only saved race-start bookmarks are shown. No new timestamps have been estimated.</p><a class="button-link" href="#broadcasts">BACK TO THE LIBRARY</a></div>`;
+  app.innerHTML=header(esc(title(v)),esc(roundLabel(v))+` · <a href="#broadcasts">ALL BROADCASTS ↗</a>`)+`<div class="container section"><div class="library-player"><iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" title="${esc(title(v))} — ${esc(roundLabel(v))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="broadcast-footer"><p>Race dates: ${esc(dates(v))}</p><a href="${watch(v.id)}" target="_blank" rel="noopener noreferrer">WATCH ON YOUTUBE ↗</a></div>${chaptersHtml(id,chapters)}${v.inferred?'<p class="stats-notice">This recording was matched using the weekly series schedule and stream listing order. Its race coverage has not been independently checked.</p>':''}<div class="section-head"><div><span class="eyebrow">IN THIS RECORDING</span><h2>THE RACES</h2></div></div><div class="library-coverage">${v.races.map(({entry:e,link})=>{const offset=Number.isSafeInteger(link.start_seconds)&&link.start_seconds>0&&link.start_seconds<=86400?link.start_seconds:null;return `<div class="series-card"><span class="sub">ROUND ${esc(e.round)} · ${esc(fmtDay(e.event_date))}</span><h3>${esc(e.series)}</h3><p>${esc(e.track)}</p><a class="series-go" href="#race/${e.subsession_id}" data-series="${esc(e.series)}">RACE REPORT & RESULTS ↗</a>${link.verification_note?`<p class="result-note">${esc(link.verification_note)}</p>`:''}${offset?`<p><a class="broadcast-watch" href="${watch(v.id)}&amp;t=${offset}s" target="_blank" rel="noopener noreferrer">OPEN SAVED RACE START ↗</a></p>`:'<p class="result-note">Full recording · Race start not bookmarked.</p>'}</div>`;}).join('')}</div><p class="result-note">Only saved race-start bookmarks are shown. No new timestamps have been estimated.</p><a class="button-link" href="#broadcasts">BACK TO THE LIBRARY</a></div>`;
+  bindChapters(id,chapters);
  }
- return {library,recording,build,matches,load};
+ return {library,recording,build,matches,load,chaptersForVideo,validateChapters,chapterText,chaptersHtml,bindChapters};
 };

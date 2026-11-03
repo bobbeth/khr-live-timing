@@ -1,0 +1,38 @@
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const read=async p=>JSON.parse(await fs.readFile(new URL(p,import.meta.url),'utf8'));
+const chapterIndex=await read('../data/broadcast-chapters.json');
+const broadcasts=await read('../data/broadcasts.json');
+const entries=[...(await read('../../archive/index.json')).events,...(await read('../data/live/index.json')).events];
+const id='m1ujm3C8Bp4',data=chapterIndex.videos[id];
+const nodes=new Map(),player={src:'',scrollIntoView(){}};
+const node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:''});return nodes.get(id);};
+const buttons=data.chapters.map(c=>({dataset:{chapterStart:String(c.start_seconds)},setAttribute(k,v){this[k]=v;}}));
+let copied='';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const context={window:{},location:{hash:'#broadcast/'+id},navigator:{clipboard:{writeText:async text=>{copied=text;}}},document:{getElementById:node,querySelectorAll:()=>buttons,querySelector:()=>player},fetch:async url=>({ok:true,json:async()=>url.includes('broadcast-chapters')?chapterIndex:broadcasts})};
+vm.createContext(context);vm.runInContext(await fs.readFile(new URL('../assets/broadcasts.js',import.meta.url),'utf8'),context);
+const lib=context.window.createMMTVBroadcastLibrary({app:node('app'),entries:()=>entries,seasonName:()=> 'Fall Fest 2026',esc,fmtDay:d=>d});
+assert.equal(lib.validateChapters(chapterIndex,id),data);
+assert.ok(lib.chapterText(data).startsWith('00:00 Bomber Stocks'));
+assert.ok(lib.chapterText(data).endsWith('1:16:00 Cushion Kings — Eldora coverage'));
+assert.equal((lib.chaptersHtml(id,data,88961208).match(/data-chapter-start=/g)||[]).length,6);
+assert.equal(lib.chaptersHtml(id,data,123),'');
+await lib.recording(id);
+assert.equal((node('app').innerHTML.match(/data-chapter-start=/g)||[]).length,7);
+buttons[1].onclick();assert.equal(player.src,'https://www.youtube-nocookie.com/embed/'+id+'?rel=0&autoplay=1&start=665');assert.equal(buttons[1]['aria-pressed'],'true');
+assert.ok(node('chapter-status').textContent.includes('11:05'));
+await node('copy-broadcast-chapters').onclick();assert.equal(copied,lib.chapterText(data));
+for(const mutate of [x=>x.chapters[0].start_seconds=1,x=>x.chapters[1].start_seconds=-1,x=>x.chapters[1].start_seconds=5,x=>x.chapters[1].start_seconds=1.5,x=>x.chapters[1].verification='estimated',x=>x.chapters[1].subsession_id=99999999,x=>x.chapters.at(-1).start_seconds=x.duration_seconds-1,x=>x.chapters.reverse()]){
+ const copy=structuredClone(chapterIndex);mutate(copy.videos[id]);assert.equal(lib.validateChapters(copy,id),null);
+}
+assert.equal(lib.validateChapters({schema_version:'wrong',videos:chapterIndex.videos},id),null);
+assert.equal(await lib.chaptersForVideo('invalid'),null);
+assert.equal(await lib.chaptersForVideo('IyXQ4OjSR3Y'),null);
+const escaped=structuredClone(data);escaped.chapters[0].title='<script>alert(1)</script>';assert.ok(!lib.chaptersHtml(id,escaped).includes('<script>'));
+const failContext={...context,window:{},fetch:async url=>({ok:!url.includes('broadcast-chapters'),json:async()=>broadcasts})};
+vm.createContext(failContext);vm.runInContext(await fs.readFile(new URL('../assets/broadcasts.js',import.meta.url),'utf8'),failContext);
+const fallback=failContext.window.createMMTVBroadcastLibrary({app:node('fallback'),entries:()=>entries,seasonName:()=>'',esc,fmtDay:d=>d});
+await fallback.recording(id);assert.ok(node('fallback').innerHTML.includes('youtube-nocookie.com/embed/'+id));assert.ok(!node('fallback').innerHTML.includes('data-chapter-start'));
+console.log('PASS: seven checked chapters, six Bomber-only buttons, embedded seeking, copyable YouTube text, escaping, invalid-offset rejection and missing-data fallback.');

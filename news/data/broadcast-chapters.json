@@ -1,0 +1,21 @@
+{
+  "schema_version": "MMTV-broadcast-chapters-v1",
+  "videos": {
+    "m1ujm3C8Bp4": {
+      "status": "video_checked_trial",
+      "source_url": "https://www.youtube.com/watch?v=m1ujm3C8Bp4",
+      "duration_seconds": 10379,
+      "coverage_note": "Bomber Stocks Round 1 trial. Checked viewing points include session lead-ins, not frame-exact green flags. Cushion Kings has a handover marker only; its individual sessions are not mapped yet.",
+      "timing_method": "Manual recording inspection. Round 1 has official results but no located original live transition log. Simulated weather start times were not used. Original broadcast IDs and the existing 76:00 Cushion Kings bookmark remain unchanged.",
+      "chapters": [
+        {"start_seconds":0,"title":"Bomber Stocks — opening & practice","subsession_id":88961208,"verification":"video_checked","evidence":"Opening broadcaster introduction sampled at 00:30; Bomber practice observed later before qualifying."},
+        {"start_seconds":665,"title":"Bomber Stocks — qualifying","subsession_id":88961208,"verification":"video_checked","evidence":"At 11:05.7, the video shows Qualify 0:03 / 5:00. This bookmark enters the qualifying lead-in."},
+        {"start_seconds":978,"title":"Bomber Stocks — Heat 1","subsession_id":88961208,"verification":"video_checked","evidence":"At 16:17.9, Heat 1 is displayed with a 0:04 session timer and the classified driver list."},
+        {"start_seconds":1523,"title":"Bomber Stocks — Twin Feature 1 (B-Main)","subsession_id":88961208,"verification":"video_checked","evidence":"At 25:22.9, B-Main Lap 1 / 25 is displayed with red start lights and Josh Roberts at the front. Official session -2 is the first twin."},
+        {"start_seconds":2557,"title":"Bomber Stocks — first-twin results & warm-up","subsession_id":88961208,"verification":"video_checked","evidence":"At 42:37.2, the B-main results show Chad Puterbaugh ahead of Jim Reavis and Brian Angell. Warmup footage was checked later at 46:43.1."},
+        {"start_seconds":2951,"title":"Bomber Stocks — Twin Feature 2 (Feature)","subsession_id":88961208,"verification":"video_checked","evidence":"At 49:11.1, Feature Lap 1 / 25 is in its grid lead-in. Racing footage was checked at 50:03.3; the timer reads 0:22. Official session 0 is the final twin."},
+        {"start_seconds":4560,"title":"Cushion Kings — Eldora coverage","subsession_id":88962942,"verification":"video_checked","evidence":"Existing 76:00 bookmark retained. Eldora venue coverage was visually sampled at 76:07.6. This is a coverage handover, not a verified race-start timestamp."}
+      ]
+    }
+  }
+}
