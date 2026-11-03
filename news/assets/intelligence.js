@@ -25,24 +25,39 @@ window.MMTVIntelligence=(()=>{
   if(!model)return null;
   return {drivers:model.drivers.drivers.map(d=>({...d,iracing_id:d.driver_id,names:new Set(d.names),numbers:new Set(d.numbers),profile:profiles?.drivers?.[String(d.driver_id)]?.profile||null,races:d.races.map(r=>({...r}))})),meetings:model.races.meetings,failures:[],sessionGaps:[...new Set(model.championships.championships.flatMap(c=>c.missing_sessions.map(s=>s.subsession_id)))],intelligence:model.index};
  }
+ function enrichRow(row,rows){
+  const id=row.driver_id||model.drivers.names[normalize(row.driver)];
+  const verified=rows.find(r=>r.driver_id===Number(id)&&r.car_number===String(row.car_number));if(!verified)return row;
+  const output={...row,driver_id:verified.driver_id,field_provenance:{...row.field_provenance}};
+  for(const field of ['start_position','positions_gained','laps_completed','laps_led','best_lap_seconds','incidents','champ_points']){
+   const proof=verified.field_provenance?.fields?.[field]||verified.field_provenance;
+   if(row[field]==null&&verified[field]!=null){output[field]=verified[field];output.field_provenance[field]=proof;}
+   else if(row[field]!=null&&verified[field]===row[field]&&proof){output.field_provenance[field]??=proof;}
+  }
+  return output;
+ }
  function enrichEvent(event){
   if(!model)return event;
   const source=model.races.races.find(r=>r.entry.subsession_id===Number(event.subsession_id));if(!source)return event;
-  return {...event,intelligence_source:source.source,classification_difference:source.classification_difference,feature_results:event.feature_results.map(row=>{
-   const id=row.driver_id||model.drivers.names[normalize(row.driver)];
-   const verified=source.rows.find(r=>r.driver_id===Number(id)&&r.car_number===String(row.car_number));if(!verified)return row;
-   const output={...row,driver_id:verified.driver_id,field_provenance:{...row.field_provenance}};
-   for(const field of ['start_position','positions_gained','laps_completed','laps_led','best_lap_seconds','incidents','champ_points'])if(row[field]==null&&verified[field]!=null){output[field]=verified[field];output.field_provenance[field]=verified.field_provenance;}
-   return output;
-  })};
+  return {...event,intelligence_source:source.source,classification_difference:source.classification_difference,feature_results:event.feature_results.map(row=>enrichRow(row,source.rows))};
+ }
+ function enrichMeeting(meeting){
+  if(!model)return meeting;
+  const source=model.races.races.find(r=>r.entry.subsession_id===Number(meeting.subsession_id));if(!source)return meeting;
+  return {...meeting,sessions:meeting.sessions.map(session=>{const verified=source.sessions.find(s=>Number(s.simsession_number)===Number(session.simsession_number)&&s.kind===session.kind);return verified?{...session,classification:(session.classification||[]).map(row=>enrichRow(row,verified.classification))}:session;})};
  }
  const raceLink=(id,text)=>`<a href="#race/${Number(id)}">${esc(text||'Race report')} ↗</a>`;
+ function recoverySources(r){
+  const labels={start_position:'Start',positions_gained:'Places gained',best_lap_seconds:'Best lap',laps_led:'Laps led',incidents:'Incidents',champ_points:'Supplied points'};
+  const list=r.sessions.flatMap(s=>s.classification.flatMap(row=>Object.entries(row.field_provenance?.fields||{}).filter(([field,p])=>labels[field]&&p.source_kind).map(([field,p])=>`<li>${esc(s.name)} · #${esc(row.car_number)} ${esc(row.driver)} · ${labels[field]}: ${esc(row[field])}. Source: ${esc(p.source_kind.replaceAll('_',' '))}; certainty: ${esc(p.certainty.replaceAll('_',' '))}. ${p.replay_context?'Live/replay context: '+esc(p.replay_context)+'. ':''}<span style="overflow-wrap:anywhere">SHA256 ${esc(p.capture_sha256?.join(', ')||p.published_row_sha256||r.source.canonical_sha256)}</span></li>`)));
+  return list.length?`<details class="result-note"><summary>† Supplemented result sources</summary><p>† marks a supplemented value. These are source-checked additions, not saved official result fields. A single verified snapshot is labelled separately from corroborated captures. Unknown values remain —. Live/replay context can remain undetermined even where session identity, clocks and completion agree.</p><ul>${list.join('')}</ul></details>`:'';
+ }
  function contextHtml(page,id,detail){
   if(!model)return '';
   let title='',body='';const selectedCompetition=['profile-season','standings-season','insights-season','reviews-season'].map(id=>document.getElementById(id)?.value).find(Boolean);const comp=selectedCompetition||model.races.races.slice().sort((a,b)=>b.entry.event_date.localeCompare(a.entry.event_date))[0]?.entry.competition;
   if(page==='race'){
    const r=model.races.races.find(r=>r.entry.subsession_id===Number(id));if(!r)return '';
-   title='THE STORY SO FAR';body=r.facts.map(f=>`<p>${esc(f.text)}</p>`).join('')+`<p class="result-note">Verified starting positions: ${r.coverage.start_position.known}/${r.coverage.start_position.total}. Laps led: ${r.coverage.laps_led.known}/${r.coverage.laps_led.total}. Unavailable values remain —.</p><details><summary>Session progression & sources</summary><ul>${r.sessions.map(s=>`<li>${esc(s.name)} · ${s.classification.length} classified · ${esc(s.classification.find(r=>r.position===1)?.driver||'Winner unavailable')}${s.kind==='twin_feature_1'?' · Opening twin, scored separately':''}</li>`).join('')}</ul><p class="result-note">${esc(r.source.certainty)} classification · canonical SHA256 ${esc(r.source.canonical_sha256)}. ${r.classification_difference?esc(r.classification_difference.note):'Final-feature totals count this event once.'}</p></details>`;
+   title='THE STORY SO FAR';body=r.facts.map(f=>`<p>${esc(f.text)}</p>`).join('')+`<p class="result-note">Verified starting positions: ${r.coverage.start_position.known}/${r.coverage.start_position.total}. Laps led: ${r.coverage.laps_led.known}/${r.coverage.laps_led.total}. Unavailable values remain —.</p><details><summary>Session progression & sources</summary><ul>${r.sessions.map(s=>`<li>${esc(s.name)} · ${s.classification.length} classified · ${esc(s.classification.find(r=>r.position===1)?.driver||'Winner unavailable')}${s.kind==='twin_feature_1'?' · Opening twin, scored separately':''}</li>`).join('')}</ul><p class="result-note">${esc(r.source.certainty)} classification · canonical SHA256 ${esc(r.source.canonical_sha256)}. ${r.classification_difference?esc(r.classification_difference.note):'Final-feature totals count this event once.'}</p></details>${recoverySources(r)}`;
   }else if(page==='driver'){
    const driverId=model.drivers.names[normalize(id)]||Number(id),d=model.drivers.drivers.find(d=>d.driver_id===driverId||d.id===normalize(id));if(!d)return '';
    title='FORM GUIDE';const ss=d.session_statistics_by_competition[comp]||{heat_wins:0,heats:0,qualifying_wins:0,qualifying:0},f=d.by_competition[comp];if(!f)return '';
@@ -63,8 +78,13 @@ window.MMTVIntelligence=(()=>{
  function decorate(){
   const app=document.getElementById('app');if(!model||!app||app.querySelector('#canonical-intelligence')||app.querySelector('.loading'))return;
   const [page,id,detail]=decodeURIComponent(location.hash.slice(1)||'home').split('/');
-  const html=contextHtml(page,id,detail);if(html)(app.querySelector('.container.section')||app).insertAdjacentHTML('beforeend',html);
+  const html=contextHtml(page,id,detail);if(!html)return;
+  if(page==='race'){
+   const details=app.querySelector('#race-details')||document.getElementById('race-details');
+   const video=details?.querySelector('.race-broadcast');
+   if(video)video.insertAdjacentHTML('afterend',html);else if(details)details.insertAdjacentHTML('afterbegin',html);
+  }else (app.querySelector('.container.section')||app).insertAdjacentHTML('beforeend',html);
  }
  if(typeof MutationObserver!=='undefined')new MutationObserver(decorate).observe(document.getElementById('app'),{childList:true,subtree:true});
- return {load,statsData,enrichEvent,contextHtml,decorate,get model(){return model;}};
+ return {load,statsData,enrichEvent,enrichMeeting,contextHtml,decorate,get model(){return model;}};
 })();

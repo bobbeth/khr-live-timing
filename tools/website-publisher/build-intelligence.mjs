@@ -3,6 +3,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
+import {recoverSession} from './recover-session-fields.mjs';
 const root=path.resolve(process.argv[2]);
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8').replace(/^\uFEFF/,''));
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
@@ -33,10 +34,19 @@ function participant(d,event){let r=d.races.find(r=>r.entry.subsession_id===even
 for(const race of history.races){
  const id=Number(race.subSessionID),published=entries.get(id);
  if(!published)continue; // The publisher writes the completed event/index first. Never leak unpublished events.
- const c=JSON.parse(fs.readFileSync(race.provenance.canonicalFile,'utf8'));
- const capture=race.provenance.linkedCapture?JSON.parse(fs.readFileSync(race.provenance.linkedCapture,'utf8')):null;
+ const canonicalBytes=fs.readFileSync(race.provenance.canonicalFile);
+ if(hash(canonicalBytes)!==race.provenance.canonicalSha256.toLowerCase())throw Error('Canonical changed during export: '+id);
+ const c=JSON.parse(canonicalBytes);
+ const captureBytes=race.provenance.linkedCapture?fs.readFileSync(race.provenance.linkedCapture):null;
+ if(captureBytes&&hash(captureBytes)!==race.provenance.linkedCaptureSha256.toLowerCase())throw Error('Linked classification capture changed during export: '+id);
+ const capture=captureBytes?JSON.parse(captureBytes):null;
  const entry={subsession_id:id,competition:ctx.window.MMTVExportSeasonName(published),series:seriesNames[race.seriesKey]||published.series||null,round:race.round??published.round??null,track:race.track||published.track,event_date:published.event_date};
- const event={entry,source:publicSource(race,'final_feature'),metadata_source:race.metadataUnknown?.length?'canonical_with_exact_published_subsession_metadata':'canonical',rows:[],sessions:[],facts:[],classification_difference:null,coverage:{}};
+ const eventPath=published.verification==='live_captured'?`news/data/live/events/${id}.json`:`archive/events/${id}.json`;
+ const originalEvent=read(eventPath);let originalMeeting;try{originalMeeting=read(published.verification==='live_captured'?`news/data/live/meetings/${id}.json`:`news/data/meetings/${id}.json`)}catch{}
+ const previous=history.races.filter(r=>{const p=entries.get(Number(r.subSessionID));return p&&ctx.window.MMTVExportSeasonName(p)===entry.competition&&p.series===entry.series&&Number(p.round)===Number(entry.round)-1;});
+ const previousRow=previous.length===1?previous[0].results.find(r=>r.position===1):null;
+ const previousWinner=previousRow?{driver_id:previousRow.driverId,car_number:previousRow.number}:null;
+ const event={entry,recovery_audit:[],source:publicSource(race,'final_feature'),metadata_source:race.metadataUnknown?.length?'canonical_with_exact_published_subsession_metadata':'canonical',rows:[],sessions:[],facts:[],classification_difference:null,coverage:{}};
  event.metadata_provenance={subsession_id:id,series:{source:race.seriesKey?'canonical':'published_index',field:race.seriesKey?'seriesKey':'series',certainty:race.seriesKey?'canonical_identity':'existing_published_subsession_identity'},round:{source:race.round!==null?'canonical':'published_index',field:'round',certainty:race.round!==null?'canonical_identity':'existing_published_subsession_identity'},competition:{source:'existing_site_policy',field:'seasonName',policy_sha256:hash(seasonPolicy[1])},published_index_file:published.verification==='live_captured'?'news/data/live/index.json':'archive/index.json',published_entry_sha256:hash(JSON.stringify(stable(published)))};
  const getId=(r,official=false)=>official?Number(r.cust_id):Number(capture?.diagnostic?.drivers?.find(d=>d.fields?.carIdx===r.carIdx&&String(d.number)===String(r.number))?.fields?.userId)||null;
  for(const rawRow of race.results){
@@ -55,6 +65,10 @@ for(const race of history.races){
   if(!kind||seenSessions.has(num))continue;
   if(!official&&(!raw.completedCandidate||!raw.structureValid||raw.resultsOfficial!==1))continue;
   const rows=raw.results||[];if(!rows.length)continue;seenSessions.add(num);
+  const knownIds=new Map(rows.map(r=>[String(r.number),getId(r,false)]));
+  const publishedRows=['feature','twin_feature_2'].includes(kind)?originalEvent.feature_results:(originalMeeting?.sessions?.find(s=>Number(s.simsession_number)===Number(num))?.classification||[]);
+  const recovery=official?null:recoverSession({canonical:c,canonicalFile:race.provenance.canonicalFile,id,raw,entry,kind,previousWinner,knownIds,publishedRows:publishedRows.map(r=>({...r,driver_id:r.driver_id||names[normalize(r.driver)]}))});
+  if(recovery)event.recovery_audit.push(recovery.audit);
   const source={...publicSource(race,`session.${num}`),certainty:official?'official':'native_completed'};
   const session={simsession_number:num,name,kind,available:true,classification:[],source};
   for(const row of rows){
@@ -63,7 +77,16 @@ for(const race of history.races){
    const pos=official?Number(row.finish_position)+1:Number(row.position);
    const number=String(official?row.livery?.car_number:row.number);
    const r={driver_id:driverId,driver:name,car_number:number,position:pos,start_position:official&&row.starting_position>=0?row.starting_position+1:null,laps_completed:official?row.laps_complete:row.lapsCompleted,laps_led:official?row.laps_lead:null,best_lap_seconds:official&&row.best_lap_time>0?row.best_lap_time/10000:null,champ_points:official&&core.valid(row.champ_points)?Number(row.champ_points):null,reason_out:official?row.reason_out:row.reason,field_provenance:source};
+   r.field_provenance={...source,fields:Object.fromEntries(Object.keys(r).filter(k=>r[k]!=null&&k!=='field_provenance').map(k=>[k,source]))};
+   const supplemental=recovery?.rows.get(driverId);if(supplemental){for(const [field,value] of Object.entries(supplemental.values)){if(r[field]==null&&value!=null){r[field]=value;r.field_provenance.fields[field]=supplemental.proofs[field];}}}
    r.positions_gained=r.start_position===null?null:r.start_position-pos;
+   if(r.positions_gained!==null&&!r.field_provenance.fields.positions_gained)r.field_provenance.fields.positions_gained=r.field_provenance.fields.start_position||source;
+   if(['feature','twin_feature_2'].includes(kind)){
+    const final=event.rows.find(row=>row.driver_id===driverId&&row.car_number===number);
+    if(final&&!official){final.field_provenance={...final.field_provenance,fields:{...final.field_provenance.fields}};for(const field of ['start_position','positions_gained','best_lap_seconds','laps_led','incidents','champ_points'])if(final[field]==null&&r[field]!=null){final[field]=r[field];final.field_provenance.fields[field]=r.field_provenance.fields[field]||source;}
+     const statsRow=drivers.get(String(driverId)).races.find(r=>r.entry.subsession_id===id);Object.assign(statsRow,{start:final.start_position,gain:final.positions_gained,bestLap:final.best_lap_seconds,led:final.laps_led,field_provenance:final.field_provenance});
+    }
+   }
    session.classification.push(r);
    const d=touch(driverId,name);if(!d.numbers.includes(number))d.numbers.push(number);
    if(dns(r))continue;
@@ -72,8 +95,7 @@ for(const race of history.races){
   }
   session.classification.sort((a,b)=>a.position-b.position);event.sessions.push(session);
  }
- const eventPath=published.verification==='live_captured'?`news/data/live/events/${id}.json`:`archive/events/${id}.json`;
- const original=read(eventPath).feature_results;
+ const original=originalEvent.feature_results;
  if(original.length!==event.rows.length||original.some((r,i)=>Number(r.finish_position)!==event.rows[i]?.finish_position||normalize(r.driver)!==normalize(event.rows[i]?.driver))){event.classification_difference={published_rows:original.length,canonical_rows:event.rows.length,note:'Original published classification retained; season statistics use the source-traced canonical classification.'};}
  for(const key of ['start_position','laps_completed','laps_led','best_lap_seconds','champ_points'])event.coverage[key]={known:event.rows.filter(r=>core.valid(r[key])).length,total:event.rows.length};
  event.venue={public_venue_id:publicVenue(published.track).id,public_venue_name:publicVenue(published.track).name,track:entry.track,configuration:official?c.official.event_result.data.track?.config_name||null:capture?.track?.configuration||null,vehicle_classes:[...new Set((official?rawSessions.find(s=>s.simsession_name==='FEATURE')?.results||[]:capture?.drivers||[]).map(r=>official?r.car_name:r.carDisplayName).filter(Boolean))].sort()};
@@ -100,9 +122,9 @@ for(const race of races){
  const m=core.summary(before),form=core.form(before);
  race.facts.push({text:`${d.name} made it ${m.wins} final-feature ${m.wins===1?'win':'wins'} from ${m.starts} recorded ${race.entry.series} ${m.starts===1?'appearance':'appearances'} this season.`,driver_id:d.driver_id,source:race.source,coverage:{known:m.starts,total:m.starts},related_subsessions:before.map(r=>r.entry.subsession_id)});
  if(form.winStreak>1)race.facts.push({text:`${d.name} has won their last ${form.winStreak} recorded final-feature appearances in this championship.`,source:race.source,related_subsessions:form.recent.slice(0,form.winStreak).map(r=>r.id),coverage:{known:before.length,total:before.length}});
- const movers=race.rows.filter(r=>core.valid(r.positions_gained)&&r.positions_gained>0).sort((a,b)=>b.positions_gained-a.positions_gained);if(movers.length)race.facts.push({text:`${movers[0].driver} gained ${movers[0].positions_gained} places from the verified starting position to finish P${movers[0].finish_position}.`,source:movers[0].field_provenance,coverage:race.coverage.start_position,related_subsessions:[race.entry.subsession_id]});
+ const movers=race.rows.filter(r=>core.valid(r.positions_gained)&&r.positions_gained>0).sort((a,b)=>b.positions_gained-a.positions_gained);if(movers.length)race.facts.push({text:`${movers[0].driver} gained ${movers[0].positions_gained} places from the verified starting position to finish P${movers[0].finish_position}.`,source:movers[0].field_provenance.fields?.positions_gained||movers[0].field_provenance,coverage:race.coverage.start_position,related_subsessions:[race.entry.subsession_id]});
 }
-const venues=Object.values(Object.groupBy(races,r=>r.venue.key)).map(group=>({key:group[0].venue.key,...group[0].venue,competition:group[0].entry.competition,events:group.map(r=>r.entry.subsession_id),past_winners:group.map(r=>({subsession_id:r.entry.subsession_id,driver_id:r.rows[0].driver_id,name:r.rows[0].driver,date:r.entry.event_date})),best_lap:group[0].venue.configuration&&group[0].venue.vehicle_classes.length===1?group.flatMap(r=>r.rows.filter(row=>row.best_lap_seconds>0).map(row=>({seconds:row.best_lap_seconds,driver_id:row.driver_id,subsession_id:r.entry.subsession_id,source:row.field_provenance}))).sort((a,b)=>a.seconds-b.seconds)[0]||null:null}));
+const venues=Object.values(Object.groupBy(races,r=>r.venue.key)).map(group=>({key:group[0].venue.key,...group[0].venue,competition:group[0].entry.competition,events:group.map(r=>r.entry.subsession_id),past_winners:group.map(r=>({subsession_id:r.entry.subsession_id,driver_id:r.rows[0].driver_id,name:r.rows[0].driver,date:r.entry.event_date})),best_lap:group[0].venue.configuration&&group[0].venue.vehicle_classes.length===1?group.flatMap(r=>r.rows.filter(row=>row.best_lap_seconds>0).map(row=>({seconds:row.best_lap_seconds,driver_id:row.driver_id,subsession_id:r.entry.subsession_id,source:row.field_provenance.fields?.best_lap_seconds||row.field_provenance}))).sort((a,b)=>a.seconds-b.seconds)[0]||null:null}));
 const championships=[];
 for(const key of [...new Set(races.map(r=>r.entry.competition+'|'+r.entry.series))]){
  const events=races.filter(r=>r.entry.competition+'|'+r.entry.series===key).sort((a,b)=>a.entry.round-b.entry.round);let previous=new Map();
@@ -113,7 +135,7 @@ for(const key of [...new Set(races.map(r=>r.entry.competition+'|'+r.entry.series
  });championships.push({key,competition:events[0].entry.competition,series:events[0].entry.series,status:'provisional_before_drops',drops_applied:false,rounds,missing_sessions:events.filter(r=>!r.sessions.some(s=>s.kind==='qualifying')).map(r=>({subsession_id:r.entry.subsession_id,kind:'qualifying',status:'unknown_not_observed'}))});
 }
 for(const venue of venues){const wins=new Map();for(const winner of venue.past_winners){const row=wins.get(winner.driver_id)||{driver_id:winner.driver_id,name:winner.name,wins:0,source_subsessions:[]};row.wins++;row.source_subsessions.push(winner.subsession_id);wins.set(winner.driver_id,row);}venue.repeat_winners=[...wins.values()].filter(d=>d.wins>1);}
-for(const d of drivers.values())d.personal_bests=venues.filter(v=>v.configuration&&v.vehicle_classes.length===1).map(v=>{const times=races.filter(r=>r.venue.key===v.key).flatMap(r=>r.rows.filter(row=>row.driver_id===d.driver_id&&row.best_lap_seconds>0).map(row=>({seconds:row.best_lap_seconds,subsession_id:r.entry.subsession_id,source:row.field_provenance}))).sort((a,b)=>a.seconds-b.seconds);return times.length?{venue:v.key,competition:v.competition,best:times[0],known:times.length,total:v.events.length}:null;}).filter(Boolean);
+for(const d of drivers.values())d.personal_bests=venues.filter(v=>v.configuration&&v.vehicle_classes.length===1).map(v=>{const times=races.filter(r=>r.venue.key===v.key).flatMap(r=>r.rows.filter(row=>row.driver_id===d.driver_id&&row.best_lap_seconds>0).map(row=>({seconds:row.best_lap_seconds,subsession_id:r.entry.subsession_id,source:row.field_provenance.fields?.best_lap_seconds||row.field_provenance}))).sort((a,b)=>a.seconds-b.seconds);return times.length?{venue:v.key,competition:v.competition,best:times[0],known:times.length,total:v.events.length}:null;}).filter(Boolean);
 const common={schema_version:'MMTV-canonical-intelligence-v1'};
 const content={drivers:{...common,names,drivers:[...drivers.values()].sort((a,b)=>a.driver_id-b.driver_id)},races:{...common,races,meetings:publicMeetings},venues:{...common,venues},championships:{...common,championships}};
 const serialized=Object.fromEntries(Object.entries(content).map(([key,value])=>[key,JSON.stringify(stable(value))+'\n']));
