@@ -145,18 +145,18 @@ const entries=[...new Map([...historical,...live].map(e=>[e.subsession_id,e])).v
 const schedule=JSON.parse(await read('news/data/schedule.json'));
 const rounds=reviews.build(entries,schedule,data,'Fall Fest 2026');
 assert.equal(rounds.length,6);
-const six=rounds.find(r=>r.round===6);assert.equal(six.events.length,2);assert.equal(six.missing.length,3);assert.equal(six.expected.length,5);assert.equal(six.book.movers[0].gain,10);
+const six=rounds.find(r=>r.round===6),sixCount=entries.filter(e=>Number(e.round)===6).length;assert.equal(six.events.length,sixCount);assert.equal(six.missing.length,5-sixCount);assert.equal(six.expected.length,5);assert.equal(six.book.movers[0].gain,10);
 for(const round of rounds){
  assert.equal(round.statsComplete,true);
  assert.ok(round.book.movers.every(m=>Number(m.race.entry.round)===round.round));
  if(round.round<6){assert.equal(round.missing.length,0);assert.equal(round.events.length,5);}
 }
-assert.equal(reviews.build([...entries,...entries],schedule,data,'Fall Fest 2026').find(r=>r.round===6).events.length,2);
+assert.equal(reviews.build([...entries,...entries],schedule,data,'Fall Fest 2026').find(r=>r.round===6).events.length,sixCount);
 assert.equal(reviews.build(entries,schedule,data,'Other season').length,0);
 assert.equal(reviews.build(entries,schedule,{...data,failures:[89810317]},'Fall Fest 2026').find(r=>r.round===6).statsComplete,false);
 context.location.hash='#rounds';await reviews.index();assert.equal((node('app').innerHTML.match(/class="round-review-card"/g)||[]).length,6);
 for(const round of [1,5,6]){context.location.hash='#round/Fall%20Fest%202026/'+round;await reviews.review(round,'Fall Fest 2026');
- assert.equal((node('app').innerHTML.match(/class="round-series-report"/g)||[]).length,round===6?2:5);
+ assert.equal((node('app').innerHTML.match(/class="round-series-report"/g)||[]).length,round===6?sixCount:5);
  assert.ok(node('app').innerHTML.includes('THE BROADCASTS'));assert.ok(!node('app').innerHTML.includes('undefined'));
  if(round===6){assert.ok(node('app').innerHTML.includes('Reports still to come:'));assert.ok(node('app').innerHTML.includes('#broadcast/IyXQ4OjSR3Y'));assert.ok(!node('app').innerHTML.includes('/7'));}
  if(round===1)assert.ok(!node('app').innerHTML.includes('/0'));

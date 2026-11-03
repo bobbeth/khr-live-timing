@@ -4,11 +4,13 @@ window.createMMTVRaceInsights=function({app,entries,seasonName,esc,driverStats})
  let season='Fall Fest 2026',series='Bomber Stocks',first=null,second=null,scope='shared',version=0;
  const inScope=(e,s,c)=>seasonName(e)===s&&(c==='All series'||e.series===c);
  function summary(races){
+  if(window.MMTVIntelligence?.model)return window.MMTVIntelligenceCore.summary(races);
   const f=races.filter(r=>r.feature&&valid(r.finish)&&Number(r.finish)>0);
   const starts=f.filter(r=>valid(r.start)&&Number(r.start)>0),gains=f.filter(r=>valid(r.gain));
   return {starts:f.length,wins:f.filter(r=>Number(r.finish)===1).length,podiums:f.filter(r=>Number(r.finish)<=3).length,top5:f.filter(r=>Number(r.finish)<=5).length,average:f.length?f.reduce((a,r)=>a+Number(r.finish),0)/f.length:null,averageStart:starts.length?starts.reduce((a,r)=>a+Number(r.start),0)/starts.length:null,startCoverage:starts.length,gained:gains.reduce((a,r)=>a+Number(r.gain),0),gainCoverage:gains.length,best:f.length?Math.min(...f.map(r=>Number(r.finish))):null};
  }
  function compare(a,b,s,c){
+  if(window.MMTVIntelligence?.model)return window.MMTVIntelligenceCore.compare(a.races.filter(r=>inScope(r.entry,s,c)),b.races.filter(r=>inScope(r.entry,s,c)));
   const ar=a.races.filter(r=>r.feature&&inScope(r.entry,s,c)),br=b.races.filter(r=>r.feature&&inScope(r.entry,s,c));
   const opponent=new Map(br.map(r=>[String(r.entry.subsession_id),r]));
   const shared=ar.filter(r=>opponent.has(String(r.entry.subsession_id))).map(a=>({a,b:opponent.get(String(a.entry.subsession_id))})).sort((a,b)=>a.a.entry.event_date.localeCompare(b.a.entry.event_date)||a.a.entry.subsession_id-b.a.entry.subsession_id);
