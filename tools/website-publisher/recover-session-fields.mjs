@@ -18,10 +18,10 @@ function readLinked(canonicalFile,ref){
  // Cache only the fields needed for validation, not the private broadcast payload.
  const s={sha,timestamp:full.timestamp,session:full.session,snapshot:full.snapshot,identity:full.broadcast?.nativeEventIdentity,
   raw:full.diagnostic?.rawSession,diagnostics:(full.diagnostic?.drivers||[]).map(d=>({number:String(d.number),carIdx:d.fields?.carIdx,userId:d.fields?.userId,bestLap:d.fields?.bestLapTime,start:d.fields?.startPosition,laps:d.fields?.laps})),
-  drivers:full.drivers||[],native:full.broadcast?.nativeHistoricalResults?.sessions||[],stable:full.broadcast?.nativeClassificationStability?.sessions||[],
+  drivers:(full.drivers||[]).map(d=>Object.fromEntries(['number','lapsCompleted','bestLap','lastLap','startPosition','sdkStartPosition','startPositionOverridden','lapsLed','rawLapsLed'].map(k=>[k,d[k]]))),native:full.broadcast?.nativeHistoricalResults?.sessions||[],stable:full.broadcast?.nativeClassificationStability?.sessions||[],
   evidence:full.broadcast?.nativeFinalSessionEvidence,led:full.lapsLedIntegrity,eol:full.broadcast?.eolGridPreview,eolStats:full.broadcast?.eolBroadcastStats,yota:full.broadcast?.yotaEOL,
   replay:full.session?.isReplay===true||full.diagnostic?.calculated?.isReplay===true||full.broadcast?.nativeFinalSessionEvidence?.isReplay===true};
- loaded.set(dest,s);return s;
+ loaded.set(dest,s);if(loaded.size>32)loaded.delete(loaded.keys().next().value);return s;
 }
 export function validateSample(s,{id,num,raw}){
  const reject=reason=>({valid:false,reason});
@@ -41,10 +41,11 @@ export function validateSample(s,{id,num,raw}){
  if(!native?.completedCandidate||!native.structureValid||native.resultsOfficial!==1||fingerprint(native)!==fingerprint(raw))return reject('classification_mismatch');
  return {valid:true,proof,stable,native};
 }
-function selectRefs(refs){
+function selectRefs(refs,exhaustive,priorSourceHashes=[]){
+ if(exhaustive)return refs.map((r,order)=>({...r,order})).reverse();
  const selected=new Map();
  // Recent captures normally suffice; bounded samples across the catalogue find pre-replay evidence too.
- for(const [i,r] of refs.entries())if(i>=refs.length-32)selected.set(r.file,{...r,order:i});
+ for(const [i,r] of refs.entries())if(i>=refs.length-32||priorSourceHashes.includes(r.sha256.toLowerCase()))selected.set(r.file,{...r,order:i});
  for(let i=0;i<40;i++){const n=Math.floor(i*Math.max(0,refs.length-1)/39);if(refs[n])selected.set(refs[n].file,{...refs[n],order:n});}
  return [...selected.values()].sort((a,b)=>b.order-a.order);
 }
@@ -62,16 +63,18 @@ function noEol(s,{entry,kind,raw,previousWinner}){
  if(entry.series==='Yota Outlawz'&&s.yota?.status==='winner_absent_or_not_loaded'&&s.yota.currentDriverPresent===false&&Number(s.yota.previousWinner?.round)===Number(entry.round)-1&&String(s.yota.previousWinner?.number)===String(previousWinner.car_number))return 'previous_winner_absent_eol_expired';
  return null;
 }
-export function recoverSession({canonical,canonicalFile,id,raw,entry,kind,previousWinner,knownIds,publishedRows=[]}){
- const num=Number(raw.sessionNum),refs=selectRefs((canonical.live?.captures||[]).filter(r=>Number(r.sessionNum)===num));
- const accepted=[],rejected={};
+export function recoverSession({canonical,canonicalFile,id,raw,entry,kind,previousWinner,knownIds,publishedRows=[],exhaustive=false,priorSourceHashes=[]}){
+ const num=Number(raw.sessionNum),refs=selectRefs((canonical.live?.captures||[]).filter(r=>Number(r.sessionNum)===num),exhaustive,priorSourceHashes);
+ const accepted=[],rejected={},ledger=[],observed=new Map();
  for(const ref of refs){
   const s=readLinked(canonicalFile,ref),valid=validateSample(s,{id,num,raw});
+  if(exhaustive)ledger.push({capture_sha256:s.sha,valid:valid.valid,reason:valid.reason||null,sdk_session_number:s.raw?.sessionNum,native_session_number:s.evidence?.nativeCurrentSessionNum,sdk_state:s.raw?.state,native_state:valid.proof?.nativeSessionState??s.evidence?.sessions?.[0]?.nativeSessionState,replay_context:s.evidence?.sessions?.[0]?.replayContextClassification||'unknown'});
+  for(const d of s.drivers){const o=observed.get(String(d.number))||{frames:0,best:0,start:0,led:0};o.frames++;if(numeric(d.bestLap)&&d.bestLap>0)o.best++;if(numeric(d.sdkStartPosition)&&d.sdkStartPosition>0)o.start++;if(numeric(d.lapsLed))o.led++;observed.set(String(d.number),o);}
   if(!valid.valid){rejected[valid.reason]=(rejected[valid.reason]||0)+1;continue}
   accepted.push({s,ref,valid});
-  if(accepted.length>=5)break;
+
  }
- const output=new Map();
+ const output=new Map(),driverAudit=[];
  for(const row of raw.results){
   const key=String(row.number),expectedId=Number(knownIds.get(key));if(!Number.isInteger(expectedId)||expectedId<=0||!Number.isInteger(row.carIdx)||row.carIdx<0||!key)continue;
   const result={driver_id:expectedId,values:{},proofs:{}};
@@ -85,7 +88,7 @@ export function recoverSession({canonical,canonicalFile,id,raw,entry,kind,previo
    const eligible=samples.filter(x=>predicate(x));if(!eligible.length)return [];
    const newest=eligible[0],matching=eligible.filter(x=>same(x.d[field],newest.d[field]));
    const observations=new Set(matching.map(x=>String(x.s.evidence.telemetryTick)+'|'+x.valid.stable.acceptedObservations));
-   if(matching.length>=2&&observations.size>=2)return matching;
+   if(matching.length>=2&&observations.size>=2){const seen=new Set();return matching.filter(x=>{const key=String(x.s.evidence.telemetryTick)+'|'+x.valid.stable.acceptedObservations;if(seen.has(key))return false;seen.add(key);return true}).slice(0,2);}
    // A single current SDK frame can supplement a field when its native final
    // classification has already remained unchanged for 30s / five observations.
    // Expose this weaker evidence explicitly; it is never an official result field.
@@ -105,7 +108,8 @@ export function recoverSession({canonical,canonicalFile,id,raw,entry,kind,previo
   if(result.values.start_position!=null){result.values.positions_gained=result.values.start_position-Number(row.position);result.proofs.positions_gained={...result.proofs.start_position,field:'verified_start_position - native_finish_position',certainty:'derived_from_verified_start_and_native_finish'};}
   // Supplied native result fields only: never offTracks or championship rule calculations.
   for(const field of ['incidents','champ_points'])if(numeric(row[field])&&Number(row[field])>=0){result.values[field]=Number(row[field]);result.proofs[field]={field:'native_completed.results.'+field,source_kind:'native_completed_result_field',certainty:'native_supplied',subsession_id:id,session_number:num,driver_id:expectedId,car_number:key,official:false};}
+  driverAudit.push({driver_id:expectedId,car_number:key,linked_sdk_availability:observed.get(key)||{frames:0,best:0,start:0,led:0},accepted_identity_matched_frames:samples.length,unfilled_reasons:Object.fromEntries(['best_lap_seconds','start_position','positions_gained','laps_led','incidents','champ_points'].filter(f=>result.values[f]==null).map(f=>[f,(['incidents','champ_points'].includes(f)?'not_supplied_in_native_classification':!samples.length?'no_current_completed_clock_matched_driver_capture':f==='start_position'||f==='positions_gained'?'no_corroborated_post_eol_or_exempt_complete_grid':f==='laps_led'?'active_laps_led_integrity_or_distance_check_failed':'no_consistent_final_lap_count_and_raw_best_confirmation')]))});
   output.set(expectedId,result);
  }
- return {rows:output,audit:{subsession_id:id,session_number:num,captures_considered:refs.length,accepted:accepted.length,rejected,recovered_fields:Object.fromEntries(['best_lap_seconds','start_position','positions_gained','laps_led','incidents','champ_points'].map(f=>[f,[...output.values()].filter(r=>r.values[f]!=null).length]))}};
+ return {rows:output,details:{captures:ledger,drivers:driverAudit},audit:{subsession_id:id,session_number:num,scan:exhaustive?'exhaustive':'bounded_plus_prior_verified_sources',captures_considered:refs.length,accepted:accepted.length,rejected,recovered_fields:Object.fromEntries(['best_lap_seconds','start_position','positions_gained','laps_led','incidents','champ_points'].map(f=>[f,[...output.values()].filter(r=>r.values[f]!=null).length]))}};
 }

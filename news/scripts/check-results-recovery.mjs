@@ -22,3 +22,12 @@ assert.equal(run(()=>{},{entry:{series:'Cushion Kings',round:6}}).values.start_p
 const confirmed=run(()=>{},{entry:{series:'Cushion Kings',round:6},publishedRows:[{driver_id:925665,car_number:'75',start_position:1,start_position_source:'confirmed_eol_independent_lane_advancement'}]});assert.equal(confirmed.proofs.start_position.certainty,'confirmed_post_eol_start');
 assert.equal(run(()=>{},{knownIds:new Map([['75',471386]])}),undefined);
 console.log('PASS recovery guards: identity/car/session, native completion, retained/replay, clocks, stable observations, checksum, final laps, matching best, legal led, EOL, unknown incidents/points and certainty labels.');
+
+// Exhaustive evidence outside the bounded sample must survive later automatic exports.
+const corpus=[];for(let i=0;i<100;i++){const s=structuredClone(base);s.broadcast.nativeFinalSessionEvidence.telemetryTick=i+1000;s.broadcast.nativeClassificationStability.sessions[0].acceptedObservations=i+100;if(![1,3].includes(i))s.diagnostic.rawSession.state=4;const bytes=JSON.stringify(s),file='live-staging/corpus-'+i+'.json';fs.writeFileSync(path.join(dir,file),bytes);corpus.push({file,sessionNum:9,sha256:crypto.createHash('sha256').update(bytes).digest('hex')});}
+const options={canonical:{live:{captures:corpus}},canonicalFile:path.join(dir,'canonical/89836161.json'),id:89836161,raw,entry:{series:'Yota Outlawz',round:1},kind:'feature',knownIds:new Map([['75',925665]])};
+assert.equal(recoverSession(options).rows.get(925665).values.best_lap_seconds,undefined);
+const exhaustive=recoverSession({...options,exhaustive:true});assert.equal(exhaustive.audit.captures_considered,100);assert.equal(exhaustive.details.captures.length,100);assert.equal(exhaustive.rows.get(925665).values.best_lap_seconds,16.2876);
+const hashes=exhaustive.rows.get(925665).proofs.best_lap_seconds.capture_sha256;assert.equal(hashes.length,2);
+const retained=recoverSession({...options,priorSourceHashes:hashes});assert.equal(retained.rows.get(925665).values.best_lap_seconds,16.2876);assert.ok(retained.audit.captures_considered<100);
+console.log('PASS exhaustive recovery and automatic source retention: outside-sample evidence, two distinct observations, complete scan ledger, bounded future revalidation and no regression.');

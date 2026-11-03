@@ -15,7 +15,7 @@ const context={URL,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addE
  catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await read(`news/assets/${name}.js`),context);
+for(const name of ['result-tables','seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await read(`news/assets/${name}.js`),context);
 const script=await read('news/assets/app.js');
 vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues};\n})();'),context);
 await context.window.tests.init();
@@ -89,12 +89,17 @@ for(const d of data.drivers){
  assert.equal(new Set(d.races.map(r=>r.entry.subsession_id)).size,d.races.length);
  assert.equal(stats.metrics(d.races).starts,d.races.filter(r=>r.feature).length);
 }
-// Saved session points must be preserved, including zeros and bonus points.
+// Without the verified intelligence model, raw champ_points alone cannot establish league scoring.
 const jim=data.drivers.find(d=>d.id===stats.key('Jim Reavis'));
 const opener=jim.races.find(r=>r.entry.subsession_id===88961208);
 const meeting=JSON.parse(await read('news/data/meetings/88961208.json'));
 const saved=meeting.sessions.filter(s=>s.available&&['qualifying','heat','twin_feature_1','twin_feature_2','feature','consolation'].includes(s.kind)).flatMap(s=>s.classification.filter(r=>stats.key(r.driver)===jim.id));
-assert.equal(opener.points,saved.reduce((sum,r)=>sum+r.champ_points,0));
+const expectedProvisional=meeting.sessions.filter(s=>s.available&&['qualifying','heat','twin_feature_1','twin_feature_2','feature','consolation'].includes(s.kind)).flatMap(s=>s.classification.filter(r=>stats.key(r.driver)===jim.id).map(r=>stats.points('Bomber Stocks',s.kind,r.position))).reduce((a,b)=>a+b,0);
+assert.equal(opener.points,expectedProvisional);assert.ok(opener.estimated>0);
+const score=context.window.MMTVResults.score;const proof={league_id:10402,official:true,field:'official.session_results.results.league_points'};
+assert.equal(score({position:6,league_points:37,league_points_status:'calculated_provisional',league_points_provenance:{official:false,field:'existing_KHR_series_session_scoring_rules',position_used:7}},{series:'Yota Outlawz'},{kind:'feature'},stats.points).value,37);
+assert.equal(score({position:1,champ_points:99},{series:'Bomber Stocks'},{kind:'heat'},stats.points).value,8);
+assert.deepEqual(JSON.parse(JSON.stringify(score({position:1,league_points:0,league_points_status:'saved_league',league_points_provenance:proof},{series:'Bomber Stocks'},{kind:'heat'},stats.points))),{value:0,status:'saved_league',proof});
 context.location.hash='#standings';await stats.standings();
 assert.ok(node('app').innerHTML.includes('BEFORE DROPS'));
 assert.ok(node('app').innerHTML.includes('*'));

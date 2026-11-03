@@ -22,9 +22,9 @@ const context={URL,TextEncoder,Uint8Array,crypto:crypto.webcrypto,setInterval:()
  try{const rel=url.startsWith('../')?url.slice(3):'news/'+url;const source=await text(rel);return {ok:true,text:async()=>source,json:async()=>JSON.parse(source)};}catch{return {ok:false};}
 }};
 vm.createContext(context);
-for(const name of ['seed','editorial','intelligence-core','intelligence','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await text(`news/assets/${name}.js`),context);
+for(const name of ['result-tables','seed','editorial','intelligence-core','intelligence','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await text(`news/assets/${name}.js`),context);
 const appSource=await text('news/assets/app.js');
-vm.runInContext(appSource.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues,getEvent,getMeeting,stageTable};\n})();'),context);
+vm.runInContext(appSource.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues,getEvent,getMeeting,stageTable,rankSort};\n})();'),context);
 await context.window.tests.init();
 const intelligence=context.window.MMTVIntelligence,core=context.window.MMTVIntelligenceCore;
 assert.ok(intelligence.model,'Static export must pass SHA256/schema validation');
@@ -40,7 +40,7 @@ for(const event of events){
  for(const fact of event.facts){assert.ok(fact.source);assert.ok(fact.related_subsessions.every(id=>ids.includes(id)));assert.ok(fact.coverage.known<=fact.coverage.total);}
 }
 const historical=JSON.parse(execFileSync('git',['-C',root,'show','HEAD:news/data/intelligence/races.json'],{encoding:'utf8',maxBuffer:40e6}));
-for(const e of events.filter(e=>e.source.certainty==='official'))assert.deepEqual(JSON.parse(JSON.stringify(e.rows)),historical.races.find(r=>r.entry.subsession_id===e.entry.subsession_id).rows,'Every official Feature payload is preserved');
+for(const e of events.filter(e=>e.source.certainty==='official'))for(const [i,row] of historical.races.find(r=>r.entry.subsession_id===e.entry.subsession_id).rows.entries())for(const [key,value] of Object.entries(row))assert.deepEqual(JSON.parse(JSON.stringify(e.rows[i][key])),value,'Existing official Feature field is preserved: '+key);
 const r1=events.find(e=>e.entry.subsession_id===88961208);
 assert.equal(r1.rows[0].driver,'Jim Reavis');assert.equal(r1.rows[0].laps_completed,25);assert.equal(r1.rows[0].start_position,14);
 const yota=events.find(e=>e.entry.subsession_id===89836161);
@@ -71,6 +71,7 @@ for(const id of ids){
  const enriched=intelligence.enrichEvent(original);
  for(const [i,row] of original.feature_results.entries())for(const [key,value] of Object.entries(row))if(value!==null&&value!==undefined)assert.deepEqual(enriched.feature_results[i][key],value,'Existing published value must be preserved '+id+'/'+key);
 }
+let savedSessionCount=0,savedRowCount=0;
 // All existing tables preserve classification and non-null fields; supplements carry per-field proof.
 for(const event of events){
  const live=(await read('news/data/live/index.json')).events.some(e=>e.subsession_id===event.entry.subsession_id);
@@ -78,16 +79,26 @@ for(const event of events){
  const meeting=await read(p),enriched=intelligence.enrichMeeting(meeting);
  assert.equal(enriched.sessions.length,meeting.sessions.length);
  for(const [i,s] of meeting.sessions.entries()){
+  savedSessionCount++;savedRowCount+=s.classification.length;for(const row of s.classification)assert.ok(data.drivers.some(d=>d.id===context.window.tests.driverStats.key(row.driver)),'Every saved driver link resolves to a profile: '+row.driver);
   assert.equal(enriched.sessions[i].classification.length,s.classification.length);
   for(const [j,row] of s.classification.entries())for(const [key,value] of Object.entries(row))if(value!=null)assert.deepEqual(enriched.sessions[i].classification[j][key],value);
-  const html=context.window.tests.stageTable(enriched.sessions[i]);
-  if(s.classification.length){assert.equal((html.match(/<th>/g)||[]).length,9);for(const body of html.matchAll(/<tr>(.*?)<\/tr>/gs))if(body[1].includes('<td'))assert.equal((body[1].match(/<td(?:>| )/g)||[]).length,9);}
+  const html=context.window.tests.stageTable(enriched.sessions[i],event.entry);
+  if(s.classification.length){const k=/^WARM/i.test(s.name)?'warmup':s.kind;const expected=['practice','warmup'].includes(k)?6:k==='qualifying'?(enriched.sessions[i].classification.some(r=>r.qual_lap_seconds>0)?8:7):10;assert.equal((html.match(/<th>/g)||[]).length,expected,k);for(const body of html.matchAll(/<tr>(.*?)<\/tr>/gs))if(body[1].includes('<td'))assert.equal((body[1].match(/<td(?:>| )/g)||[]).length,expected);}
  }
  if(event.source.certainty!=='official'){
   const max=Math.max(...event.rows.map(r=>r.laps_completed));assert.ok(event.rows.reduce((n,r)=>n+(r.laps_led||0),0)<=max);
   for(const row of [...event.rows,...event.sessions.flatMap(s=>s.classification)])for(const proof of Object.values(row.field_provenance?.fields||{}))if(proof.source_kind)assert.equal(proof.official,false);
  }
 }
+assert.equal(savedSessionCount,158);assert.equal(savedRowCount,1463);
+const screenshotMeeting=await read('news/data/meetings/89495168.json'),practice=screenshotMeeting.sessions.find(s=>s.kind==='practice'&&s.name==='PRACTICE');
+assert.equal(practice.classification[0].driver,'Chad Puterbaugh');assert.equal(practice.classification[0].laps_completed,32);assert.equal(practice.classification[0].best_lap_seconds,9.7042);assert.equal(practice.classification[0].incidents,2);
+const practiceHtml=context.window.tests.stageTable(practice,events.find(e=>e.entry.subsession_id===89495168).entry);for(const h of ['START','+/-','LED','PTS','STATUS'])assert.ok(!practiceHtml.includes('<th>'+h+'</th>'));
+const sortRows=[{finish_position:1,start_position:null,positions_gained:null,laps_led:null},{finish_position:2,start_position:4,positions_gained:2,laps_led:0},{finish_position:3,start_position:1,positions_gained:-2,laps_led:5}];
+for(const sort of ['start','gained','led'])assert.equal(context.window.tests.rankSort(sortRows,sort).at(-1).finish_position,1);
+const copied=context.window.MMTVResults.copy({series:'Test',round:1,track:'Track'},sortRows.map(r=>({...r,driver:'Driver',car_number:'1',laps_completed:null})),n=>n,'source');assert.ok(!/\b(?:null|undefined|NaN)\b/.test(copied));assert.ok(copied.includes('start —, laps —, led —'));
+const oldDrivers=JSON.parse(execFileSync('git',['-C',root,'show','HEAD:news/data/intelligence/drivers.json'],{encoding:'utf8',maxBuffer:40e6}));for(const driver of data.drivers)for(const race of driver.races)assert.equal(race.points,oldDrivers.drivers.find(d=>d.driver_id===driver.driver_id).races.find(r=>r.entry.subsession_id===race.entry.subsession_id).points,'Verified league scoring preserves existing totals');
+assert.equal(events.find(e=>e.entry.subsession_id===89302439).sessions.find(s=>s.simsession_number===-2).kind,'consolation');
 const cushion=events.find(r=>r.entry.subsession_id===89812470),travis=cushion.rows.find(r=>r.car_number==='88');assert.equal(travis.start_position,11);assert.equal(travis.field_provenance.fields.start_position.certainty,'confirmed_post_eol_start');
 const mini=events.find(r=>r.entry.subsession_id===89834758);assert.equal(mini.coverage.best_lap_seconds.known,9);assert.equal(mini.coverage.laps_led.known,9);assert.equal(mini.coverage.start_position.known,0);
 assert.ok(!appSource.includes('<th>STATUS</th>'));assert.ok(!appSource.includes('<td>${esc(r.reason_out'));
@@ -108,4 +119,5 @@ assert.equal(core.compare(a.races,[]).shared.length,0);
 const broadcasts=await read('news/data/broadcasts.json'),editorial=JSON.parse((await text('news/assets/editorial.js')).replace(/^\s*window\.MMTV_EDITORIAL\s*=\s*/,'').replace(/;\s*$/,''));
 assert.ok(ids.every(id=>broadcasts.events[id]?.video_id&&editorial.events[id]));
 const protectedChanges=execFileSync('git',['-C',root,'diff','--name-only','HEAD','--','archive','news/data/live','news/data/broadcasts.json','news/data/driver-profiles.json','news/assets/editorial.js','news/assets/analytics.js','news/privacy.html'],{encoding:'utf8'}).trim();assert.equal(protectedChanges,'');
+console.log('PASS all saved results: 29 events, 158 sessions, 1463 rows, kind-specific headers, source-preserving enrichment, screenshot Practice, safe sorts/copy and unchanged championship totals.');
 console.log(`PASS canonical intelligence: ${ids.length} unique events, ${appearanceCount} Feature appearances, twins/scoring separated, verified identities, unknowns/denominators, static integrity, private-data exclusion, all profiles/races, H2H scopes and protected content.`);

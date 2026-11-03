@@ -26,14 +26,17 @@ window.MMTVIntelligence=(()=>{
   return {drivers:model.drivers.drivers.map(d=>({...d,iracing_id:d.driver_id,names:new Set(d.names),numbers:new Set(d.numbers),profile:profiles?.drivers?.[String(d.driver_id)]?.profile||null,races:d.races.map(r=>({...r}))})),meetings:model.races.meetings,failures:[],sessionGaps:[...new Set(model.championships.championships.flatMap(c=>c.missing_sessions.map(s=>s.subsession_id)))],intelligence:model.index};
  }
  function enrichRow(row,rows){
-  const id=row.driver_id||model.drivers.names[normalize(row.driver)];
+  const exact=rows.filter(r=>normalize(r.driver)===normalize(row.driver)&&r.car_number===String(row.car_number));
+  const id=row.driver_id||model.drivers.names[normalize(row.driver)]||(exact.length===1?exact[0].driver_id:null);
   const verified=rows.find(r=>r.driver_id===Number(id)&&r.car_number===String(row.car_number));if(!verified)return row;
   const output={...row,driver_id:verified.driver_id,field_provenance:{...row.field_provenance}};
-  for(const field of ['start_position','positions_gained','laps_completed','laps_led','best_lap_seconds','incidents','champ_points']){
+  for(const field of ['start_position','positions_gained','laps_completed','laps_led','best_lap_seconds','incidents','champ_points','qual_lap_seconds','average_lap_seconds','league_points','league_points_status','reason_out']){
    const proof=verified.field_provenance?.fields?.[field]||verified.field_provenance;
    if(row[field]==null&&verified[field]!=null){output[field]=verified[field];output.field_provenance[field]=proof;}
    else if(row[field]!=null&&verified[field]===row[field]&&proof){output.field_provenance[field]??=proof;}
   }
+  if(verified.unavailable_fields)output.unavailable_fields={...verified.unavailable_fields,...row.unavailable_fields};
+  if(verified.league_points_provenance)output.league_points_provenance=verified.league_points_provenance;
   return output;
  }
  function enrichEvent(event){
@@ -44,7 +47,7 @@ window.MMTVIntelligence=(()=>{
  function enrichMeeting(meeting){
   if(!model)return meeting;
   const source=model.races.races.find(r=>r.entry.subsession_id===Number(meeting.subsession_id));if(!source)return meeting;
-  return {...meeting,sessions:meeting.sessions.map(session=>{const verified=source.sessions.find(s=>Number(s.simsession_number)===Number(session.simsession_number)&&s.kind===session.kind);return verified?{...session,classification:(session.classification||[]).map(row=>enrichRow(row,verified.classification))}:session;})};
+  return {...meeting,sessions:meeting.sessions.map(session=>{const verified=source.sessions.find(s=>Number(s.simsession_number)===Number(session.simsession_number)&&(s.kind===session.kind||/^WARM/i.test(s.name)&&/^WARM/i.test(session.name)));return verified?{...session,classification_difference:verified.classification_difference,classification:(session.classification||[]).map(row=>enrichRow(row,verified.classification))}:session;})};
  }
  const raceLink=(id,text)=>`<a href="#race/${Number(id)}">${esc(text||'Race report')} ↗</a>`;
  function recoverySources(r){

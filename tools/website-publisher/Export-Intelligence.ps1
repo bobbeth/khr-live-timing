@@ -1,7 +1,7 @@
 # Read the existing canonical adapter as functions only. Never start or modify the Bridge.
 function Write-MMTVIntelligence {
  [CmdletBinding()]
- param([Parameter(Mandatory=$true)][string]$RepositoryPath,[Parameter(Mandatory=$true)][string]$CanonicalPath,[string]$AdapterSourcePath='',[string]$NodePath='',[int]$MinStableSeconds=90)
+ param([Parameter(Mandatory=$true)][string]$RepositoryPath,[Parameter(Mandatory=$true)][string]$CanonicalPath,[string]$AdapterSourcePath='',[string]$NodePath='',[int]$MinStableSeconds=90,[switch]$ExhaustiveRecovery,[string]$AuditOutputPath='')
  if(-not $AdapterSourcePath){
   $release=Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Bridge Releases\131DC'
   $records=@(Get-ChildItem -LiteralPath $release -Recurse -File -Filter active.json | Sort-Object LastWriteTimeUtc -Descending)
@@ -36,7 +36,7 @@ function Write-MMTVIntelligence {
   if(((Get-Date).ToUniversalTime()-$file.LastWriteTimeUtc).TotalSeconds -lt $MinStableSeconds){return [pscustomobject]@{changed_paths=@();event_count=$history.archiveCount;status='waiting_for_stable_canonical_archive'}}
   if((Get-FileHash -LiteralPath $file.FullName).Hash -ne $race.provenance.canonicalSha256){throw 'Canonical archive changed during export; retry after settling.'}
  }
- $payload=[ordered]@{history=$history;source_event_count=$availableCount;source_catalogue_count=$catalogueCount;statistics=(Get-KHRHistoricalInsights131R $history -Mode season).statistics;adapter_sha256=(Get-FileHash -LiteralPath $AdapterSourcePath).Hash}
+ $payload=[ordered]@{history=$history;source_event_count=$availableCount;source_catalogue_count=$catalogueCount;statistics=(Get-KHRHistoricalInsights131R $history -Mode season).statistics;adapter_sha256=(Get-FileHash -LiteralPath $AdapterSourcePath).Hash;recovery=[ordered]@{exhaustive=[bool]$ExhaustiveRecovery;audit_output=$AuditOutputPath}}
  $previousEncoding=$OutputEncoding
  try{
   $OutputEncoding=New-Object Text.UTF8Encoding($false)
