@@ -12,6 +12,8 @@ param(
     [switch]$SkipBroadcasts,
     [switch]$CheckDriverProfiles,
     [switch]$SkipDriverProfiles,
+    [string]$DriverSettingsPath='F:\Backup\KHR Bot\Driver Profiles\settings.json',
+    [string]$DriverStateRoot='',
     [string]$WorkRoot = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast'),
     [string]$StagePath = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Race Archives\Unified\live-staging'),
     [string]$CanonicalPath = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Race Archives\Unified\canonical'),
@@ -426,11 +428,23 @@ try {
         } catch { Note ('[YOUTUBE SKIP] '+$_.Exception.Message) }
     }
     $profileChanged=$false
-    if($lookupProfiles){
+    $autoDriverDiscovery=$false
+    if(-not $SkipDriverProfiles -and (Test-Path -LiteralPath $DriverSettingsPath)){
+        try{$autoDriverDiscovery=(Get-Content -LiteralPath $DriverSettingsPath -Raw|ConvertFrom-Json).enabled -eq $true}catch{Note '[DRIVER DISCOVERY] Invalid settings; disabled.'}
+    }
+    if($lookupProfiles -or $autoDriverDiscovery){
         try{
-            $profileUpdate=Update-MMTVDriverProfiles -RepositoryPath $repo
+            if(-not $DriverStateRoot){
+                if($Publish){$DriverStateRoot='F:\Backup\KHR Bot\Driver Profiles\state'}
+                else{$DriverStateRoot=Join-Path $WorkRoot 'Website Publisher\driver-state-dry-run'}
+            }
+            $profileUpdate=Invoke-MMTVDriverWorkflow -RepositoryPath $repo -NodePath $NodePath -StateRoot $DriverStateRoot -SettingsPath $DriverSettingsPath -Manual:$lookupProfiles
             $profileChanged=$profileUpdate.changed
-            if($profileChanged){$allowed.Add('news/data/driver-profiles.json')}
+            foreach($driverPath in @($profileUpdate.changed_paths)){
+                Require ($driverPath -in @('news/data/driver-identities.json','news/data/driver-profiles.json')) 'Unexpected driver output path.'
+                $allowed.Add($driverPath)
+            }
+            Note "[DRIVER DISCOVERY] $($profileUpdate.discovery_status); profile refresh $($profileUpdate.profile_status)."
             Note "[DRIVER PROFILES] $($profileUpdate.available) supplied profiles / $($profileUpdate.identified) verified driver IDs."
         }catch{Note ('[PROFILE SKIP] '+$_.Exception.Message)}
     }
@@ -472,3 +486,45 @@ try {
 }
 catch {Note ('[ERROR] '+$_.Exception.Message);throw}
 finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
+
+# SIG # Begin signature block
+# MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCsUflP3jI1lXiT
+# ynA2Y3XNIIgzGeHE6ORgmcbCevXddaCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
+# c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
+# MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
+# 9w0BAQEFAAOCAY8AMIIBigKCAYEA0KKkBodSOLNMxbrvEKCaBPzCWy+OCdhF8pV5
+# W2Kg3T7mMw9FjbGdMXqamhA0edqSj8H463I6NK8bIYYc1i2HS2Jh+jbUe02+aLT+
+# MYPakVjKgaqs8Hd5MYhsKv1JQxl92SVpGlL7NK3m2i4umT67Gl4ZzBzQCCL+03R1
+# 3vD7SCymEU3uVTQHc8+hdPXnvUeyTYy9jvC8QlfEX4zEKlO9ESmU6Yjk4fXmsEEg
+# 8cTrmqSw3EeDfn9xvZJ6z+tk9iDLLeJTnK03pXvPJJoCldVE377mPfdij3l7BEu1
+# SC8h7IL8nRq7JkbArXC6L6Yfyk0xRtDMRnYWM9BAaoTQH9WC5NtsDHs0Ztg6cuxL
+# TrUctaUgRHcDVW+pWndwEosK4QMeSMSSKJ+HNKQtfUCw0zYRHSICKD02F2s/qm2K
+# H43uGrtUp+w1ryc8C9tzznX8gia0UGPTYMI/OBSbaVOJUTCtjQGsuneZ2r19yRF+
+# /nxseWw3VpiclujlL0/Q/0L9zTd5AgMBAAGjRjBEMA4GA1UdDwEB/wQEAwIHgDAT
+# BgNVHSUEDDAKBggrBgEFBQcDAzAdBgNVHQ4EFgQUlPv7zz5U5NgsxT/dh2xfMvWZ
+# 9dswDQYJKoZIhvcNAQELBQADggGBAK3zXDI/sEffqGOv8+9vjmVrHcId8WR36D7G
+# JNxxA3Y3KKmnq2QtV88Vnu/zgM4wFZHjru56h9XTNWLNfEtgA17V9UXlmgMEqUvh
+# Rp0eIkaZeRpnuJwybSQFijx0Djt19T4N4/sm/22l0u2uRTl9AZ9wkq2Udu42vi8x
+# QCmWOspU1srAcKOJZNIlvxZKFsfiN8LKMaKiKweSSRsnplFimiCoatfJFHzKmxhu
+# zyHab1jVH08/Zi8zSvDtSh+d34PO9hX+HF8ZMAJLj6Bnn5nK+98GMAaDOa5/PARl
+# sbXXlcAybeyODLw6pQjapZlotot5VAirWzKO5zkmiCX+ym+zCsPvWzU2/8YOZJto
+# MslBns4Yz4rdiGTHsLO+GyV6VFLcGvZhA7llttIG9B5aSCvZMwnDcQsgb4YKIo7A
+# HXMkadUbyjqL78Docj57LWog0/NAH1dO1simWtkH0z9GUuijebxzkk0VlQXGZBGR
+# hRjYXqaUj8R62vAr5K2SI3HGmi3bYjGCAmowggJmAgEBMDgwJDEiMCAGA1UEAwwZ
+# S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
+# hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
+# DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
+# MC8GCSqGSIb3DQEJBDEiBCCZnHxXJtrwmtMYukjxebzCpFS3daMUNmAVYFeVDu0H
+# WTANBgkqhkiG9w0BAQEFAASCAYBaMnoHnWXOPF2fLmqkOAwiDSpo5iT2Kd7wCsWi
+# iYtJCyhyswudDIWTAiW4z8kyctADGDPMTn0PbTGnuW2tZuggv/DZ/3fit7B12BNc
+# vT1QhVYUn4oOqlDiMmycp2iy/LUKCdxiXe6RZio+FtMcyPTLILs1ubFh4SDVuK91
+# OHYcXHdaAwQUq+LBNffpdl1m2+OASSVCk3A9wxoLKx+x0vS+dg42vkjEJy86iJr8
+# Qst8E+j2SxqdpQOpb1ty2wsJMEN6q41qnNoag/COdh0cHL92oqPJpqKp9v7YPLCF
+# 30QGmTDmhP7HLp+1rcDhWVsDqjShIpSqyfyE39Z7wzaDjLlVXWGZR3mMN5z4r7Md
+# afNIh22769x/17KAb9hFu025ruD8vN4dj9zsnFlhh+3wOG0d+wpByDH7sphaZDsd
+# 4EFkEnJFCdK9cK+owJyVRA0YJOOBdrrcOahJY/S98LgKwdHDvd5iOgTwZcKUxXl7
+# 2NytU/OKHbnZsOGBY4YSM6K4k8w=
+# SIG # End signature block

@@ -1,0 +1,3 @@
+# Preserve exact bytes of signed publisher scripts across checkouts.
+tools/website-publisher/MMTV-AutoPublish.ps1 -text
+tools/website-publisher/DriverProfiles.ps1 -text
