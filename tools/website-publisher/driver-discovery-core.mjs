@@ -18,12 +18,14 @@ function observe(input,now,settings){
  if(s.snapshot?.retained!==false||s.snapshot.retainedFrom)fail('retained_snapshot');
  if(s.connectionHealth&&s.connectionHealth.isFresh!==true)fail('unfresh_connection');
  const n=s.broadcast?.nativeEventIdentity,r=s.diagnostic?.rawSession,c=s.broadcast?.championship?.sessionCapture?.currentSession;
+ const nativeCurrent=s.broadcast?.nativeHistoricalResults?.sessions?.find(x=>x.sessionNum===r?.sessionNum),safety=s.broadcast?.nativeCompletionSafety;
+ const independent=!c&&safety?.readOnly===true&&safety.sessionIdentity===n?.eventKey&&safety.nativeCurrentSessionNum===r?.sessionNum&&nativeCurrent?.structureValid===true&&norm(nativeCurrent.sessionName)===norm(r?.sessionName)&&norm(nativeCurrent.sessionType)===norm(r?.sessionType)&&s.broadcast.nativeHistoricalResults.sessionInfoUpdate===n?.nativeUpdate;
  if(!n||n.identityValid!==true||n.leagueConsistent!==true||Number(n.leagueID)!==10402||Number(n.liveLeagueID)!==10402||Number(s.league?.id)!==10402||!validId(n.subSessionID)||!validId(n.sessionID))fail('invalid_native_identity');
  const eventKey=[n.sessionID,n.subSessionID,10402].join('|');if(n.eventKey!==eventKey)fail('native_event_key_mismatch');
- if(!r||!Number.isInteger(r.sessionNum)||r.sessionNum<0||!c||c.sessionNum!==r.sessionNum||(norm(c.name)!==norm(r.sessionName))||(norm(c.type)!==norm(r.sessionType))||c.replayBlocked!==false||s.replayMode===true||r.replayMode===true||s.session?.isReplay===true)fail('session_or_replay_mismatch');
+ if(!r||!Number.isInteger(r.sessionNum)||r.sessionNum<0||(!independent&&(!c||c.sessionNum!==r.sessionNum||norm(c.name)!==norm(r.sessionName)||norm(c.type)!==norm(r.sessionType)||c.replayBlocked!==false))||s.replayMode===true||r.replayMode===true||s.session?.isReplay===true)fail('session_or_replay_mismatch');
  if(norm(s.session?.name)!==norm(r.sessionName)||Number(s.session?.state)!==Number(r.state))fail('diagnostic_session_mismatch');
  if(s.broadcast.nativeCompletionSafety?.nativeCurrentSessionNum!=null&&s.broadcast.nativeCompletionSafety.nativeCurrentSessionNum!==r.sessionNum)fail('native_session_mismatch');
- const rows=s.diagnostic?.drivers,active=s.drivers;if(!Array.isArray(rows)||!Array.isArray(active)||rows.length>256||active.length>256||c.driverCount!==active.length)fail('invalid_current_roster');
+ const rows=s.diagnostic?.drivers,active=s.drivers;if(!Array.isArray(rows)||!Array.isArray(active)||rows.length>256||active.length>256||(c&&c.driverCount!==active.length))fail('invalid_current_roster');
  const native=s.broadcast.nativeHistoricalResults?.sessions?.find(x=>x.sessionNum===r.sessionNum),nativeRows=native?.results;
  const excluded=new Set(settings.excluded_customer_ids.map(Number)),ids=new Map(),carIndexes=new Map(),accepted=new Map(),rejected=[];
  for(const row of rows){const f=row.fields||{},id=Number(f.userId),idx=f.carIdx;ids.set(id,(ids.get(id)||0)+1);carIndexes.set(idx,(carIndexes.get(idx)||0)+1)}

@@ -13,9 +13,9 @@ function Invoke-MMTVDriverWorkflow {
   $bridge='F:\Backup\KHR Bot\Production\KHR Broadcast\Bridge Releases\131DC\retry-20261103-201556-303\DC.ps1'
   if((Get-FileHash -LiteralPath $bridge -Algorithm SHA256).Hash -ne 'CB54C4E8FA10E12EEFB0A52680EAAEF9AAA14ED3AAB047AFEA8A9429BC412EA6'){throw 'Unreviewed Bridge version; discovery safely skipped.'}
   try{
-   $first=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8765/live' -TimeoutSec 3).Content
+   $first=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8765/live' -TimeoutSec 8).Content
    Start-Sleep -Seconds 2
-   $second=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8765/live' -TimeoutSec 3).Content
+   $second=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8765/live' -TimeoutSec 8).Content
    $request.snapshots=@($first,$second);$request.now=[DateTime]::UtcNow.ToString('o')
   }catch{$request.snapshots=@()}
  }
@@ -46,11 +46,12 @@ function Update-MMTVDriverProfiles {
 }
 
 
+
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA381FG0jc9s6uI
-# ZS0PJu/tjwQcUczdbHFVr+pfntPq7qCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAu+3YMlwGjtrOo
+# /Fmctdum2Uy2oS+wnPD+3s2FePebbqCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -76,14 +77,14 @@ function Update-MMTVDriverProfiles {
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCBzf7AxCLOgcR+dNemFo792nYH6II7nEWBacnFV1xTn
-# YDANBgkqhkiG9w0BAQEFAASCAYAVx13TnwZu/5XufIbGtBw+UDlMgf/jrdyrq5Ip
-# 4EpEMh9ZGseagVmWqZ3oe59n0sUb4/85ZF0ChmNwHU6e6Zho9IDZv7UBkwW+ZG6j
-# MfHCOByQoJ9CBKvZP1wEkrqlnQmNq+u8Q45rmo1AXGqvSwGJiF6A/yzsGReMC1JR
-# nhs334FZPbPLf8Iu2W4B0thSPzyOrI8LHWzv3G2YYedwytJDg4V8AZnIsWej9JEe
-# Snp8nD6qBiIgdjUNWoXEhMgQjydMwv0Q8HpFJqfS2jorv0yAFkC19mKIzlSD8/ZW
-# zOlfBSLuykp2wHmJ1TfDeopKsgzYBcJFmArJY4yEYffJS4X4yjgYscHwDRoGsYCw
-# 1Jsvma8Oyz/WX4tFVqnZ8tOgJ/fUgqHdVXEc0LAJpNBlfbiAu4frtH4aejmk7Sfe
-# DgBT6LMDuPUkra9ya2GBXrWm20hjrWrAHiGV6Np7pssmp1B6uyLylaaMrdPPdR+E
-# El94naZsMIRr39T3teqRKJbok94=
+# MC8GCSqGSIb3DQEJBDEiBCCutZhIUo4ATRXhGbcM+9d4Fzsmm/NHfsdaoxlI+GkM
+# VzANBgkqhkiG9w0BAQEFAASCAYCKmMR1xESRP3AYqmIvAehqXS41o0mwZrwcdSTH
+# nswmQwMREhSz6UUUR9HEIHamCbNxkmZVzMiDFc9R2FwxcPR7A5lgP7VWcklpTIyl
+# nkWrH/zgBw2unqRcXcwRhebB+1DTOBaYC08XpTFh29ZhyljWr0X+pj6CTnRgoI6O
+# P0rRA9I5LslQ233gG0fTy8k5u+644bW+5YKWUc0NGeqUxyloPDM4/5G1bR2p8BR9
+# GQWQf9ykoL0LdR0NyR64qIc3oTARW7hxwPMU3SDBWqyEIwXCdwZTGA6WkqjkEQb8
+# 1ZTUrvGlVnPAmM61F8mG3loxW/40hr+C00CmduFUAiAcJtHOC7RHIJx7eOeAWw0+
+# 8rfIYn1Z3r/kKdRhkigH+nfydyLjcybv4xipie7MZBazP0M3LL05gtiVMS29t1nd
+# i0HiZLtD977ssMFs64JYbuNQirhoICQr8tXtJTRRYhUSgaTXfq8TWfx0mI8rG0br
+# emkBOHhKIa364ZXtkTfECQFYF5Q=
 # SIG # End signature block
