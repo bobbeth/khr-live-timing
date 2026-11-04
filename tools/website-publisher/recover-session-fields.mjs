@@ -7,8 +7,8 @@ const same=(a,b)=>numeric(a)&&numeric(b)&&Math.abs(Number(a)-Number(b))<0.00005;
 const fingerprint=s=>JSON.stringify((s.results||[]).map(r=>[r.position,String(r.number),r.lapsCompleted]).sort((a,b)=>a[0]-b[0]));
 const normalized=s=>String(s||'').replace(/\s+/g,' ').trim().toLowerCase();
 const loaded=new Map();
-function readLinked(canonicalFile,ref){
- const unified=path.dirname(path.dirname(canonicalFile));
+function readLinked(canonicalFile,ref,captureRoot=null){
+ const unified=captureRoot||path.dirname(path.dirname(canonicalFile));
  const dest=path.resolve(unified,ref.file);
  if(!/^live-staging[\\/]/.test(ref.file)||!dest.startsWith(unified+path.sep))throw Error('Unsafe linked capture path');
  if(loaded.has(dest)){const cached=loaded.get(dest);if(cached.sha!==String(ref.sha256).toLowerCase())throw Error('Conflicting canonical-linked capture checksum');return cached;}
@@ -63,11 +63,11 @@ function noEol(s,{entry,kind,raw,previousWinner}){
  if(entry.series==='Yota Outlawz'&&s.yota?.status==='winner_absent_or_not_loaded'&&s.yota.currentDriverPresent===false&&Number(s.yota.previousWinner?.round)===Number(entry.round)-1&&String(s.yota.previousWinner?.number)===String(previousWinner.car_number))return 'previous_winner_absent_eol_expired';
  return null;
 }
-export function recoverSession({canonical,canonicalFile,id,raw,entry,kind,previousWinner,knownIds,publishedRows=[],exhaustive=false,priorSourceHashes=[]}){
+export function recoverSession({canonical,canonicalFile,id,raw,entry,kind,previousWinner,knownIds,publishedRows=[],exhaustive=false,priorSourceHashes=[],captureRoot=null}){
  const num=Number(raw.sessionNum),refs=selectRefs((canonical.live?.captures||[]).filter(r=>Number(r.sessionNum)===num),exhaustive,priorSourceHashes);
  const accepted=[],rejected={},ledger=[],observed=new Map();
  for(const ref of refs){
-  const s=readLinked(canonicalFile,ref),valid=validateSample(s,{id,num,raw});
+  const s=readLinked(canonicalFile,ref,captureRoot),valid=validateSample(s,{id,num,raw});
   if(exhaustive)ledger.push({capture_sha256:s.sha,valid:valid.valid,reason:valid.reason||null,sdk_session_number:s.raw?.sessionNum,native_session_number:s.evidence?.nativeCurrentSessionNum,sdk_state:s.raw?.state,native_state:valid.proof?.nativeSessionState??s.evidence?.sessions?.[0]?.nativeSessionState,replay_context:s.evidence?.sessions?.[0]?.replayContextClassification||'unknown'});
   for(const d of s.drivers){const o=observed.get(String(d.number))||{frames:0,best:0,start:0,led:0};o.frames++;if(numeric(d.bestLap)&&d.bestLap>0)o.best++;if(numeric(d.sdkStartPosition)&&d.sdkStartPosition>0)o.start++;if(numeric(d.lapsLed))o.led++;observed.set(String(d.number),o);}
   if(!valid.valid){rejected[valid.reason]=(rejected[valid.reason]||0)+1;continue}

@@ -1,0 +1,41 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import {driverAdmission} from './driver-admission.mjs';
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex'),norm=s=>String(s??'').toLowerCase().replace(/\s+/g,' ').trim(),require=(ok,msg)=>{if(!ok)throw Error(msg)};
+export function validateOwnerAssociation(a,{canonicalFile,settings,eligibility,minStableSeconds=90,now=Date.now(),captureRoot=null}){
+ require(a.owner_confirmed===true&&a.league_id===10402&&Number.isInteger(a.subsession_id)&&a.subsession_id>0,'Owner/league/subsession association invalid');
+ require(['bomber_stocks','cushion_kings','mini_menaces','dirt_cheap_asphalt_fast','wide_open_revival'].includes(a.series_key)&&Number.isInteger(a.round)&&a.round>0&&a.competition==='Fall Fest 2026','Owner championship association invalid');
+ const bytes=fs.readFileSync(canonicalFile),c=JSON.parse(bytes);require(hash(bytes)===a.canonical_sha256.toLowerCase(),'Associated canonical SHA256 changed; revalidate before publication');require(c.subsession_id===a.subsession_id,'Association/canonical event mismatch');require(c.round==null||Number(c.round)===a.round,'Conflicting canonical round');require(!c.series||[norm(a.series_key),norm(a.series_name)].includes(norm(c.series)),'Conflicting canonical series');require(!c.track||norm(c.track)===norm(a.track),'Conflicting canonical track');
+ require(now-fs.statSync(canonicalFile).mtimeMs>=minStableSeconds*1000,'Associated canonical is not settled');const unified=captureRoot||path.dirname(path.dirname(canonicalFile)),policy=driverAdmission({settings,eligibility});
+ const verified=[],fingerprints=[],sourcePaths=[];
+ for(const wanted of a.feature_capture_sha256){
+  const refs=(c.live?.captures||[]).filter(r=>String(r.sha256).toLowerCase()===wanted.toLowerCase());require(refs.length===1&&refs[0].sessionNum===a.feature_session_number,'Evidence not a unique canonical-linked Feature');
+  const ref=refs[0],file=path.resolve(unified,ref.file);require(/^live-staging[\\/]/.test(ref.file)&&file.startsWith(unified+path.sep),'Unsafe associated capture reference');const b=fs.readFileSync(file);require(hash(b)===wanted.toLowerCase(),'Associated capture SHA256 mismatch');require(now-fs.statSync(file).mtimeMs>=minStableSeconds*1000,'Capture is not settled');const s=JSON.parse(b),n=s.broadcast?.nativeEventIdentity,r=s.diagnostic?.rawSession;
+  require(n?.identityValid===true&&n.leagueConsistent===true&&n.leagueID===10402&&n.liveLeagueID===10402&&n.subSessionID===a.subsession_id&&n.sessionID===a.native_session_id&&n.eventKey===a.native_session_id+'|'+a.subsession_id+'|10402','Associated native identity mismatch');
+  require(s.snapshot?.retained===false&&!s.snapshot.retainedFrom&&s.session?.isFinished===true&&s.session.state===6&&r?.sessionNum===a.feature_session_number&&norm(r.sessionName)==='feature','Associated capture is not the finished non-retained Feature');
+  require(!s.session.isReplay&&!s.replayMode&&!s.fixture&&!s.synthetic,'Replay/fixture capture rejected');
+  require(norm(s.track?.displayName)===norm(a.track)&&norm(s.track?.name)===norm(a.sdk_track_name),'Associated track mismatch');
+  const sessions=s.broadcast?.nativeHistoricalResults?.sessions||[],feature=sessions.filter(x=>x.sessionNum===a.feature_session_number&&norm(x.sessionName)==='feature');require(feature.length===1,'Ambiguous associated Feature');
+  const proof=[];
+  for(const native of sessions.filter(x=>x.completedCandidate===true)){
+   require(native.structureValid===true&&native.resultsOfficial===1&&native.results?.length===native.classificationCount&&native.results.length>=2,'Invalid associated native session structure');
+   const stable=(s.broadcast.nativeClassificationStability?.sessions||[]).filter(x=>x.sessionNum===native.sessionNum);require(stable.length===1&&stable[0].eventIdentityValid===true&&stable[0].classificationUnchanged===true&&stable[0].acceptedObservations>=2&&stable[0].minimumSeconds>=5&&stable[0].unchangedSeconds>=stable[0].minimumSeconds,'Associated classification lacks stable completion evidence');
+   const ids=new Set(),cars=new Set();const rows=[...native.results].sort((x,y)=>x.position-y.position).map((row,i)=>{
+    require(row.position===i+1&&Number.isInteger(row.lapsCompleted)&&row.lapsCompleted>=0&&row.lapsCompleted<=native.resultsLapsComplete&&!cars.has(String(row.number)),'Invalid native positions/car/laps');cars.add(String(row.number));
+    const sdk=(s.diagnostic?.drivers||[]).filter(d=>d.fields?.carIdx===row.carIdx&&String(d.number)===String(row.number));require(sdk.length===1,'Native driver ID/car mapping ambiguous');const d=sdk[0].fields,id=Number(d.userId);require(Number.isSafeInteger(id)&&id>0&&!ids.has(id)&&!policy.blocked(id)&&(policy.verified(id)||policy.preserve(id)),'Unknown/duplicate/quarantined native competitor');ids.add(id);
+    require(![d,sdk[0]].some(o=>['ai','isAI','isSpectator','spectator','isObserver','isPaceCar','isBroadcaster'].some(k=>o[k]===true||o[k]===1||norm(o[k])==='true')),'AI/spectator native competitor rejected');
+    require(d.carId===a.car_id&&norm(d.carName)===norm(a.sdk_car_name)&&norm(d.carDisplayName)===norm(a.sdk_car_display_name),'Factual native car mismatch');
+    return {customer_id:id,position:row.position,number:String(row.number),name:row.name,laps:row.lapsCompleted,reason:row.reason};
+   });require(rows[0].laps===native.resultsLapsComplete,'Native winner/distance mismatch');proof.push({number:native.sessionNum,name:native.sessionName,laps:native.resultsLapsComplete,rows});
+  }
+  const final=proof.find(x=>x.number===a.feature_session_number);require(final&&final.laps===a.feature_laps&&final.rows.length===a.feature_rows,'Owner-confirmed Feature count/distance mismatch');
+  for(const expected of a.expected_feature_rows){const row=final.rows.find(r=>r.position===expected.position);require(row&&row.customer_id===expected.customer_id&&row.number===expected.number&&(expected.laps===undefined||row.laps===expected.laps)&&(expected.reason===undefined||row.reason===expected.reason),'Owner-confirmed Feature expectation mismatch');}
+  fingerprints.push(JSON.stringify(final.rows));verified.push({sha256:wanted.toLowerCase(),timestamp:s.timestamp,native_update:n.nativeUpdate,telemetry_tick:s.broadcast.nativeFinalSessionEvidence?.telemetryTick,accepted_observations:s.broadcast.nativeClassificationStability.sessions.find(x=>x.sessionNum===a.feature_session_number).acceptedObservations,sessions:proof});sourcePaths.push(file);
+ }
+ require(verified.length===2&&new Set(a.feature_capture_sha256.map(x=>x.toLowerCase())).size===2&&fingerprints[0]===fingerprints[1]&&(verified[0].native_update!==verified[1].native_update||verified[0].telemetry_tick!==verified[1].telemetry_tick||verified[0].accepted_observations!==verified[1].accepted_observations),'Two distinct matching native Feature observations required');
+ return {...a,canonicalFile,featureCaptureFiles:sourcePaths,proof:verified,public_provenance:{basis:'explicit_owner_confirmed_event_id_association',subsession_id:a.subsession_id,league_id:10402,series_key:a.series_key,round:a.round,competition:a.competition,track:a.track,car_id:a.car_id,car_class:a.car_class,canonical_sha256:a.canonical_sha256,feature_capture_sha256:a.feature_capture_sha256}};
+}
+if(process.argv[2]==='validate'){
+ let raw='';for await(const c of process.stdin)raw+=c;const req=JSON.parse(raw),docBytes=fs.readFileSync(req.associationsPath),doc=JSON.parse(docBytes);require(doc.schema_version==='MMTV-owner-event-associations-v1','Unsupported event association schema');
+ const settings=JSON.parse(fs.readFileSync(req.driverSettingsPath,'utf8')),eb=fs.readFileSync(settings.eligibility_path);require(hash(eb)===String(settings.eligibility_sha256).toLowerCase(),'Private admission ledger checksum mismatch');const eligibility=JSON.parse(eb),events={};
+ for(const [id,a]of Object.entries(doc.events)){require(String(a.subsession_id)===id,'Association key mismatch');events[id]=validateOwnerAssociation(a,{canonicalFile:path.join(req.snapshotsPath,id+'.json'),settings,eligibility,minStableSeconds:req.minStableSeconds,captureRoot:path.dirname(req.canonicalPath)});events[id].public_provenance.association_sha256=hash(docBytes);}
+ console.log(JSON.stringify({events,association_sha256:hash(docBytes)}));
+}
