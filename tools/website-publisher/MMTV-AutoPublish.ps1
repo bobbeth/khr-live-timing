@@ -462,7 +462,7 @@ try {
     [IO.File]::WriteAllText($htmlPath,$html.Replace("`r`n","`n"),(New-Object Text.UTF8Encoding($false)))
     $allowed.Add('news/data/live/index.json');$allowed.Add('news/assets/editorial.js');$allowed.Add('news/index.html')
     }
-    $intelligence=Write-MMTVIntelligence -RepositoryPath $repo -CanonicalPath $CanonicalPath -AdapterSourcePath $AdapterSourcePath -NodePath $NodePath -MinStableSeconds $MinStableSeconds
+    $intelligence=Write-MMTVIntelligence -RepositoryPath $repo -CanonicalPath $CanonicalPath -AdapterSourcePath $AdapterSourcePath -NodePath $NodePath -MinStableSeconds $MinStableSeconds -DriverSettingsPath $DriverSettingsPath
     foreach($path in @($intelligence.changed_paths)){Require ($path -match '^news/data/intelligence/((index|drivers|races|venues|championships|catalogue)\.json|events/[0-9]{6,12}\.json)$') "Unapproved intelligence output: $path";if($path -match '/events/(\d+)\.json$'){Require (@($intelligence.subsession_ids) -contains [long]$Matches[1]) "Unknown intelligence event output: $path"};$allowed.Add($path)}
     Note "[INTELLIGENCE] $($intelligence.event_count) canonical race events; $(@($intelligence.changed_paths).Count) changed derived files."
     if($allowed.Count -eq 0){Note '[PASS] No new races, broadcasts, driver profiles or intelligence changes to publish.';return}
@@ -487,11 +487,12 @@ try {
 catch {Note ('[ERROR] '+$_.Exception.Message);throw}
 finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 
+
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCsUflP3jI1lXiT
-# ynA2Y3XNIIgzGeHE6ORgmcbCevXddaCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBuUXvc+mimG/JT
+# zGWn519PLaOc7PmPSQL38zyW94DuDKCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -517,14 +518,14 @@ finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCCZnHxXJtrwmtMYukjxebzCpFS3daMUNmAVYFeVDu0H
-# WTANBgkqhkiG9w0BAQEFAASCAYBaMnoHnWXOPF2fLmqkOAwiDSpo5iT2Kd7wCsWi
-# iYtJCyhyswudDIWTAiW4z8kyctADGDPMTn0PbTGnuW2tZuggv/DZ/3fit7B12BNc
-# vT1QhVYUn4oOqlDiMmycp2iy/LUKCdxiXe6RZio+FtMcyPTLILs1ubFh4SDVuK91
-# OHYcXHdaAwQUq+LBNffpdl1m2+OASSVCk3A9wxoLKx+x0vS+dg42vkjEJy86iJr8
-# Qst8E+j2SxqdpQOpb1ty2wsJMEN6q41qnNoag/COdh0cHL92oqPJpqKp9v7YPLCF
-# 30QGmTDmhP7HLp+1rcDhWVsDqjShIpSqyfyE39Z7wzaDjLlVXWGZR3mMN5z4r7Md
-# afNIh22769x/17KAb9hFu025ruD8vN4dj9zsnFlhh+3wOG0d+wpByDH7sphaZDsd
-# 4EFkEnJFCdK9cK+owJyVRA0YJOOBdrrcOahJY/S98LgKwdHDvd5iOgTwZcKUxXl7
-# 2NytU/OKHbnZsOGBY4YSM6K4k8w=
+# MC8GCSqGSIb3DQEJBDEiBCDFNOOfrh/L20flvBwLq+Ibbf5FkPZQhrPdUA40CWet
+# DzANBgkqhkiG9w0BAQEFAASCAYANZu7pXj2uPqzRW9/n1Xli9SbSUm4sINn/CyEP
+# vAEZwJVFtd/m6aC/9DQxdLYiuAaG3UvozAPZehW7l+lVuqtcgSNM6YRUYhEBXX/2
+# q8U/mV+sc0DbbEl/uU+FfcS++cpytgQyTW47XOtAU514prZaDZfUeRsxWOEFM0Q0
+# 63oigjawW59V5aTCCzKnzIqgwM15gw46ByuePIMVCnAVjgH07BFi29+gHtA99xP2
+# WhR07Di2BoxTUwpfhfUwHLKFqLi9mcHUS95wC+3nxE+v4XSSXIumxExLzbuFXv9P
+# JnpNI9pWUIFOinH+A9mr+usDPv76cxYABJ/+USbhH+80YLdPo5BlQhmuo7yzsxUA
+# sROiaoiMyLr5/taG/kGNUDhHIXx9YNxOAiZVGPTYp3VK6gMZ2XLOZmhn7nBZ/avl
+# rauRihTIX2ytltB+Ns6T4a/LXcnIuN8xNWdC1qm08iM2XGhpBBclh+xSA06XMTl5
+# skQ7A9UDz2I0eg9tmpUnJERCJ9A=
 # SIG # End signature block
