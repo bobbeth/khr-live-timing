@@ -1,7 +1,7 @@
 # Read the existing canonical adapter as functions only. Never start or modify the Bridge.
 function Write-MMTVIntelligence {
  [CmdletBinding()]
- param([Parameter(Mandatory=$true)][string]$RepositoryPath,[Parameter(Mandatory=$true)][string]$CanonicalPath,[string]$AdapterSourcePath='',[string]$NodePath='',[int]$MinStableSeconds=90,[switch]$ExhaustiveRecovery,[string]$AuditOutputPath='',[string]$DriverSettingsPath='F:\Backup\KHR Bot\Driver Profiles\settings.json')
+ param([Parameter(Mandatory=$true)][string]$RepositoryPath,[Parameter(Mandatory=$true)][string]$CanonicalPath,[string]$AdapterSourcePath='',[string]$NodePath='',[int]$MinStableSeconds=90,[switch]$ExhaustiveRecovery,[string]$AuditOutputPath='',[string]$DriverSettingsPath='F:\Backup\KHR Bot\Driver Profiles\settings.json',[string]$EventAssociationsPath='',[string]$EventSnapshotsPath='')
  if(-not $AdapterSourcePath){
   $release=Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Bridge Releases\131DC'
   $records=@(Get-ChildItem -LiteralPath $release -Recurse -File -Filter active.json | Sort-Object LastWriteTimeUtc -Descending)
@@ -23,7 +23,18 @@ function Write-MMTVIntelligence {
  $script:KHRUnifiedCanonicalDir=$CanonicalPath
  $script:KHRLeagueFallbackDir=Split-Path -Parent (Split-Path -Parent $CanonicalPath)
  $script:KHR131DCHistoryCache=$null;$script:KHR131DCLastScan=[datetime]::MinValue;$script:KHR131DCFingerprint='';$script:KHR131DCRecords=@{}
+ . (Join-Path $PSScriptRoot 'OwnerEventAssociations.ps1')
+ $ownerEvents=Initialize-MMTVOwnerEventAssociations -AssociationsPath $EventAssociationsPath -CanonicalPath $CanonicalPath -DriverSettingsPath $DriverSettingsPath -NodePath $NodePath -MinStableSeconds $MinStableSeconds -SnapshotsPath $EventSnapshotsPath
+ $ownerCanonicalReader=(Get-Command Read-KHRCanonicalEvent131DC).ScriptBlock
+ function Read-KHRCanonicalEvent131DC($File){
+  $target=$File;$id=[string]$File.BaseName
+  if($ownerEvents.ContainsKey($id)){$original=[IO.File]::ReadAllText($File.FullName)|ConvertFrom-Json;if(-not $original.official){$target=Get-Item -LiteralPath $ownerEvents[$id].canonicalFile}}
+  $event=& $ownerCanonicalReader $target
+  if($ownerEvents.ContainsKey($id)){$event.provenance|Add-Member -NotePropertyName captureRoot -NotePropertyValue (Split-Path -Parent $CanonicalPath) -Force}
+  $event
+ }
  $history=Get-KHRCanonicalHistory131DC
+ foreach($race in $history.races){$id=[string]$race.subSessionID;if($ownerEvents.ContainsKey($id)){$a=$ownerEvents[$id];$race.seriesKey=$a.series_key;$race.round=$a.round;$race.track=$a.track;$race.metadataUnknown=@($race.metadataUnknown|Where-Object {$_ -notin @('series','round','track')});$race.provenance|Add-Member -NotePropertyName ownerAssociation -NotePropertyValue $a.public_provenance -Force}}
  $published=@{}
  foreach($index in @('archive\index.json','news\data\live\index.json')){foreach($entry in @(([IO.File]::ReadAllText((Join-Path $RepositoryPath $index)) | ConvertFrom-Json).events)){$published[[string]$entry.subsession_id]=$true}}
  foreach($failure in $history.errors){if($failure -match '^(\d+)\.json:' -and $published.ContainsKey($Matches[1])){throw ('Published canonical event invalid: '+$failure)}}
@@ -48,11 +59,14 @@ function Write-MMTVIntelligence {
  }finally{$OutputEncoding=$previousEncoding}
 }
 
+
+
+
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCq5OLCat3SRuPG
-# YDQlXSVN5YiM4gQeBNFKatW6mFlyaqCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAR+Qen0NcZ5XS5
+# ZuZjR8MAplnyZKQ99UpnZHWtReoS5KCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -78,14 +92,14 @@ function Write-MMTVIntelligence {
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCB2inzygbTQZNNea2bBFJbt/ofwqHHqd7+8mk6QeeMk
-# ijANBgkqhkiG9w0BAQEFAASCAYC/2aPK/duOtOPUhmhTiU6Cdi2OPdM3lUH4FHX6
-# efqn/Asp8wue3E8Kli5RzpJ0IHDT5B1ueZL7M6PTyP9N4zA7WlAvPio/y+hVJQsR
-# FYDY+/kUUPnt1HoN4MzuWA+c4vJgufSWcGqAis+QpWFvdbFFJ5yIXUKtxdHt0nd7
-# 59gnKF6yOD+eXH7QXYtsOELz/0bQTGs6rjnLOG5JluLKYRoop33x7fY66tUhP0pS
-# Mp9IciRA1QKngFcOr1uRM4acI6tm1Z4luJgV85oZXwNU36ezcW27n/KnvVTcZiYd
-# QQCw4rblGnrpeOWfm9QW7eK34mr6tUZz6P7zEl0l/yl71E3WyYuVNZEfskYS1U2k
-# 6UbfxJwD6NeHmYEPMqJee3RHtZaND/mwNVbDf30rn3Y2lEuwwYtwnDkw1smvjbS9
-# SwXlg+s0MELtDJYO8y51DmRK/nNFxw30xb4VnvI1AHeRJGQL1ehFlLZVtECuyCWk
-# aoAgdnvlhmiM2n9NvsxqVtQPTPQ=
+# MC8GCSqGSIb3DQEJBDEiBCDrV3GB7jx2HlPnLoNtTk59Az3Lsr7ZNUkUlKO55z2r
+# QTANBgkqhkiG9w0BAQEFAASCAYAxvPEKKDYHMugqZta3R8lHMleTkBoeBdLxP2Qk
+# b/u3y7H1Zjrj/5dLo2TSwCaaKabiI9sUzDzA9JyD24bWVEIaQrcriGKcCO/BSxMR
+# Ek9VPJvdi2OS5NxjlLOHFy1elADzbkflhj3x8go5hqPzmCSHJDbZCs9ft/tR/FUG
+# pS1IK2i90c00i4yWB5c+2IBTXxJ9PVqNE3IlSOvvB/HyJ9Xfrig1wWZ/YGGH1B51
+# LltROhepCkwYeCvYQnqa1htQGFZXhZswS8psGw4OF5khMAJuegBq0z8xfMULrE85
+# VJpOlIS7l2qoYv4v90BwJt1BQeA4Akb+HYAdKeXhvJKg0vzwxjJMT5cnClZef2M0
+# cQeIMANI9+aZJxVI0P9dBOh3Jf6k1gUCAvt1a62Y/+Z0EXjDER63gzNF2cFb228N
+# YTNHJF1jA9b67F0am2cP77jvsY88Kn7qpOjPEHJgYJ4+4M6383zD0dQLefJvUHJe
+# tfhnpIzvPAXkZAI8wHCYaLqN0K0=
 # SIG # End signature block

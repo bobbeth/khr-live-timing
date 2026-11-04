@@ -1,0 +1,57 @@
+{
+  "schema_version": "MMTV-owner-event-associations-v1",
+  "events": {
+    "89859608": {
+      "owner_confirmed": true,
+      "confirmation_source": "Explicit owner instruction: publish Wide Open Revival Fall Fest 2026 Round 6",
+      "subsession_id": 89859608,
+      "league_id": 10402,
+      "native_session_id": 326875130,
+      "series_key": "wide_open_revival",
+      "series_name": "Wide Open Revival",
+      "competition": "Fall Fest 2026",
+      "round": 6,
+      "track": "Knoxville Raceway",
+      "sdk_track_name": "knoxville",
+      "car_id": 84,
+      "sdk_car_name": "dirtlatemodel 438",
+      "sdk_car_display_name": "Dirt Super Late Model",
+      "car_class": "Dirt Super Late Models",
+      "feature_session_number": 9,
+      "feature_laps": 45,
+      "feature_rows": 11,
+      "canonical_sha256": "49284b3fa60acbee9ab14b47b444ebaff73e3e8e3cdedeced05410b127dc33d6",
+      "feature_capture_sha256": [
+        "e074239f7dd30b4a70de7035481030b81f06f3b077d4353f611d741484573896",
+        "f9c757b983e34727f4e432b30a305a653cbe8deeff73551aa61c31f036d75b41"
+      ],
+      "expected_feature_rows": [
+        {
+          "position": 1,
+          "customer_id": 925665,
+          "number": "75",
+          "laps": 45
+        },
+        {
+          "position": 2,
+          "customer_id": 1115695,
+          "number": "7",
+          "laps": 45
+        },
+        {
+          "position": 3,
+          "customer_id": 186983,
+          "number": "69",
+          "laps": 45
+        },
+        {
+          "position": 11,
+          "customer_id": 969935,
+          "number": "29",
+          "laps": 0,
+          "reason": "Disco"
+        }
+      ]
+    }
+  }
+}

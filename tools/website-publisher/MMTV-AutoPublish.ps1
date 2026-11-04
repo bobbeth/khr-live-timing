@@ -14,6 +14,8 @@ param(
     [switch]$SkipDriverProfiles,
     [string]$DriverSettingsPath='F:\Backup\KHR Bot\Driver Profiles\settings.json',
     [string]$DriverStateRoot='',
+    [string]$EventAssociationsPath='',
+    [string]$EventSnapshotsPath='',
     [string]$WorkRoot = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast'),
     [string]$StagePath = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Race Archives\Unified\live-staging'),
     [string]$CanonicalPath = (Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Race Archives\Unified\canonical'),
@@ -24,6 +26,8 @@ param(
 . (Join-Path $PSScriptRoot 'BroadcastLinks.ps1')
 . (Join-Path $PSScriptRoot 'DriverProfiles.ps1')
 . (Join-Path $PSScriptRoot 'Export-Intelligence.ps1')
+. (Join-Path $PSScriptRoot 'OwnerEventAssociations.ps1')
+$script:MMTVOwnerEventAssociations=@{}
 $lookupProfiles = -not $SkipDriverProfiles -and ($CheckDriverProfiles -or $CheckBroadcasts -or ([Environment]::CommandLine -notmatch '(?i)-NonInteractive'))
 $lookupBroadcasts = -not $SkipBroadcasts -and ($CheckBroadcasts -or ([Environment]::CommandLine -notmatch '(?i)-NonInteractive'))
 $ErrorActionPreference = 'Stop'
@@ -95,6 +99,8 @@ function SessionKind([string]$name,[string]$series){
     return $null
 }
 function SeriesName($s){
+    $ownerAssociation=Get-MMTVOwnerEventAssociation $s
+    if($ownerAssociation){return [string]$ownerAssociation.series_name}
     $k=FirstText $s @('broadcast.championship.activeSeriesKey','broadcast.fallFestRegistry.verifiedSeriesKey','broadcast.championship.series.key','broadcast.championship.series.seriesKey','broadcast.championship.series.name')
     $names=@{
         'bomber_stocks'='Bomber Stocks'; 'bomber stocks'='Bomber Stocks';
@@ -178,6 +184,14 @@ function TryDate($s){
     return $null
 }
 function BuildArticle($feature,$meta,$rows){
+    if([string]$feature.id -eq '89859608' -and $script:MMTVOwnerEventAssociations.ContainsKey([string]$feature.id)){
+        $a=$script:MMTVOwnerEventAssociations[[string]$feature.id]
+        return [pscustomobject]@{headline='McClain takes the Knoxville win in Wide Open Revival Round 6';deck='Brian Angell follows the #75 home, with Mikey Mixter completing the podium.';kicker='MUD MULES TV RACE REPORT';paragraphs=@(
+          'Forty-five laps at Knoxville, and Kent McClain came out on top. The #75 took the Wide Open Revival Round 6 Feature in Dirt Super Late Models, ahead of Brian Angell in the #7 and Mikey Mixter in the #69.',
+          'Travis Mcdonald took fourth in the #88, with Joey Brewer fifth in the #062. Eight drivers completed all 45 laps. Kelley McClellan finished ninth on 44 laps and Wayne Bridges tenth on 43.',
+          'Jonathon Foxworth was eleventh in the #29 with no completed laps; his result records a disconnect.'
+        )}
+    }
     $win=$rows[0];$second=$rows[1]
     $track=$meta.track;$series=$meta.series;$round=$meta.round
     $start=$win.start_position
@@ -226,12 +240,16 @@ function BuildArticle($feature,$meta,$rows){
 }
 
 function CanonicalSessions($file){
+    if($script:MMTVOwnerEventAssociations.ContainsKey([string]$file.BaseName)){$file=Get-Item -LiteralPath $script:MMTVOwnerEventAssociations[[string]$file.BaseName].canonicalFile}
     if(((Get-Date).ToUniversalTime()-$file.LastWriteTimeUtc).TotalSeconds -lt $MinStableSeconds){return}
     $c=[IO.File]::ReadAllText($file.FullName) | ConvertFrom-Json
     $id=IntOrNull (PathValue $c 'subsession_id')
     Require ($id -eq (IntOrNull $file.BaseName)) "Canonical filename/identity mismatch: $($file.Name)"
     $features=@(PathValue $c 'sdk_completed_results' | Where-Object { (PathValue $_ 'role') -eq 'feature' -and @(PathValue $_ 'results').Count -ge 2 })
-    if($features.Count -eq 0){return}
+    if($features.Count -eq 0){
+        if($script:MMTVOwnerEventAssociations.ContainsKey([string]$id)){$a=$script:MMTVOwnerEventAssociations[[string]$id];$features=@([pscustomobject]@{sessionNum=$a.feature_session_number;role='feature';capturedAt=$a.proof[-1].timestamp;results=$a.proof[-1].sessions[-1].rows})}
+        else{return}
+    }
     # Canonical is the catalogue; resolve its latest immutable linked capture, never guess filenames.
     $feature=$features | Sort-Object capturedAt -Descending | Select-Object -First 1
     $refs=@(PathValue $c 'live.captures' | Where-Object { (IntOrNull (PathValue $_ 'sessionNum')) -eq (IntOrNull $feature.sessionNum) })
@@ -246,6 +264,7 @@ function CanonicalSessions($file){
     if($null -eq $info){Note "[SKIP] ${id}: latest linked Feature is not settled and finished.";return}
     Require ($info.id -eq $id -and $info.num -eq $feature.sessionNum) "Canonical/native identity mismatch: $id"
     $round=IntOrNull (PathValue $c 'round')
+    if($null -eq $round -and $script:MMTVOwnerEventAssociations.ContainsKey([string]$id)){$round=[int]$script:MMTVOwnerEventAssociations[[string]$id].round}
     Require ($null -ne $round -and $round -gt 0) "Canonical round unavailable: $id"
     foreach($native in @(PathValue $info.capture 'broadcast.nativeHistoricalResults.sessions')){
         if($null -eq $native -or (PathValue $native 'completedCandidate') -ne $true){continue}
@@ -318,6 +337,7 @@ try {
     Require ($Competition -match '\S') 'Competition name is required.'
     $captures=New-Object System.Collections.Generic.List[object]
     Require (Test-Path -LiteralPath $CanonicalPath -PathType Container) 'Canonical archive directory is missing.'
+    $script:MMTVOwnerEventAssociations=Initialize-MMTVOwnerEventAssociations -AssociationsPath $EventAssociationsPath -CanonicalPath $CanonicalPath -DriverSettingsPath $DriverSettingsPath -NodePath $NodePath -MinStableSeconds $MinStableSeconds -SnapshotsPath $EventSnapshotsPath
     foreach($file in @(Get-ChildItem -LiteralPath $CanonicalPath -File -Filter '*.json')){
         if($file.BaseName -notmatch '^\d{7,12}$'){continue}
         foreach($info in @(CanonicalSessions $file)){if($null -ne $info){$captures.Add($info)}}
@@ -384,6 +404,7 @@ try {
         $date=$f.date.ToString('yyyy-MM-dd')
         $cautions=IntOrNull (PathValue $f.metadata 'session.cautions')
         $numDrivers=@($featureRows).Count
+        $association=$null;if($script:MMTVOwnerEventAssociations.ContainsKey($id)){$association=$script:MMTVOwnerEventAssociations[$id];$cautions=$null}
         $event=[ordered]@{
             schema_version='KHR-public-results-v1';verification='live_captured';
             provenance='canonical_linked_SDK_native_completed_classification';subsession_id=$f.id;
@@ -396,11 +417,13 @@ try {
             provenance='canonical_linked_SDK_native_completed_classification';subsession_id=$f.id;
             series=$series;round=$round;track=$track;event_date=$date;sessions=$sessions.ToArray()
         }
+        if($association){$event.owner_event_association=$association.public_provenance;$event.car_class=$association.car_class;$event.car_id=$association.car_id;$meeting.owner_event_association=$association.public_provenance;$meeting.car_class=$association.car_class;$meeting.car_id=$association.car_id}
         $indexEntry=[pscustomobject]@{
             subsession_id=$f.id;path="events/$id.json";verification='live_captured';competition=$Competition;
             series=$series;round=$round;track=$track;event_date=$date;feature_result_rows=@($featureRows).Count;
             winners=@([pscustomobject]@{session='FEATURE';session_number=$f.num;driver=$winner.driver;car_number=$winner.car_number})
         }
+        if($association){$indexEntry|Add-Member -NotePropertyName car_class -NotePropertyValue $association.car_class;$indexEntry|Add-Member -NotePropertyName car_id -NotePropertyValue $association.car_id}
         $eventRel="news/data/live/events/$id.json";$meetingRel="news/data/live/meetings/$id.json"
         $eventDest=Join-Path $repo ($eventRel.Replace('/','\'))
         $meetingDest=Join-Path $repo ($meetingRel.Replace('/','\'))
@@ -462,7 +485,7 @@ try {
     [IO.File]::WriteAllText($htmlPath,$html.Replace("`r`n","`n"),(New-Object Text.UTF8Encoding($false)))
     $allowed.Add('news/data/live/index.json');$allowed.Add('news/assets/editorial.js');$allowed.Add('news/index.html')
     }
-    $intelligence=Write-MMTVIntelligence -RepositoryPath $repo -CanonicalPath $CanonicalPath -AdapterSourcePath $AdapterSourcePath -NodePath $NodePath -MinStableSeconds $MinStableSeconds -DriverSettingsPath $DriverSettingsPath
+    $intelligence=Write-MMTVIntelligence -RepositoryPath $repo -CanonicalPath $CanonicalPath -AdapterSourcePath $AdapterSourcePath -NodePath $NodePath -MinStableSeconds $MinStableSeconds -DriverSettingsPath $DriverSettingsPath -EventAssociationsPath $EventAssociationsPath -EventSnapshotsPath $EventSnapshotsPath
     foreach($path in @($intelligence.changed_paths)){Require ($path -match '^news/data/intelligence/((index|drivers|races|venues|championships|catalogue)\.json|events/[0-9]{6,12}\.json)$') "Unapproved intelligence output: $path";if($path -match '/events/(\d+)\.json$'){Require (@($intelligence.subsession_ids) -contains [long]$Matches[1]) "Unknown intelligence event output: $path"};$allowed.Add($path)}
     Note "[INTELLIGENCE] $($intelligence.event_count) canonical race events; $(@($intelligence.changed_paths).Count) changed derived files."
     if($allowed.Count -eq 0){Note '[PASS] No new races, broadcasts, driver profiles or intelligence changes to publish.';return}
@@ -488,11 +511,15 @@ catch {Note ('[ERROR] '+$_.Exception.Message);throw}
 finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 
 
+
+
+
+
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBuUXvc+mimG/JT
-# zGWn519PLaOc7PmPSQL38zyW94DuDKCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB1jXjSMS0IZ24f
+# Sld3ndNnYaEKR/Ubt1QNsjeox5J4+aCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -518,14 +545,14 @@ finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCDFNOOfrh/L20flvBwLq+Ibbf5FkPZQhrPdUA40CWet
-# DzANBgkqhkiG9w0BAQEFAASCAYANZu7pXj2uPqzRW9/n1Xli9SbSUm4sINn/CyEP
-# vAEZwJVFtd/m6aC/9DQxdLYiuAaG3UvozAPZehW7l+lVuqtcgSNM6YRUYhEBXX/2
-# q8U/mV+sc0DbbEl/uU+FfcS++cpytgQyTW47XOtAU514prZaDZfUeRsxWOEFM0Q0
-# 63oigjawW59V5aTCCzKnzIqgwM15gw46ByuePIMVCnAVjgH07BFi29+gHtA99xP2
-# WhR07Di2BoxTUwpfhfUwHLKFqLi9mcHUS95wC+3nxE+v4XSSXIumxExLzbuFXv9P
-# JnpNI9pWUIFOinH+A9mr+usDPv76cxYABJ/+USbhH+80YLdPo5BlQhmuo7yzsxUA
-# sROiaoiMyLr5/taG/kGNUDhHIXx9YNxOAiZVGPTYp3VK6gMZ2XLOZmhn7nBZ/avl
-# rauRihTIX2ytltB+Ns6T4a/LXcnIuN8xNWdC1qm08iM2XGhpBBclh+xSA06XMTl5
-# skQ7A9UDz2I0eg9tmpUnJERCJ9A=
+# MC8GCSqGSIb3DQEJBDEiBCARscCaiLiRJbXiNw0iTbktfbuKH776Rri9VvjK6ltL
+# 0TANBgkqhkiG9w0BAQEFAASCAYBw3YC0JlRJQNfZmmWVwFXSf+94v/OEp267g3T0
+# I987pvK6QskkQCRXNEtoRLyKsyIHOIDRdBA+TVCQDnh5/zRHhG+/Li+v0lnTi6w6
+# wBbd0pmtv5tbH9+8sTRDLjT0z3vaRbeUvm9GFQT6QdtDER4Xe55zWB9A6tk2hZQU
+# bcLWpz7D/mb8neXo4bpIBkri0kFjPiP20tN0ZGdulSmSpQR9YxdBgGV9uPiHZoRd
+# crSrMPAv9QObBFuFk4EVkxYuu0auHLX6Ako/ipJA07JLop9SZSQg4rG0gBXezt8z
+# rIkL76ggVgAUnN2W6kNS3XN1WTa99NS/forsgoNeORSjMA7KBJcjww4tzMWvEwy7
+# TmeeCWIJ1ZoedZKu2jxRkT80itArTLqSsLaTmkMmINEtLoOcWMrbE02Bbg4CLuQS
+# +nyth6vBhtunAxqJY/HKrI9+8hMwnCwpah7toprwwzZDKCQiJbABUS0vfMhiDmxl
+# cTOqmBj1mC3bSXyIBfMenyciTrU=
 # SIG # End signature block

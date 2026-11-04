@@ -163,12 +163,12 @@ context.location.hash='#rounds';await reviews.index();assert.equal((node('app').
 for(const round of [1,5,6]){context.location.hash='#round/Fall%20Fest%202026/'+round;await reviews.review(round,'Fall Fest 2026');
  assert.equal((node('app').innerHTML.match(/class="round-series-report"/g)||[]).length,round===6?sixCount:5);
  assert.ok(node('app').innerHTML.includes('THE BROADCASTS'));assert.ok(!node('app').innerHTML.includes('undefined'));
- if(round===6){assert.ok(node('app').innerHTML.includes('Reports still to come:'));assert.ok(node('app').innerHTML.includes('#broadcast/IyXQ4OjSR3Y'));assert.ok(!node('app').innerHTML.includes('/7'));}
+ if(round===6){assert.equal(node('app').innerHTML.includes('Reports still to come:'),sixCount<5);assert.ok(node('app').innerHTML.includes('#broadcast/IyXQ4OjSR3Y'));assert.ok(!node('app').innerHTML.includes('/7'));}
  if(round===1)assert.ok(!node('app').innerHTML.includes('/0'));
 }
 context.location.hash='#round/Fall%20Fest%202026/99';await reviews.review(99,'Fall Fest 2026');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
 context.location.hash='#round/Unknown/1';await reviews.review(1,'Unknown');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
-console.log('PASS: six round reviews, partial Round 6, source-scoped climbs, broadcast links, deduplication, missing-data states and previous/next boundaries.');
+console.log('PASS: six round reviews, source-based round completeness, source-scoped climbs, broadcast links, deduplication, missing-data states and previous/next boundaries.');
 
 // Commentary briefings must exclude the selected round and all later results.
 const desk=context.window.tests.commentary;
