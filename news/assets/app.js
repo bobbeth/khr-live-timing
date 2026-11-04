@@ -268,10 +268,12 @@ function renderMeeting(meeting,entry){
 function formatDelta(n){const val=Number(n);if(!Number.isFinite(val))return '—';return `<span class="${val>0?'delta-up':val<0?'delta-down':'delta-flat'}">${val>0?'+':''}${val}</span>`}
 function rankSort(rows,by){return window.MMTVResults.sort(rows,by);}
 function tableRows(event){const tbody=document.getElementById('result-body');if(!tbody)return;const rows=rankSort(event.feature_results,state.sort);tbody.innerHTML=rows.map(r=>{const gain=r.positions_gained!==null&&r.positions_gained!==undefined?Number(r.positions_gained):r.start_position!=null?r.start_position-r.finish_position:null;return `<tr><td><b>${esc(r.finish_position)}</b></td><td><span class="number-tag">${esc(r.car_number)}</span></td><td class="driver-cell">${driverStats.driverLink(r.driver)}</td><td>${fieldValue(r,'start_position',esc(r.start_position??'—'))}</td><td>${fieldValue(r,'positions_gained',gain===null?'—':formatDelta(gain))}</td><td>${fieldValue(r,'laps_completed',esc(r.laps_completed??'—'))}</td><td>${fieldValue(r,'laps_led',esc(r.laps_led??'—'))}</td><td>${fieldValue(r,'best_lap_seconds',r.best_lap_seconds!=null&&Number(r.best_lap_seconds)>0?Number(r.best_lap_seconds).toFixed(4)+'s':'—')}</td><td>${fieldValue(r,'incidents',esc(r.incidents??'—'))}</td><td>${pointsValue(r,eventById(event.subsession_id),{kind:eventById(event.subsession_id)?.series==='Bomber Stocks'?'twin_feature_2':'feature'})}</td></tr>`}).join('')}
-async function race(id){const entry=eventById(id);if(!entry){app.innerHTML='<div class="container section"><div class="empty">This race report is not available yet. <a href="#results">Return to archive ↗</a></div></div>';return}
+let indexesReady=false,raceRenderVersion=0;
+async function race(id){const version=++raceRenderVersion;const entry=eventById(id);if(!entry&&!indexesReady){app.innerHTML='<div class="container section loading">Loading the race archive…</div>';return}if(!entry){app.innerHTML='<div class="container section"><div class="empty">This race report is not available yet. <a href="#results">Return to archive ↗</a></div></div>';return}
  const a=editorial[String(id)]||seed.articles[String(id)];const headline=a?.headline||`${winner(entry)} takes ${entry.series} honours at ${entry.track}`;const deck=a?.deck||`Full race coverage from ${entry.track}.`;const bgnum=eventCache[String(id)]?.feature_results?.[0]?.car_number||'KHR';const full=seed.seriesTitles[entry.series]||entry.series;
  app.innerHTML=`<section class="page-banner"><span class="banner-number" aria-hidden="true">${esc(bgnum)}</span><div class="container"><div class="breadcrumb"><a href="#home">THE NEWSROOM</a><span>/</span><a href="#results">RESULTS</a><span>/</span> ROUND ${esc(entry.round)}</div><span class="eyebrow" style="margin-top:23px">${esc(a?.kicker||'MUD MULES TV RACE REPORT')} · ${esc(entry.series)}</span><h1>${esc(headline)}</h1><p class="deck">${esc(deck)}</p><div class="result-meta"><span>${esc(fmtDay(entry.event_date))}</span><span><a href="${venues.trackUrl(entry.track)}">${esc(entry.track)} ↗</a></span><span>iRacing #${esc(id)}</span></div></div></section><div id="race-details" class="container section"><div class="loading">Loading race results…</div></div>`;
- const [event,meeting,broadcast]=await Promise.all([getEvent(id),getMeeting(id),getBroadcast(id)]);if(location.hash!==routeRace(id))return;
+ const [rawEvent,rawMeeting,broadcast]=await Promise.all([getEvent(id),getMeeting(id),getBroadcast(id),window.MMTVIntelligence?.loadRace(id)]);if(location.hash!==routeRace(id)||version!==raceRenderVersion)return;
+ const event=rawEvent?(window.MMTVIntelligence?.enrichEvent(rawEvent)||rawEvent):null,meeting=rawMeeting?(window.MMTVIntelligence?.enrichMeeting(rawMeeting)||rawMeeting):null;
  if(!event){document.getElementById('race-details').innerHTML=`<div class="empty">The results could not be loaded. Try again in a moment. <a href="${sourceUrl(id)}" target="_blank" rel="noopener">Open the published race record ↗</a></div>`;return}
  const rows=event.feature_results||[];const podium=rows.filter(x=>x.finish_position<=3).sort((a,b)=>a.finish_position-b.finish_position);const validlaps=rows.filter(r=>r.best_lap_seconds!==null&&Number(r.best_lap_seconds)>0),fastest=validlaps.sort((a,b)=>a.best_lap_seconds-b.best_lap_seconds)[0],mostLed=rankSort(rows,'led')[0],largest=rankSort(rows,'gained')[0];const meta=event.event_summary||{};
  const meetingHtml=renderMeeting(meeting,entry);
@@ -291,22 +293,13 @@ document.addEventListener('input',e=>{if(e.target.id==='filter-search'){state.se
 document.addEventListener('click',e=>{const link=e.target.closest('.series-go');if(link){state.series=link.dataset.series;state.season='all';state.round='all';state.search='';}});
 window.addEventListener('hashchange',route);
 async function init(){
- await window.MMTVIntelligence?.load();
- route();if(location.protocol==='file:')return;
- let official=seed.index.events;
- try{
-  const r=await fetch('../archive/index.json',{cache:'no-store'});
-  if(r.ok){const j=await r.json();if(j.status==='published_official_backed'&&Array.isArray(j.events)&&j.events.length>=seed.index.events.length)official=j.events;}
- }catch(e){}
- let live=[];
- try{
-  const r=await fetch('data/live/index.json',{cache:'no-store'});
-  if(r.ok){const j=await r.json();if(j.schema_version==='MMTV-live-index-v1'&&Array.isArray(j.events))live=j.events.filter(e=>e.verification==='live_captured'&&Number.isInteger(Number(e.subsession_id)));}
- }catch(e){}
- const merged=new Map(official.map(e=>[Number(e.subsession_id),e]));
- live.forEach(e=>{merged.set(Number(e.subsession_id),e);liveIds.add(Number(e.subsession_id));});
- publishedIndex={...seed.index,events:[...merged.values()],event_count:merged.size};
- route();
+ route();if(location.protocol==='file:'){indexesReady=true;return;}
+ const [official,live]=await Promise.all([
+  (async()=>{try{const r=await fetch('../archive/index.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.status==='published_official_backed'&&Array.isArray(j.events)&&j.events.length>=seed.index.events.length)return j.events;}}catch{}return seed.index.events;})(),
+  (async()=>{try{const r=await fetch('data/live/index.json',{cache:'no-store'});if(r.ok){const j=await r.json();if(j.schema_version==='MMTV-live-index-v1'&&Array.isArray(j.events))return j.events.filter(e=>e.verification==='live_captured'&&Number.isInteger(Number(e.subsession_id)));}}catch{}return [];})()
+ ]);
+ const merged=new Map(official.map(e=>[Number(e.subsession_id),e]));live.forEach(e=>{merged.set(Number(e.subsession_id),e);liveIds.add(Number(e.subsession_id));});
+ publishedIndex={...seed.index,events:[...merged.values()],event_count:merged.size};indexesReady=true;route();
 }
 init();
 })();

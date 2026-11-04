@@ -449,7 +449,7 @@ try {
     $allowed.Add('news/data/live/index.json');$allowed.Add('news/assets/editorial.js');$allowed.Add('news/index.html')
     }
     $intelligence=Write-MMTVIntelligence -RepositoryPath $repo -CanonicalPath $CanonicalPath -AdapterSourcePath $AdapterSourcePath -NodePath $NodePath -MinStableSeconds $MinStableSeconds
-    foreach($path in @($intelligence.changed_paths)){Require ($path -match '^news/data/intelligence/(index|drivers|races|venues|championships)\.json$') "Unapproved intelligence output: $path";$allowed.Add($path)}
+    foreach($path in @($intelligence.changed_paths)){Require ($path -match '^news/data/intelligence/((index|drivers|races|venues|championships|catalogue)\.json|events/[0-9]{6,12}\.json)$') "Unapproved intelligence output: $path";if($path -match '/events/(\d+)\.json$'){Require (@($intelligence.subsession_ids) -contains [long]$Matches[1]) "Unknown intelligence event output: $path"};$allowed.Add($path)}
     Note "[INTELLIGENCE] $($intelligence.event_count) canonical race events; $(@($intelligence.changed_paths).Count) changed derived files."
     if($allowed.Count -eq 0){Note '[PASS] No new races, broadcasts, driver profiles or intelligence changes to publish.';return}
     $addArgs=@('-C',$repo,'add','--') + $allowed.ToArray()

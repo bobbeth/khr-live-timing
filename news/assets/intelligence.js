@@ -1,28 +1,55 @@
 /* Static public JSON only. This client never contacts the local Bridge. */
 window.MMTVIntelligence=(()=>{
- let promise,model;
+ let promise,model,corePromise,allPromise,ready=false;const detailRequests=new Map(),detailReady=new Set();
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const normalize=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,' ');
+
+ async function checked(index,name){
+  if(!/^(drivers|races|venues|championships|catalogue)\.json$|^events\/[0-9]{6,12}\.json$/.test(name)||!/^([a-f0-9]{64})$/.test(index.files?.[name]?.sha256||''))throw Error('Invalid intelligence file manifest');
+  if(!globalThis.crypto?.subtle)throw Error('SHA256 verification unavailable');
+  const expected=index.files[name].sha256,url='data/intelligence/'+name+'?v='+expected;
+  for(const cache of ['default','reload']){
+   const response=await fetch(url,{cache});if(!response.ok)throw Error('Intelligence file unavailable: '+name);const text=await response.text();
+   const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));const sha=[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join('');
+   if(sha!==expected){if(cache==='default')continue;throw Error('Intelligence revision mismatch: '+name);}
+   const value=JSON.parse(text);if(value.schema_version!==index.schema_version)throw Error('Intelligence schema mismatch');return value;
+  }
+ }
+ const asMeeting=r=>({entry:r.entry,event:{subsession_id:r.entry.subsession_id,feature_results:r.rows},meeting:{subsession_id:r.entry.subsession_id,sessions:r.sessions}});
+ function checkRaces(index,races){if(!Array.isArray(races)||races.length!==index.published_event_count||new Set(races.map(r=>Number(r.entry.subsession_id))).size!==index.published_event_count||races.some(r=>!index.subsession_ids.includes(Number(r.entry.subsession_id))))throw Error('Intelligence event coverage mismatch');}
+ async function core(){
+  if(corePromise)return corePromise;
+  corePromise=(async()=>{try{
+   const response=await fetch('data/intelligence/index.json',{cache:'no-store'});if(!response.ok)throw Error('Intelligence index unavailable');const index=await response.json();
+   if(index.schema_version!=='MMTV-canonical-intelligence-v1'||!Array.isArray(index.subsession_ids)||new Set(index.subsession_ids).size!==index.published_event_count)throw Error('Invalid intelligence index');
+   if(!index.delivery){const values=await Promise.all(['drivers','races','venues','championships'].map(n=>checked(index,n+'.json')));checkRaces(index,values[1].races);model={index,...Object.fromEntries(['drivers','races','venues','championships'].map((n,i)=>[n,values[i]]))};ready=true;index.subsession_ids.forEach(id=>detailReady.add(Number(id)));return model;}
+   if(index.delivery.version!==1||index.delivery.catalogue!=='catalogue.json')throw Error('Unsupported intelligence delivery');
+   const catalogue=await checked(index,'catalogue.json');checkRaces(index,catalogue.races);
+   for(const id of index.subsession_ids)if(index.delivery.events?.[id]!=='events/'+id+'.json')throw Error('Invalid race delivery mapping');
+   model={index,drivers:{schema_version:index.schema_version,names:catalogue.names,drivers:catalogue.identities},races:{schema_version:index.schema_version,races:catalogue.races,meetings:catalogue.races.map(asMeeting)},venues:{venues:[]},championships:{championships:[]}};
+   decorate();return model;
+  }catch(error){console.warn('Race intelligence unavailable; published results remain available.',error.message);corePromise=null;return null;}})();return corePromise;
+ }
  async function load(){
   if(promise)return promise;
-  promise=(async()=>{
-   try{
-    const response=await fetch('data/intelligence/index.json',{cache:'no-store'});if(!response.ok)return null;const index=await response.json();
-    if(index.schema_version!=='MMTV-canonical-intelligence-v1'||new Set(index.subsession_ids).size!==index.published_event_count)return null;
-    const result={index};
-    for(const name of ['drivers','races','venues','championships']){
-     const r=await fetch('data/intelligence/'+name+'.json',{cache:'no-store'});if(!r.ok)throw Error('Incomplete intelligence export');
-     const text=await r.text();
-     if(globalThis.crypto?.subtle){const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));const sha=[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join('');if(sha!==index.files[name+'.json'].sha256)throw Error('Intelligence revision mismatch');}
-     result[name]=JSON.parse(text);if(result[name].schema_version!==index.schema_version)throw Error('Intelligence schema mismatch');
-    }
-    if(result.races.races.length!==index.published_event_count)throw Error('Intelligence event coverage mismatch');
-    model=result;return model;
-   }catch(error){console.warn('Race intelligence unavailable; published results remain available.',error.message);return null;}
-  })();return promise;
+  promise=(async()=>{try{const base=await core();if(!base){promise=null;return null;}if(ready)return model;
+   const values=await Promise.all(['drivers','venues','championships'].map(n=>checked(model.index,n+'.json')));
+   for(const [i,n] of ['drivers','venues','championships'].entries())model[n]=values[i];ready=true;decorate();return model;
+  }catch(error){console.warn('Season intelligence unavailable; published results remain available.',error.message);promise=null;return null;}})();return promise;
+ }
+ async function loadRace(id){
+  id=Number(id);if(!Number.isInteger(id))return null;if(detailRequests.has(id))return detailRequests.get(id);
+  const task=(async()=>{try{if(!await core()||!model.index.subsession_ids.includes(id)){detailRequests.delete(id);return null;}if(detailReady.has(id))return model.races.races.find(r=>r.entry.subsession_id===id);
+   const result=await checked(model.index,model.index.delivery.events[id]);if(Number(result.subsession_id)!==id||Number(result.race?.entry?.subsession_id)!==id||!Array.isArray(result.race.rows)||!Array.isArray(result.race.sessions))throw Error('Race intelligence identity mismatch');
+   const i=model.races.races.findIndex(r=>r.entry.subsession_id===id);model.races.races[i]=result.race;model.races.meetings[i]=asMeeting(result.race);detailReady.add(id);return result.race;
+  }catch(error){console.warn('Detailed race intelligence unavailable; published results remain available.',error.message);detailRequests.delete(id);return null;}})();detailRequests.set(id,task);return task;
+ }
+ async function loadAll(){
+  if(allPromise)return allPromise;
+  allPromise=(async()=>{try{if(!await load())return null;if(!model.index.delivery)return model;const races=await checked(model.index,'races.json');checkRaces(model.index,races.races);model.races=races;model.index.subsession_ids.forEach(id=>detailReady.add(id));return model;}catch(error){console.warn('Full archive unavailable; verified route data remains available.',error.message);allPromise=null;return null;}})();return allPromise;
  }
  function statsData(profiles){
-  if(!model)return null;
+  if(!model||!ready)return null;
   return {drivers:model.drivers.drivers.map(d=>({...d,iracing_id:d.driver_id,names:new Set(d.names),numbers:new Set(d.numbers),profile:profiles?.drivers?.[String(d.driver_id)]?.profile||null,races:d.races.map(r=>({...r}))})),meetings:model.races.meetings,failures:[],sessionGaps:[...new Set(model.championships.championships.flatMap(c=>c.missing_sessions.map(s=>s.subsession_id)))],intelligence:model.index};
  }
  function enrichRow(row,rows){
@@ -40,12 +67,12 @@ window.MMTVIntelligence=(()=>{
   return output;
  }
  function enrichEvent(event){
-  if(!model)return event;
+  if(!model||!detailReady.has(Number(event.subsession_id)))return event;
   const source=model.races.races.find(r=>r.entry.subsession_id===Number(event.subsession_id));if(!source)return event;
   return {...event,intelligence_source:source.source,classification_difference:source.classification_difference,feature_results:event.feature_results.map(row=>enrichRow(row,source.rows))};
  }
  function enrichMeeting(meeting){
-  if(!model)return meeting;
+  if(!model||!detailReady.has(Number(meeting.subsession_id)))return meeting;
   const source=model.races.races.find(r=>r.entry.subsession_id===Number(meeting.subsession_id));if(!source)return meeting;
   return {...meeting,sessions:meeting.sessions.map(session=>{const verified=source.sessions.find(s=>Number(s.simsession_number)===Number(session.simsession_number)&&(s.kind===session.kind||/^WARM/i.test(s.name)&&/^WARM/i.test(session.name)));return verified?{...session,classification_difference:verified.classification_difference,classification:(session.classification||[]).map(row=>enrichRow(row,verified.classification))}:session;})};
  }
@@ -89,5 +116,5 @@ window.MMTVIntelligence=(()=>{
   }else (app.querySelector('.container.section')||app).insertAdjacentHTML('beforeend',html);
  }
  if(typeof MutationObserver!=='undefined')new MutationObserver(decorate).observe(document.getElementById('app'),{childList:true,subtree:true});
- return {load,statsData,enrichEvent,enrichMeeting,contextHtml,decorate,get model(){return model;}};
+ return {load,loadRace,loadAll,statsData,enrichEvent,enrichMeeting,contextHtml,decorate,get model(){return model;}};
 })();

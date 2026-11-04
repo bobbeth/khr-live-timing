@@ -19,12 +19,13 @@ for(const name of ['drivers','races','venues','championships']){
 const elements=new Map();
 const node=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',value:'',textContent:'',addEventListener(){},querySelector(selector){if(['#canonical-intelligence','.loading','.container.section'].includes(selector))return null;return node(id+selector);},querySelectorAll(){return [];},insertAdjacentHTML(position,html){this.innerHTML+=html;}});return elements.get(id);};
 const context={URL,TextEncoder,Uint8Array,crypto:crypto.webcrypto,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addEventListener(){}},location:{protocol:'https:',hash:'#home'},document:{getElementById:node,querySelectorAll(){return [];},addEventListener(){}},navigator:{},console,localStorage:{getItem:()=>null,setItem(){}},fetch:async url=>{
- try{const rel=url.startsWith('../')?url.slice(3):'news/'+url;const source=await text(rel);return {ok:true,text:async()=>source,json:async()=>JSON.parse(source)};}catch{return {ok:false};}
+ try{url=String(url).split('?')[0];const rel=url.startsWith('../')?url.slice(3):'news/'+url;const source=await text(rel);return {ok:true,text:async()=>source,json:async()=>JSON.parse(source)};}catch{return {ok:false};}
 }};
 vm.createContext(context);
 for(const name of ['result-tables','seed','editorial','intelligence-core','intelligence','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await text(`news/assets/${name}.js`),context);
 const appSource=await text('news/assets/app.js');
 vm.runInContext(appSource.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues,getEvent,getMeeting,stageTable,rankSort};\n})();'),context);
+await context.window.MMTVIntelligence.loadAll();
 await context.window.tests.init();
 const intelligence=context.window.MMTVIntelligence,core=context.window.MMTVIntelligenceCore;
 assert.ok(intelligence.model,'Static export must pass SHA256/schema validation');
