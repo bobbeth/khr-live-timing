@@ -5,6 +5,8 @@ import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
 import {driverAdmission} from './driver-admission.mjs';
 import {recoverSession} from './recover-session-fields.mjs';
+import {sessionCatalogue} from './session-evidence.mjs';
+import {nativeNonRaceSessions} from './native-session-evidence.mjs';
 const root=path.resolve(process.argv[2]);
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8').replace(/^\uFEFF/,''));
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
@@ -17,6 +19,7 @@ const core=ctx.window.MMTVIntelligenceCore,legacy=ctx.window.createMMTVStats({di
 const indexes=['archive/index.json','news/data/live/index.json'];
 const entries=new Map(indexes.flatMap(p=>read(p).events.map(e=>[Number(e.subsession_id),e])));
 const profiles=read('news/data/driver-profiles.json');
+const sessionAdmission=driverAdmission({settings:driver_policy,eligibility:driver_eligibility,identities:{names:profiles.names||{}}});
 const publicVenue=ctx.window.createMMTVVenues({}).resolver(read('news/data/tracks.json'));
 const seasonPolicy=fs.readFileSync(path.join(root,'news/assets/app.js'),'utf8').match(/const seasonName = ([^;\n]+);/);if(!seasonPolicy)throw Error('Existing competition policy not found');vm.runInContext('window.MMTVExportSeasonName = '+seasonPolicy[1],ctx);
 const names=Object.fromEntries(Object.entries(history.identityNames).filter(([,ids])=>ids.length===1).map(([name,ids])=>[name,Number(ids[0])]));
@@ -41,6 +44,8 @@ for(const race of history.races){
  const canonicalBytes=fs.readFileSync(race.provenance.canonicalFile);
  if(hash(canonicalBytes)!==race.provenance.canonicalSha256.toLowerCase())throw Error('Canonical changed during export: '+id);
  const c=JSON.parse(canonicalBytes);
+ const captureRoot=race.provenance.captureRoot||path.dirname(path.dirname(race.provenance.canonicalFile));
+ const catalogue=sessionCatalogue({canonical:c,canonicalPath:recoveryOptions.catalogue_root?path.join(recoveryOptions.catalogue_root,id+'.json'):null,captureRoot,id});
  const captureBytes=race.provenance.linkedCapture?fs.readFileSync(race.provenance.linkedCapture):null;
  if(captureBytes&&hash(captureBytes)!==race.provenance.linkedCaptureSha256.toLowerCase())throw Error('Linked classification capture changed during export: '+id);
  const capture=captureBytes?JSON.parse(captureBytes):null;
@@ -53,7 +58,7 @@ for(const race of history.races){
  const event={entry,recovery_audit:[],source:publicSource(race,'final_feature'),metadata_source:race.provenance.ownerAssociation?'canonical_with_owner_confirmed_event_association':race.metadataUnknown?.length?'canonical_with_exact_published_subsession_metadata':'canonical',rows:[],sessions:[],facts:[],classification_difference:null,coverage:{}};
  event.metadata_provenance={subsession_id:id,series:{source:race.seriesKey?'canonical':'published_index',field:race.seriesKey?'seriesKey':'series',certainty:race.seriesKey?'canonical_identity':'existing_published_subsession_identity'},round:{source:race.round!==null?'canonical':'published_index',field:'round',certainty:race.round!==null?'canonical_identity':'existing_published_subsession_identity'},competition:{source:'existing_site_policy',field:'seasonName',policy_sha256:hash(seasonPolicy[1])},published_index_file:published.verification==='live_captured'?'news/data/live/index.json':'archive/index.json',published_entry_sha256:hash(JSON.stringify(stable(published)))};
  if(race.provenance.ownerAssociation){event.metadata_provenance.owner_event_association=race.provenance.ownerAssociation;for(const field of ['series','round'])event.metadata_provenance[field]={source:'owner_confirmed_event_id_association',certainty:'explicit_owner_confirmation',association_sha256:race.provenance.ownerAssociation.association_sha256};}
- const getId=(r,official=false)=>official?Number(r.cust_id):Number(capture?.diagnostic?.drivers?.find(d=>d.fields?.carIdx===r.carIdx&&String(d.number)===String(r.number))?.fields?.userId)||null;
+ const getId=(r,official=false)=>official?Number(r.cust_id):Number(r.evidenceUserId||capture?.diagnostic?.drivers?.find(d=>d.fields?.carIdx===r.carIdx&&String(d.number)===String(r.number))?.fields?.userId)||null;
  for(const rawRow of race.results){
   const row={...rawRow};for(const field of ['startPosition','positionsGained','lapsCompleted','rawLapsLed','bestLap','incidents','champPoints'])row[field]=core.valid(row[field])?Number(row[field]):null;
   const d=touch(row.driverId,row.name);if(!d)throw Error('Unverified Feature identity '+id+'/'+row.number);
@@ -61,7 +66,8 @@ for(const race of history.races){
   const r=participant(d,entry);Object.assign(r,{feature:!dns(row),finish:row.position,start:row.startPosition,laps:row.lapsCompleted,led:row.rawLapsLed,bestLap:row.bestLap,gain:row.positionsGained,field_provenance:publicSource(race,'final_feature.results')});
   event.rows.push({driver_id:d.driver_id,driver:row.name,car_number:row.number,finish_position:row.position,start_position:row.startPosition,laps_completed:row.lapsCompleted,laps_led:row.rawLapsLed,best_lap_seconds:row.bestLap,positions_gained:row.positionsGained,incidents:row.incidents,champ_points:row.champPoints,reason_out:row.reason,field_provenance:publicSource(race,'final_feature.results')});
  }
- const rawSessions=c.official?.event_result?.data?.session_results||capture?.broadcast?.nativeHistoricalResults?.sessions||[];
+ const rawSessions=[...(c.official?.event_result?.data?.session_results||capture?.broadcast?.nativeHistoricalResults?.sessions||[])];
+ if(!c.official?.event_result?.data)for(const session of nativeNonRaceSessions({canonical:catalogue.canonical,captureRoot,id,admitDriver:driverId=>!sessionAdmission.blocked(driverId)&&(sessionAdmission.verified(driverId)||sessionAdmission.preserve(driverId)||race.results.some(row=>Number(row.driverId)===Number(driverId)))})){if(!rawSessions.some(s=>Number(s.sessionNum)===session.sessionNum)){for(const row of session.results)row.evidenceUserId=row.userId;rawSessions.push(session);}}
  const official=!!c.official?.event_result?.data;
  const seenSessions=new Set();
  for(const raw of rawSessions){
@@ -75,9 +81,9 @@ for(const race of history.races){
   const priorSession=priorRaces.find(r=>r.entry.subsession_id===id)?.sessions.find(s=>s.simsession_number===num);
   const priorSourceHashes=[...new Set((priorSession?.classification||[]).flatMap(r=>Object.values(r.field_provenance?.fields||{}).flatMap(p=>p.capture_sha256||[])))];
   const publishedRows=['feature','twin_feature_2'].includes(kind)?originalEvent.feature_results:(originalMeeting?.sessions?.find(s=>Number(s.simsession_number)===Number(num))?.classification||[]);
-  const recovery=official?null:recoverSession({canonical:c,canonicalFile:race.provenance.canonicalFile,captureRoot:race.provenance.captureRoot||null,id,raw,entry,kind,previousWinner,knownIds,exhaustive:recoveryOptions.exhaustive,priorSourceHashes,publishedRows:publishedRows.map(r=>({...r,driver_id:r.driver_id||names[normalize(r.driver)]}))});
+  const recovery=official||raw.evidenceSource?null:recoverSession({canonical:catalogue.canonical,catalogueProofs:catalogue.proofs,canonicalFile:race.provenance.canonicalFile,captureRoot:race.provenance.captureRoot||null,id,raw,entry,kind,previousWinner,knownIds,exhaustive:!!recoveryOptions.exhaustive||(recoveryOptions.exhaustive_ids||[]).map(Number).includes(id),priorSourceHashes,publishedRows:publishedRows.map(r=>({...r,driver_id:r.driver_id||names[normalize(r.driver)]}))});
   if(recovery){event.recovery_audit.push(recovery.audit);sourceAudit.push({subsession_id:id,session_number:num,...recovery.audit,...recovery.details});}
-  const source={...publicSource(race,`session.${num}`),certainty:official?'official':'native_completed'};
+  const source=raw.evidenceSource||{...publicSource(race,`session.${num}`),certainty:official?'official':'native_completed'};
   const session={simsession_number:num,name,kind,available:true,classification:[],source};
   for(const row of rows){
    const driverId=getId(row,official);if(!driverId)continue;
@@ -92,6 +98,10 @@ for(const race of history.races){
    r.field_provenance={...source,fields:Object.fromEntries(Object.keys(r).filter(k=>r[k]!=null&&k!=='field_provenance').map(k=>[k,source]))};
    if(official)for(const [field,proof] of Object.entries(r.field_provenance.fields)){r.field_provenance.fields[field]={...proof,session_number:num,driver_id:driverId,car_number:number,field:'official.session_results.results.'+({start_position:'starting_position + 1',positions_gained:'starting_position - finish_position',laps_completed:'laps_complete',laps_led:'laps_lead',best_lap_seconds:'best_lap_time / 10000',average_lap_seconds:'average_lap / 10000',driver:'display_name',position:'finish_position + 1'}[field]||field)};}
    if(r.qual_lap_seconds!==null)r.field_provenance.fields.qual_lap_seconds={...source,field:row.qual_lap_time>0?'official.session_results.results.qual_lap_time':'official.session_results.results.best_qual_lap_time',session_number:num,driver_id:driverId,car_number:number,unit:'seconds_from_iracing_10000ths'};
+   if(raw.evidenceSource){
+    if(numericField(row.nativeBest)&&row.nativeBest>0){r.best_lap_seconds=Number(row.nativeBest);r.field_provenance.fields.best_lap_seconds={...source,field:'native.SessionInfo.ResultsPositions.FastestTime',driver_id:driverId,car_index:row.carIdx,car_number:number};if(kind==='qualifying'){r.qual_lap_seconds=r.best_lap_seconds;r.field_provenance.fields.qual_lap_seconds=r.field_provenance.fields.best_lap_seconds;}}
+    for(const field of ['incidents','champ_points'])if(numericField(row[field])&&row[field]>=0){r[field]=Number(row[field]);r.field_provenance.fields[field]={...source,field:'native.SessionInfo.ResultsPositions.'+field,driver_id:driverId,car_index:row.carIdx,car_number:number};}
+   }
    const scored=kind==='qualifying'||raceKinds.includes(kind);
    r.league_points=scored&&official&&Number(c.official.event_result.data.league_id)===10402&&numericField(row.league_points)?Number(row.league_points):scored?legacy.points(entry.series,kind,pos):null;
    r.league_points_status=r.league_points===null?'not_applicable':official&&numericField(row.league_points)?'saved_league':'calculated_provisional';

@@ -1,7 +1,7 @@
 # Read the existing canonical adapter as functions only. Never start or modify the Bridge.
 function Write-MMTVIntelligence {
  [CmdletBinding()]
- param([Parameter(Mandatory=$true)][string]$RepositoryPath,[Parameter(Mandatory=$true)][string]$CanonicalPath,[string]$AdapterSourcePath='',[string]$NodePath='',[int]$MinStableSeconds=90,[switch]$ExhaustiveRecovery,[string]$AuditOutputPath='',[string]$DriverSettingsPath='F:\Backup\KHR Bot\Driver Profiles\settings.json',[string]$EventAssociationsPath='',[string]$EventSnapshotsPath='')
+ param([Parameter(Mandatory=$true)][string]$RepositoryPath,[Parameter(Mandatory=$true)][string]$CanonicalPath,[string]$AdapterSourcePath='',[string]$NodePath='',[int]$MinStableSeconds=90,[switch]$ExhaustiveRecovery,[long[]]$ExhaustiveSubsessionIds=@(),[string]$AuditOutputPath='',[string]$DriverSettingsPath='F:\Backup\KHR Bot\Driver Profiles\settings.json',[string]$EventAssociationsPath='',[string]$EventSnapshotsPath='')
  if(-not $AdapterSourcePath){
   $release=Join-Path $env:USERPROFILE 'Documents\KHR Broadcast\Bridge Releases\131DC'
   $records=@(Get-ChildItem -LiteralPath $release -Recurse -File -Filter active.json | Sort-Object LastWriteTimeUtc -Descending)
@@ -49,7 +49,7 @@ function Write-MMTVIntelligence {
  }
  $driverPolicy=@{};$driverEligibility=$null
  if(Test-Path -LiteralPath $DriverSettingsPath){$driverPolicy=Get-Content -LiteralPath $DriverSettingsPath -Raw|ConvertFrom-Json;if($driverPolicy.PSObject.Properties['eligibility_path']){if((Get-FileHash -LiteralPath $driverPolicy.eligibility_path).Hash -ne $driverPolicy.eligibility_sha256){throw 'Private driver eligibility checksum mismatch.'};$driverEligibility=Get-Content -LiteralPath $driverPolicy.eligibility_path -Raw|ConvertFrom-Json}}
- $payload=[ordered]@{driver_policy=$driverPolicy;driver_eligibility=$driverEligibility;history=$history;source_event_count=$availableCount;source_catalogue_count=$catalogueCount;statistics=(Get-KHRHistoricalInsights131R $history -Mode season).statistics;adapter_sha256=(Get-FileHash -LiteralPath $AdapterSourcePath).Hash;recovery=[ordered]@{exhaustive=[bool]$ExhaustiveRecovery;audit_output=$AuditOutputPath}}
+ $payload=[ordered]@{driver_policy=$driverPolicy;driver_eligibility=$driverEligibility;history=$history;source_event_count=$availableCount;source_catalogue_count=$catalogueCount;statistics=(Get-KHRHistoricalInsights131R $history -Mode season).statistics;adapter_sha256=(Get-FileHash -LiteralPath $AdapterSourcePath).Hash;recovery=[ordered]@{exhaustive=[bool]$ExhaustiveRecovery;exhaustive_ids=@($ExhaustiveSubsessionIds);audit_output=$AuditOutputPath;catalogue_root=$CanonicalPath}}
  $previousEncoding=$OutputEncoding
  try{
   $OutputEncoding=New-Object Text.UTF8Encoding($false)
@@ -62,11 +62,12 @@ function Write-MMTVIntelligence {
 
 
 
+
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAR+Qen0NcZ5XS5
-# ZuZjR8MAplnyZKQ99UpnZHWtReoS5KCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA4stUu8F0FYT11
+# giEM17je/37ZlhA3Ya+vo+dtVIrLoKCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -92,14 +93,14 @@ function Write-MMTVIntelligence {
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCDrV3GB7jx2HlPnLoNtTk59Az3Lsr7ZNUkUlKO55z2r
-# QTANBgkqhkiG9w0BAQEFAASCAYAxvPEKKDYHMugqZta3R8lHMleTkBoeBdLxP2Qk
-# b/u3y7H1Zjrj/5dLo2TSwCaaKabiI9sUzDzA9JyD24bWVEIaQrcriGKcCO/BSxMR
-# Ek9VPJvdi2OS5NxjlLOHFy1elADzbkflhj3x8go5hqPzmCSHJDbZCs9ft/tR/FUG
-# pS1IK2i90c00i4yWB5c+2IBTXxJ9PVqNE3IlSOvvB/HyJ9Xfrig1wWZ/YGGH1B51
-# LltROhepCkwYeCvYQnqa1htQGFZXhZswS8psGw4OF5khMAJuegBq0z8xfMULrE85
-# VJpOlIS7l2qoYv4v90BwJt1BQeA4Akb+HYAdKeXhvJKg0vzwxjJMT5cnClZef2M0
-# cQeIMANI9+aZJxVI0P9dBOh3Jf6k1gUCAvt1a62Y/+Z0EXjDER63gzNF2cFb228N
-# YTNHJF1jA9b67F0am2cP77jvsY88Kn7qpOjPEHJgYJ4+4M6383zD0dQLefJvUHJe
-# tfhnpIzvPAXkZAI8wHCYaLqN0K0=
+# MC8GCSqGSIb3DQEJBDEiBCB8SvZ+ipMn87YzzMjbqX8H70SEaY1p58E0/i+R8trL
+# YTANBgkqhkiG9w0BAQEFAASCAYCJFGi2MqnfwqnvHbe7WCps7NFAxY9VpC9r4cQc
+# cs7zKyV6/OFW2iGwEA9QDepHQ2st9xpNC5LLWAjqXeF8TZqP0Cx+fQDZ7/07XCg4
+# wMzfJSA7bk/eE6Zg4eORnUFSg5maBEa0I6WkVTngY1enjKM3K8Xj8aT4kw/3V7GQ
+# GHMpk0eKNWgKndvzUvGUmnoadbt8ZG7A9sDO+9ZRVs2FYKeUKw2zpg7i256Y63Kf
+# ESgewUBk9IaED9Hl/o0zbQ2e2zFmJiin09tG+g29HvpWOp4jQlcZadjswvgtsQrS
+# zZksw/cenTreawAemC1x6uyzhDfc+6GJz5cdXF7dSCXEvA44z46OmVoBufy3AExf
+# /mUXyEujVXATuEZ4D8KKh+BVhwDW9R0FeRAPXCHSc7k3RP9+C56el5iDENdvFac4
+# HTdWPX1n/1qMNpOvlp+zqTqhZqXHjoereoSdL1GTncggiDn2mYPByXKxrioQ7ONr
+# 2JR1WnI03q+c4/5E00ShcCTTHuM=
 # SIG # End signature block
