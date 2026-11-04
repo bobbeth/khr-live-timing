@@ -93,9 +93,9 @@ export function workflow(input){
    const response=input.profileResponse;if(response.status!==200)fail('profile_api_unavailable');
    const body=typeof response.body==='string'?response.body:JSON.stringify(response.body);if(Buffer.byteLength(body)>16*1024*1024)fail('profile_response_too_large');const rows=JSON.parse(body);
    if(!Array.isArray(rows)||rows.length===0)fail('empty_or_partial_profile_response');
-   const seen=new Set();for(const p of rows){if(!p||!validId(p.id)||seen.has(Number(p.id)))fail('invalid_or_duplicate_profile_id');seen.add(Number(p.id))}
+   const seen=new Set();let invalidUnrelated=0;for(const p of rows){if(!p||!validId(p.id)){invalidUnrelated++;continue}if(seen.has(Number(p.id))&&reg.drivers[Number(p.id)])fail('invalid_or_duplicate_profile_id');seen.add(Number(p.id))}if(!seen.size)fail('invalid_or_duplicate_profile_id');if(invalidUnrelated)notes.push({reason:'unrelated_invalid_profile_ids_ignored',count:invalidUnrelated});
    if(api.last_count&&rows.length<api.last_count*0.9)fail('suspicious_partial_profile_response');
-   const byId=new Map(rows.map(p=>[Number(p.id),p]));for(const d of Object.values(reg.drivers)){
+   const byId=new Map(rows.filter(p=>p&&validId(p.id)).map(p=>[Number(p.id),p]));for(const d of Object.values(reg.drivers)){
     const row=byId.get(d.id);if(!row){if(d.profile)notes.push({id:d.id,reason:'profile_omission_retained_pending_authoritative_revision'});d.profile_checked=true;continue}
     const incoming=safeProfile(row),revision=time(incoming.updatedAt),previous=time(d.profile_revision||d.profile?.updatedAt);
     if(!Number.isFinite(revision)||revision-now>300000){notes.push({id:d.id,reason:'unverified_profile_revision_retained'});continue}
