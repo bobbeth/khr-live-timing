@@ -1,35 +1,27 @@
-import fs from 'node:fs/promises';
-import vm from 'node:vm';
-import assert from 'node:assert/strict';
-const script=await fs.readFile(new URL('../assets/analytics.js',import.meta.url),'utf8');
-const ID='G-WLVRGFTMM1',KEY='mmtv.analytics.choice.v1';
-function setup({hostname='bobbeth.github.io',consent=null,excluded=false,dnt=false,gpc=false}={}){
- const nodes=new Map(),scripts=[],storage=new Map(),listeners={},clicks={};
- if(consent)storage.set(KEY,JSON.stringify({choice:consent,at:Date.now()}));if(excluded)storage.set('mmtv.analytics.exclude','1');
- const context={URL,location:{href:`https://${hostname}/khr-live-timing/news/#home`,hostname,pathname:'/khr-live-timing/news/',reload(){}},navigator:{doNotTrack:dnt?'1':'0',globalPrivacyControl:gpc},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},document:{currentScript:{src:`https://${hostname}/khr-live-timing/news/assets/analytics.js`},referrer:'https://example.org/private?email=private@example.org',cookie:'',head:{appendChild:e=>scripts.push(e)},body:{appendChild:e=>nodes.set(e.id,e)},createElement:tag=>({tag,setAttribute(){},remove(){nodes.delete(this.id);}}),getElementById:id=>nodes.get(id),querySelector:()=>null,addEventListener:(name,fn)=>clicks[name]=fn},window:{addEventListener:(name,fn)=>listeners[name]=fn},fetch:async()=>({ok:true,json:async()=>({schema_version:'MMTV-driver-identities-v1',names:{'kent mcclain':925665}})})};
- vm.createContext(context);vm.runInContext(script,context);
- return {context,api:context.window.MMTVAnalytics,scripts,nodes,listeners,clicks,storage,events:()=>Array.from(context.window.dataLayer||[],args=>Array.from(args)).filter(a=>a[0]==='event')};
+import fs from 'node:fs/promises';import vm from 'node:vm';import assert from 'node:assert/strict';import {webcrypto} from 'node:crypto';
+const script=await fs.readFile(new URL('../assets/analytics.js',import.meta.url),'utf8'),catalogue=JSON.parse(await fs.readFile(new URL('../data/analytics-catalogue.json',import.meta.url),'utf8'));
+let checks=0;function check(ok,name){assert.ok(ok,name);checks++}
+function setup({hostname='bobbeth.github.io',hash='#home',gpc=false,dnt=false,excluded=false,oldDeny=false,webdriver=false,storageBlocked=false,downtime=false,referrer='https://m.facebook.com/private?email=private@example.test',query='?email=private@example.test',policy='aggregate-opt-out'}={}){
+ const local=new Map(),session=new Map(),events=[],requests=[],listeners={};if(excluded)local.set('mmtv.analytics.exclude','1');if(oldDeny)local.set('mmtv.analytics.choice.v1',JSON.stringify({choice:'deny',at:Date.now()}));
+ const storage=m=>({getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v),removeItem:k=>m.delete(k)}),window={MMTVPrivateAnalyticsConfig:{enabled:true,policy,endpoint:'https://counter.example.invalid/collect'},addEventListener:(n,fn)=>{(listeners[n]??=[]).push(fn)}};
+ for(const [name,data]of [['localStorage',local],['sessionStorage',session]])Object.defineProperty(window,name,{get(){if(storageBlocked)throw Error('storage unavailable');return storage(data)}});
+ const location=new URL(`https://${hostname}/khr-live-timing/news/${query}${hash}`),document={currentScript:{src:`https://${hostname}/khr-live-timing/news/assets/analytics.js`},referrer,querySelector:()=>null,addEventListener(){}};
+ const context={window,document,location,navigator:{globalPrivacyControl:gpc,doNotTrack:dnt?'1':'0',webdriver},URL,URLSearchParams,crypto:webcrypto,AbortController,setTimeout,clearTimeout,fetch:async(input,options={})=>{const u=new URL(String(input));requests.push({url:u.href,options});if(u.pathname.endsWith('/collect')){events.push(JSON.parse(options.body));if(downtime)throw Error('offline');return {ok:true,status:202,json:async()=>({accepted:true,counted:true})}}return {ok:true,json:async()=>structuredClone(u.pathname.endsWith('analytics-catalogue.json')?catalogue:u.pathname.endsWith('driver-identities.json')?{names:catalogue.driverNames}:{events:[]})}}};
+ vm.createContext(context);vm.runInContext(script,context);return {context,window,api:window.MMTVAnalytics,events,requests,listeners,local,session,location,async flush(){await window.MMTVAnalytics.pageView();await new Promise(r=>setTimeout(r,0))}};
 }
-const t=setup();await t.api.pageView();
-assert.equal(t.scripts.length,0,'No Google requests before consent');assert.ok(t.nodes.has('mmtv-analytics-banner'));
-t.api.choose('deny');await t.api.pageView();assert.equal(t.scripts.length,0);assert.equal(t.nodes.has('mmtv-analytics-banner'),false);
-t.api.choose('allow');await t.api.pageView();assert.equal(t.scripts.length,1);assert.ok(t.scripts[0].src.endsWith(ID));assert.equal(t.events().length,1);
-await t.api.pageView();assert.equal(t.events().length,1,'Repeated init must not duplicate a pageview');
-t.context.location.href='https://bobbeth.github.io/khr-live-timing/news/?email=private@example.org#race/89810317';await t.api.pageView();
-assert.equal(t.events().length,2);assert.ok(t.events()[1][2].page_location.endsWith('#race/89810317'));assert.ok(!JSON.stringify(t.context.window.dataLayer).includes('private@example.org'));assert.equal(t.events()[0][2].page_referrer,'https://example.org/');
-t.context.location.href='https://bobbeth.github.io/khr-live-timing/news/#driver/kent%20mcclain';await t.api.pageView();assert.ok(t.events().at(-1)[2].page_location.endsWith('#driver/925665'));
-t.context.location.href='https://bobbeth.github.io/khr-live-timing/news/#driver/someone%40private.test';await t.api.pageView();assert.ok(!JSON.stringify(t.events()).includes('someone'));
-const before=t.events().length;t.api.exclude(true);t.context.location.href='https://bobbeth.github.io/khr-live-timing/news/#broadcasts';await t.api.pageView();assert.equal(t.events().length,before);assert.equal(t.context.window['ga-disable-'+ID],true);
-t.api.exclude(false);await t.api.pageView();assert.equal(t.events().length,before+1);assert.equal(t.scripts.length,1,'Re-enabling must not add a second Google tag');
-const link={href:'https://www.youtube.com/watch?v=abcdefghijk&private=secret'};t.clicks.click({target:{closest:selector=>selector==='a[href]'?link:null}});assert.equal(t.events().at(-1)[1],'youtube_click');assert.ok(!JSON.stringify(t.events()).includes('private=secret'));
-t.api.choose('deny');const stopped=t.events().length;await t.api.pageView();assert.equal(t.events().length,stopped);assert.equal(t.context.window['ga-disable-'+ID],true);
-for(const options of [{consent:'allow',excluded:true},{consent:'allow',dnt:true},{consent:'allow',gpc:true},{consent:'allow',hostname:'localhost'}]){const blocked=setup(options);await blocked.api.pageView();assert.equal(blocked.scripts.length,0);assert.equal(blocked.events().length,0);}
-const config=Array.from(t.context.window.dataLayer,a=>Array.from(a)).find(a=>a[0]==='config');assert.equal(config[1],ID);assert.equal(config[2].send_page_view,false);assert.equal(config[2].allow_google_signals,false);
-assert.equal(t.api.routeInfo('https://bobbeth.github.io/khr-live-timing/news/#home').section,'Newsroom');
-assert.equal(t.api.routeInfo('https://bobbeth.github.io/khr-live-timing/').section,'Live timing');
-console.log('PASS: new KHR ID, opt-in gating, decline/withdrawal, owner exclusion, DNT/GPC, localhost exclusion, pageview deduplication, sanitized content IDs/referrers and outbound events.');
-
-const reviewUrl='https://bobbeth.github.io/khr-live-timing/news/#round/Fall%20Fest%202026/6';
-assert.equal(t.api.routeInfo(reviewUrl).hash,'#round/Fall%20Fest%202026/6');
-assert.notEqual(t.api.routeInfo(reviewUrl).key,t.api.routeInfo(reviewUrl.replace('/6','/5')).key);
-assert.equal(t.api.routeInfo('https://bobbeth.github.io/khr-live-timing/news/#round/private%40example.com/6').hash,'#rounds');
+const t=setup();await t.flush();check(t.events.length===1,'exactly one initial page view');check(t.events[0].page.section==='home','home identified');check(t.events[0].source==='facebook','referrer category');check(!JSON.stringify(t.events).includes('private@example.test'),'no query or referral path leakage');
+vm.runInContext(script,t.context);await t.flush();check(t.events.length===1&&t.listeners.hashchange.length===1,'duplicate initialization safe');
+for(const id of Object.keys(catalogue.races)){t.location.hash='#race/'+id;await t.flush();check(t.events.at(-1).page.id===id,'published race '+id)}check(Object.keys(catalogue.races).length===30,'all 30 published race IDs');
+for(const id of Object.keys(catalogue.drivers)){t.location.hash='#driver/'+id;await t.flush();check(t.events.at(-1).page.id===id,'verified driver '+id)}
+for(const id of Object.keys(catalogue.broadcasts)){t.location.hash='#broadcast/'+id;await t.flush();check(t.events.at(-1).page.id===id,'verified broadcast '+id)}
+let n=t.events.length;for(const bad of ['#race/12345678','#driver/private@example.test','#broadcast/abcdefghijk','#home/private','#race/89859608/secret','#not-a-page/foo','#%ZZ','#round/private@example.test/6']){t.location.hash=bad;await t.flush()}check(t.events.length===n,'invalid routes and arbitrary text rejected');
+t.location.hash='#home';await t.flush();n=t.events.length;await Promise.all([t.api.pageView(),t.api.pageView()]);check(t.events.length===n,'rapid identical navigation deduplicated');t.location.hash='#results';await t.flush();t.location.hash='#home';await t.flush();check(t.events.length===n+2,'genuine return navigation counts');
+for(const options of [{gpc:true},{dnt:true},{excluded:true},{oldDeny:true},{webdriver:true},{hostname:'localhost'},{hostname:'staging.example'},{policy:'opt-in'}]){const x=setup(options);await x.flush();check(x.events.length===0&&x.requests.length===0,'excluded browser '+JSON.stringify(options))}
+t.api.choose('deny');t.location.hash='#results';await t.flush();n=t.events.length;check(t.api.status().optedOut,'opt-out stored');check(t.events.length===n,'opt-out prevents future collection');t.api.choose('allow');await t.flush();check(t.events.length===n+1,'explicit re-enable works');t.api.exclude(true);t.location.hash='#drivers';await t.flush();check(t.events.length===n+1,'owner exclusion works');check(t.local.get('mmtv.analytics.exclude')==='1','owner exclusion key preserved');
+const blocked=setup({storageBlocked:true});await blocked.flush();blocked.location.hash='#results';await blocked.flush();check(blocked.events.length===2&&blocked.events[0].tab_id===blocked.events[1].tab_id,'storage denial uses ephemeral memory, not per-page sessions');
+check(!t.session.has('mmtv.privateAnalytics.tab.v1')&&!blocked.session.has('mmtv.privateAnalytics.tab.v1'),'visitor session identifiers are memory-only');
+const down=setup({downtime:true});await down.flush();check(down.api.status().accepted===0&&down.events.length===2,'downtime safely retries one event twice');check(down.events[0].event_id===down.events[1].event_id,'retry keeps the exact event ID');
+for(const [ref,category]of [['https://discord.com/channels/private?secret=x','discord'],['https://www.twitch.tv/bobbethtv','twitch'],['https://youtu.be/id?secret=x','youtube'],['https://google.com/search?q=secret','search'],['https://other.example/private','other'],['','direct_unknown'],['https://facebook.com.evil.example/','other']])check(t.api.referrerCategory(ref,'https://bobbeth.github.io/khr-live-timing/news/')===category,'sanitised source '+category);
+check(t.api.referrerCategory('','https://bobbeth.github.io/khr-live-timing/news/?mmtv_source=discord')==='discord','approved campaign label');check(t.api.referrerCategory('','https://bobbeth.github.io/khr-live-timing/news/?mmtv_source=private@example.test')==='direct_unknown','arbitrary campaign rejected');
+check(t.requests.filter(x=>x.url.endsWith('/collect')).every(x=>x.options.referrerPolicy==='no-referrer'&&x.options.credentials==='omit'),'no automatic URL referrer or cookies sent');check(!/googletagmanager|google-analytics|gtag\(|G-WLVRGFTMM1/.test(script),'no Google analytics code');
+console.log(`PASS browser collector: ${checks} assertions; 30 races, ${Object.keys(catalogue.drivers).length} drivers, ${Object.keys(catalogue.broadcasts).length} broadcasts.`);

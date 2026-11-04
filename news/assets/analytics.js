@@ -1,87 +1,41 @@
-/* KHR GA4: basic consent (no Google script before opt-in), manual hash views. */
-(()=>{
- 'use strict';
- const ID='G-WLVRGFTMM1',KEY='mmtv.analytics.choice.v1',EXCLUDE='mmtv.analytics.exclude';
- const source=document.currentScript?.src||new URL('news/assets/analytics.js',location.href).href;
- const privacy=new URL('../privacy.html',source).href;
- const production=location.hostname==='bobbeth.github.io'&&/^\/khr-live-timing(?:\/|$)/.test(location.pathname);
- const denied={analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'};
- let started=false,lastKey=null,previous=null,choice=null,excluded=false,identityPromise;
- const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const read=key=>{try{return localStorage.getItem(key);}catch{return null;}};
- const store=(key,value)=>{try{localStorage.setItem(key,value);}catch{}};
- try{const saved=JSON.parse(read(KEY));if(saved&&Date.now()-saved.at<180*86400000)choice=['allow','deny'].includes(saved.choice)?saved.choice:null;}catch{}
- excluded=read(EXCLUDE)==='1';
- const protectedBrowser=()=>navigator.globalPrivacyControl===true||navigator.doNotTrack==='1';
- const allowed=()=>production&&choice==='allow'&&!excluded&&!protectedBrowser();
- function routeInfo(url,identities={}){
-  const parsed=new URL(url),path=parsed.pathname;
-  if(path.endsWith('/privacy.html'))return {key:path,section:'Privacy',title:'Privacy and analytics choices',hash:''};
-  if(!/\/news\/?$/.test(path))return {key:path,section:'Live timing',title:'Live timing',hash:''};
-  let bits;try{bits=decodeURIComponent(parsed.hash.slice(1)||'home').split('/');}catch{bits=['unknown'];}
-  const names={commentary:'Commentary desk',rounds:'Round reviews',round:'Round review',calendar:'Season calendar',tracks:'Track directory',track:'Track page','track-name':'Track page',home:'Newsroom',results:'Race results',championships:'Championships',standings:'Standings',drivers:'Driver roster',driver:'Driver profile',broadcasts:'Broadcast library',broadcast:'Broadcast recording',records:'Season records',compare:'Driver comparison'};
-  const section=names[bits[0]]||'Other page';let hash=names[bits[0]]?'#'+bits[0]:'#other',title=section;
-  if(bits[0]==='race'&&/^\d{7,12}$/.test(bits[1]||'')){hash='#race/'+bits[1];title='Race report '+bits[1];}
-  if(bits[0]==='broadcast'&&/^[A-Za-z0-9_-]{11}$/.test(bits[1]||'')){hash='#broadcast/'+bits[1];title='Broadcast '+bits[1];}
-  if(bits[0]==='round'){hash='#rounds';if(/^Fall Fest \d{4}$/.test(bits[1]||'')&&/^[1-9]\d?$/.test(bits[2]||'')){hash='#round/'+encodeURIComponent(bits[1])+'/'+bits[2];title=bits[1]+' Round '+bits[2];}}
-  if(bits[0]==='track'||bits[0]==='track-name')hash='#tracks';
-  if(bits[0]==='driver'){
-   hash='#drivers';
-   const numeric=/^\d{1,10}$/.test(bits[1]||'')?Number(bits[1]):null;
-   const id=numeric&&Object.values(identities).includes(numeric)?numeric:identities[String(bits[1]||'').trim().toLowerCase().replace(/\s+/g,' ')];
-   // Customer IDs identify public race content, never a visitor account.
-   if(Number.isSafeInteger(id)&&id>0){hash='#driver/'+id;title='Driver profile '+id;}
-  }
-  return {key:path+'|'+bits[0]+'|'+String(bits[1]||'').slice(0,100)+'|'+(bits[0]==='round'?hash:''),section:bits[0]==='race'?'Race report':section,title,hash};
+/* MMTV aggregate counter. No vendor SDK, visitor cookies or fingerprinting. */
+(()=>{'use strict';if(window.MMTVAnalytics?.version===2)return;
+ const config=window.MMTVPrivateAnalyticsConfig||{},EXCLUDE='mmtv.analytics.exclude',OUT='mmtv.privateAnalytics.optout.v1',OLD='mmtv.analytics.choice.v1',TAB='mmtv.privateAnalytics.tab.v1';
+ const script=document.currentScript?.src||new URL('assets/analytics.js',location.href).href,base=new URL('../',script),privacy=new URL('privacy.html',base).href;
+ const read=(store,key)=>{try{return store.getItem(key)}catch{return null}},write=(store,key,value)=>{try{store.setItem(key,value)}catch{}},remove=(store,key)=>{try{store.removeItem(key)}catch{}};
+ const production=location.hostname==='bobbeth.github.io'&&/^\/khr-live-timing(?:\/|$)/.test(location.pathname),loopback=['localhost','127.0.0.1','[::1]'].includes(location.hostname);
+ let localStorage=null,sessionStorage=null;try{localStorage=window.localStorage}catch{}try{sessionStorage=window.sessionStorage}catch{}
+ const localTest=loopback&&config.localTest===true&&(()=>{try{return ['localhost','127.0.0.1'].includes(new URL(config.endpoint).hostname)}catch{return false}})();
+ let lastObserved=null,lastAccepted=null,chain=Promise.resolve(),cataloguePromise,attempts=0,accepted=0,volatileTab;
+ function protectedBrowser(){return navigator.globalPrivacyControl===true||navigator.doNotTrack==='1'||window.doNotTrack==='1'||navigator.msDoNotTrack==='1'}
+ function optedOut(){if(read(localStorage,OUT)==='1')return true;if(read(localStorage,OUT)==='0')return false;try{return JSON.parse(read(localStorage,OLD))?.choice==='deny'}catch{return false}}
+ function allowed(){return config.enabled===true&&['aggregate-opt-out','opt-in'].includes(config.policy)&&(config.policy!=='opt-in'||read(localStorage,OUT)==='0')&&(production&&!navigator.webdriver||localTest)&&!protectedBrowser()&&!optedOut()&&read(localStorage,EXCLUDE)!=='1'&&/^\/khr-live-timing\/(?:news\/(?:index.html)?|(?:index.html)?)$/.test(location.pathname)&&typeof config.endpoint==='string'&&(()=>{try{const u=new URL(config.endpoint);return u.protocol==='https:'||localTest&&u.protocol==='http:'}catch{return false}})()}
+ function routeInfo(href,c){let u,bits;try{u=new URL(href);if(!u.pathname.includes('/news'))return /^\/khr-live-timing\/(?:index.html)?$/.test(u.pathname)?{section:'live',id:''}:null;if(!/^\/khr-live-timing\/news\/(?:index.html)?$/.test(u.pathname))return null;const hash=decodeURIComponent(u.hash.slice(1)||'home');if(hash.length>250)return null;bits=hash.split('/')}catch{return null}
+  const [page,id,detail]=bits,sections=['home','results','drivers','broadcasts','championships','standings','rounds','calendar','tracks','commentary','records'];
+  if(sections.includes(page)&&bits.length===1)return {section:page,id:''};
+  if(page==='standings'&&bits.length===2&&c.series.includes(id))return {section:'standings',id};
+  if(page==='race'&&bits.length===2&&Object.hasOwn(c.races,id))return {section:'race',id};
+  if(page==='driver'&&bits.length===2){const key=Object.hasOwn(c.drivers,id)?id:String(c.driverNames[id.toLowerCase().trim().replace(/\s+/g,' ')]||'');return Object.hasOwn(c.drivers,key)?{section:'driver',id:key}:null}
+  if(page==='broadcast'&&bits.length===2&&Object.hasOwn(c.broadcasts,id))return {section:'broadcast',id};
+  if(page==='track'&&bits.length===2&&Object.hasOwn(c.tracks,id))return {section:'track',id};
+  if(page==='track-name'&&bits.length===2){const key=c.trackNames[id.toLowerCase().trim()];return key?{section:'track',id:key}:null}
+  if(page==='round'&&bits.length===3&&id===c.competition&&/^(?:[1-9]|1[01])$/.test(detail))return {section:'round',id:detail};
+  if(page==='compare'&&(bits.length===1||bits.length===2&&id.split(',').length===2&&id.split(',').every(x=>Object.hasOwn(c.drivers,x))))return {section:'compare',id:''};return null;
  }
- function cleanUrl(url,info){const u=new URL(url);return u.origin+u.pathname+(info?.hash||'');}
- function referrer(url){try{const u=new URL(url);return /^https?:$/.test(u.protocol)?u.origin+'/':'';}catch{return '';}}
- function identities(){if(!identityPromise)identityPromise=fetch(new URL('../data/driver-identities.json',source).href,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>j?.schema_version==='MMTV-driver-identities-v1'?j.names:{}).catch(()=>({}));return identityPromise;}
- function start(){
-  if(started)return;
-  started=true;window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments);};
-  window.gtag('consent','default',denied);
-  window.gtag('consent','update',{...denied,analytics_storage:'granted'});
-  window.gtag('js',new Date());
-  window.gtag('set','page_location',cleanUrl(location.href,routeInfo(location.href)));
-  window.gtag('config',ID,{send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false,page_referrer:referrer(document.referrer),cookie_prefix:'mmtv',cookie_domain:location.hostname,cookie_path:'/khr-live-timing',cookie_expires:90*86400});
-  const script=document.createElement('script');script.async=true;script.src='https://www.googletagmanager.com/gtag/js?id='+ID;script.id='mmtv-google-tag';document.head.appendChild(script);
+ const approvedSources=['facebook','discord','twitch','youtube'];
+ function referrerCategory(ref,href){try{const label=new URL(href).searchParams.get('mmtv_source');if(approvedSources.includes(label))return label}catch{}
+  try{const h=new URL(ref).hostname.toLowerCase(),is=d=>h===d||h.endsWith('.'+d);if(is('facebook.com')||is('fb.com')||is('fb.me'))return 'facebook';if(is('discord.com')||is('discordapp.com')||is('discord.gg'))return 'discord';if(is('twitch.tv'))return 'twitch';if(is('youtube.com')||is('youtu.be'))return 'youtube';if(['google.com','google.com.au','bing.com','duckduckgo.com','search.yahoo.com','ecosia.org'].some(is))return 'search';if(h==='bobbeth.github.io')return 'direct_unknown';return 'other'}catch{return 'direct_unknown'}
  }
- async function pageView(){
-  if(!allowed())return;
-  const href=location.href,map=await identities();if(!allowed())return;
-  const info=routeInfo(href,map);if(info.key===lastKey)return;lastKey=info.key;
-  start();window['ga-disable-'+ID]=false;
-  const url=cleanUrl(href,info);
-  window.gtag('set',{page_location:url,page_title:info.title+' | Mud Mules TV',content_group:info.section,page_referrer:previous||referrer(document.referrer)});
-  window.gtag('event','page_view',{send_to:ID,page_location:url,page_title:info.title+' | Mud Mules TV',content_group:info.section,page_referrer:previous||referrer(document.referrer)});
-  previous=url;
- }
- function clearCookies(){for(const part of document.cookie.split(';')){const name=part.trim().split('=')[0];if(!name.startsWith('mmtv_'))continue;for(const domain of ['',location.hostname,'.'+location.hostname])for(const path of ['/','/khr-live-timing','/khr-live-timing/'])document.cookie=name+'=; Max-Age=0; Path='+path+(domain?'; Domain='+domain:'')+'; SameSite=Lax; Secure';}}
- function stop(){window['ga-disable-'+ID]=true;if(started)window.gtag('consent','update',denied);lastKey=null;previous=null;clearCookies();}
- function choose(value){choice=value;store(KEY,JSON.stringify({choice:value,at:Date.now()}));if(allowed()){if(started)window.gtag('consent','update',{...denied,analytics_storage:'granted'});window['ga-disable-'+ID]=false;pageView();}else stop();render();}
- function exclude(value){excluded=value;store(EXCLUDE,value?'1':'0');if(!allowed())stop();else pageView();render();}
- function render(){
-  const existing=document.getElementById('mmtv-analytics-banner');if(existing)existing.remove();
-  if(production&&!choice&&!excluded&&!protectedBrowser()){
-   const banner=document.createElement('section');banner.id='mmtv-analytics-banner';banner.className='analytics-banner';banner.setAttribute('aria-label','Analytics choice');
-   banner.innerHTML=`<div><strong>Help improve Mud Mules TV?</strong><p>Allow Google Analytics cookies to measure visits and popular sections. You can decline and use the whole site.</p><a href="${esc(privacy)}">Privacy & choices</a></div><div class="analytics-actions"><button type="button" data-analytics-action="allow">Allow analytics</button><button type="button" data-analytics-action="deny">Decline</button></div>`;
-   document.body.appendChild(banner);
-  }
-  const panel=document.querySelector('[data-analytics-panel]');if(panel)panel.innerHTML=`<p role="status">Analytics: <strong>${!production?'inactive on this preview':excluded?'excluded for this browser':protectedBrowser()?'off — browser privacy preference':choice==='allow'?'allowed':choice==='deny'?'declined':'not yet chosen'}</strong>.</p><div class="analytics-actions"><button type="button" data-analytics-action="allow">Allow analytics</button><button type="button" data-analytics-action="deny">Decline analytics</button><button type="button" data-analytics-action="${excluded?'include':'exclude'}">${excluded?'Stop excluding this browser':'Exclude this browser from statistics'}</button></div><p class="result-note">The exclusion is saved in this browser only. Clearing browser storage removes your preferences. Enabling analytics after exclusion still requires an Allow choice.</p>`;
- }
- document.addEventListener('click',event=>{
-  const action=event.target.closest?.('[data-analytics-action]')?.getAttribute('data-analytics-action');
-  if(action){if(action==='allow'||action==='deny')choose(action);else if(action==='exclude'||action==='include')exclude(action==='exclude');return;}
-  const link=event.target.closest?.('a[href]');if(!link||!allowed()||!started)return;
-  let target;try{target=new URL(link.href,location.href);}catch{return;}
-  if(!/^https?:$/.test(target.protocol)||target.origin===location.origin)return;
-  const youtube=/(^|\.)(youtube\.com|youtu\.be)$/.test(target.hostname);
-  // No free-form text, search input, target queries, account details or full referrer URLs.
-  window.gtag('event',youtube?'youtube_click':'outbound_click',{send_to:ID,link_domain:target.hostname,content_group:routeInfo(location.href).section});
- });
- window.addEventListener('hashchange',()=>{pageView();});
- window.addEventListener('storage',event=>{if(event.key===KEY||event.key===EXCLUDE)location.reload();});
- window.MMTVAnalytics={measurementId:ID,routeInfo,cleanUrl,referrer,choose,exclude,pageView,status:()=>({choice,excluded,active:allowed()})};
- render();pageView();
+ const arrivalSource=referrerCategory(document.referrer,location.href);
+ function tabId(){if(!volatileTab||volatileTab.until<=Date.now())volatileTab={id:crypto.randomUUID(),until:Date.now()+1800000};return volatileTab.id}
+ function catalogue(){return cataloguePromise??=fetch(new URL('data/analytics-catalogue.json',base),{credentials:'omit',referrerPolicy:'no-referrer'}).then(r=>{if(!r.ok)throw Error('catalogue unavailable');return r.json()}).catch(()=>null)}
+ async function transmit(event){for(let i=0;i<2;i++){if(!allowed())return false;const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),2500);try{attempts++;const r=await fetch(config.endpoint,{method:'POST',body:JSON.stringify(event),headers:{'Content-Type':'text/plain'},credentials:'omit',referrerPolicy:'no-referrer',mode:'cors',keepalive:true,signal:abort.signal});if(r.ok){const body=await r.json();if(body.accepted===true){accepted++;return true}}if(r.status<500)return false}catch{}finally{clearTimeout(timer)}}return false}
+ async function knownRoute(href,c){let page=routeInfo(href,c);if(page)return page;const h=new URL(href).hash.slice(1),m=/^(race\/[1-9]\d{6,11}|driver\/[1-9]\d{0,9}|broadcast\/[A-Za-z0-9_-]{11})$/.exec(h);if(!m)return null;const kind=h.split('/')[0],paths=kind==='race'?['../archive/index.json','data/live/index.json']:kind==='driver'?['data/driver-identities.json']:['data/broadcasts.json'];await Promise.all(paths.map(async p=>{try{const r=await fetch(new URL(p,base),{credentials:'omit',referrerPolicy:'no-referrer'});if(!r.ok)return;const d=await r.json();if(kind==='race')for(const e of (d.events||[]).slice(0,500))if(/^[1-9]\d{6,11}$/.test(String(e.subsession_id)))c.races[String(e.subsession_id)]=e.series||'Race';if(kind==='driver')for(const id of Object.values(d.names||{}).slice(0,2000))if(Number.isSafeInteger(id)&&id>0)c.drivers[String(id)]||='Driver '+id;if(kind==='broadcast')for(const b of Object.values(d.events||{}).slice(0,500))if(/^[A-Za-z0-9_-]{11}$/.test(b.video_id||''))c.broadcasts[b.video_id]=b.title||'Broadcast'}catch{}}));return routeInfo(href,c)}
+ async function pageView(){if(!allowed())return false;const href=location.href,c=await catalogue();if(!c||!allowed())return false;const page=await knownRoute(href,c);if(!page||!allowed())return false;const key=page.section+'/'+page.id;if(key===lastObserved)return false;lastObserved=key;const event={v:1,event_id:crypto.randomUUID(),tab_id:tabId(),page,source:arrivalSource};const job=chain.then(async()=>{const ok=await transmit(event);if(ok)lastAccepted=key;return ok});chain=job.catch(()=>false);return job}
+ function choose(value){write(localStorage,OUT,value==='deny'?'1':'0');if(value==='deny'){volatileTab=null;remove(sessionStorage,TAB);lastObserved=null}else pageView();render()}
+ function exclude(value){write(localStorage,EXCLUDE,value?'1':'0');if(value){volatileTab=null;remove(sessionStorage,TAB);lastObserved=null}else pageView();render()}
+ function render(){const panel=document.querySelector('[data-analytics-panel]');if(!panel)return;panel.replaceChildren();const p=document.createElement('p');p.setAttribute('role','status');p.textContent=protectedBrowser()?'Analytics off: browser privacy preference.':read(localStorage,EXCLUDE)==='1'?'This browser is excluded.':optedOut()?'Analytics disabled for this browser.':config.enabled?'Aggregate analytics available, subject to privacy preferences.':'Replacement analytics is not activated on this preview.';panel.append(p);const actions=document.createElement('div');actions.className='analytics-actions';for(const [action,label] of [['allow','Enable aggregate analytics'],['deny','Disable analytics'],[read(localStorage,EXCLUDE)==='1'?'include':'exclude',read(localStorage,EXCLUDE)==='1'?'Include this browser':'Exclude my browser']]){const b=document.createElement('button');b.type='button';b.dataset.analyticsAction=action;b.textContent=label;actions.append(b)}panel.append(actions)}
+ document.addEventListener('click',e=>{const action=e.target.closest?.('[data-analytics-action]')?.dataset.analyticsAction;if(action==='allow'||action==='deny')choose(action);else if(action==='exclude'||action==='include')exclude(action==='exclude')});
+ window.addEventListener('hashchange',()=>{void pageView().catch(()=>{})});window.addEventListener('storage',e=>{if([OUT,EXCLUDE,OLD].includes(e.key)){render();if(allowed())void pageView().catch(()=>{})}});
+ window.MMTVAnalytics={version:2,routeInfo,referrerCategory,pageView,choose,exclude,privacy,status:()=>({active:allowed(),excluded:read(localStorage,EXCLUDE)==='1',optedOut:optedOut(),lastAccepted,attempts,accepted})};render();void pageView().catch(()=>{});
 })();
