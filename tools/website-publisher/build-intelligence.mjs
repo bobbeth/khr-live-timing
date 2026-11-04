@@ -3,13 +3,14 @@ import path from 'node:path';
 import vm from 'node:vm';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
+import {driverAdmission} from './driver-admission.mjs';
 import {recoverSession} from './recover-session-fields.mjs';
 const root=path.resolve(process.argv[2]);
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8').replace(/^\uFEFF/,''));
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])])):value;
 let input='';for await(const chunk of process.stdin)input+=chunk;
-const {history,source_event_count,source_catalogue_count,statistics:oracle,adapter_sha256,recovery:recoveryOptions={}}=JSON.parse(input.replace(/^\uFEFF/,''));
+const {history,source_event_count,source_catalogue_count,statistics:oracle,adapter_sha256,recovery:recoveryOptions={},driver_eligibility=null,driver_policy={}}=JSON.parse(input.replace(/^\uFEFF/,''));
 const ctx={window:{}};vm.createContext(ctx);
 for(const name of ['intelligence-core','stats','venues'])vm.runInContext(fs.readFileSync(path.join(root,`news/assets/${name}.js`),'utf8'),ctx);
 const core=ctx.window.MMTVIntelligenceCore,legacy=ctx.window.createMMTVStats({displayName:n=>n,entries:()=>[],seasonName:e=>e.competition});
@@ -160,6 +161,10 @@ for(const key of [...new Set(races.map(r=>r.entry.competition+'|'+r.entry.series
 for(const venue of venues){const wins=new Map();for(const winner of venue.past_winners){const row=wins.get(winner.driver_id)||{driver_id:winner.driver_id,name:winner.name,wins:0,source_subsessions:[]};row.wins++;row.source_subsessions.push(winner.subsession_id);wins.set(winner.driver_id,row);}venue.repeat_winners=[...wins.values()].filter(d=>d.wins>1);}
 for(const d of drivers.values())d.personal_bests=venues.filter(v=>v.configuration&&v.vehicle_classes.length===1).map(v=>{const times=races.filter(r=>r.venue.key===v.key).flatMap(r=>r.rows.filter(row=>row.driver_id===d.driver_id&&row.best_lap_seconds>0).map(row=>({seconds:row.best_lap_seconds,subsession_id:r.entry.subsession_id,source:row.field_provenance.fields?.best_lap_seconds||row.field_provenance}))).sort((a,b)=>a.seconds-b.seconds);return times.length?{venue:v.key,competition:v.competition,best:times[0],known:times.length,total:v.events.length}:null;}).filter(Boolean);
 const observedNames=new Map();for(const d of drivers.values())for(const name of d.names){const key=normalize(name),ids=observedNames.get(key)||new Set();ids.add(d.driver_id);observedNames.set(key,ids);}for(const [name,ids] of observedNames)if(ids.size===1&&!names[name])names[name]=[...ids][0];
+// Project verified profiles only; retain every historical classification row.
+const admission=driverAdmission({settings:driver_policy,eligibility:driver_eligibility,identities:{names:profiles.names||{}}});
+for(const [id,d]of drivers)if(admission.blocked(id)||(!admission.verified(id)&&!admission.preserve(id)))drivers.delete(id);
+for(const name of Object.keys(names))if(!drivers.has(String(names[name])))delete names[name];
 const common={schema_version:'MMTV-canonical-intelligence-v1'};
 const content={drivers:{...common,names,drivers:[...drivers.values()].sort((a,b)=>a.driver_id-b.driver_id)},races:{...common,races,meetings:publicMeetings},venues:{...common,venues},championships:{...common,championships}};
 

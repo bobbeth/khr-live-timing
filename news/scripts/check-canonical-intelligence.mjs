@@ -80,7 +80,7 @@ for(const event of events){
  const meeting=await read(p),enriched=intelligence.enrichMeeting(meeting);
  assert.equal(enriched.sessions.length,meeting.sessions.length);
  for(const [i,s] of meeting.sessions.entries()){
-  savedSessionCount++;savedRowCount+=s.classification.length;for(const row of s.classification)assert.ok(data.drivers.some(d=>d.id===context.window.tests.driverStats.key(row.driver)),'Every saved driver link resolves to a profile: '+row.driver);
+  savedSessionCount++;savedRowCount+=s.classification.length;for(const [j,row]of s.classification.entries()){const id=enriched.sessions[i].classification[j].driver_id,resolved=data.drivers.some(d=>Number(d.iracing_id)===Number(id)||d.id===context.window.tests.driverStats.key(row.driver)),link=context.window.tests.driverStats.driverLink(row.driver,id);if(resolved)assert.ok(link.includes('<a '),'Verified competitor remains clickable: '+row.driver);else{assert.ok(['practice','warmup'].includes(s.kind),'Unverified non-practice driver must not be hidden');assert.ok(!link.includes('<a '),'Noncompetitor history remains plain text: '+row.driver);}}
   assert.equal(enriched.sessions[i].classification.length,s.classification.length);
   for(const [j,row] of s.classification.entries())for(const [key,value] of Object.entries(row))if(value!=null)assert.deepEqual(enriched.sessions[i].classification[j][key],value);
   const html=context.window.tests.stageTable(enriched.sessions[i],event.entry);
