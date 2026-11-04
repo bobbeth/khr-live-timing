@@ -3,3 +3,5 @@ tools/website-publisher/MMTV-AutoPublish.ps1 -text
 tools/website-publisher/DriverProfiles.ps1 -text
 tools/website-publisher/Export-Intelligence.ps1 -text
 tools/website-publisher/OwnerEventAssociations.ps1 -text
+tools/website-publisher/BroadcastLinks.ps1 -text
+tools/website-publisher/Test-BroadcastAutomation.ps1 -text

@@ -1,4 +1,4 @@
-﻿# Mud Mules TV automatic completed-race website publisher (PowerShell 5.1).
+# Mud Mules TV automatic completed-race website publisher (PowerShell 5.1).
 # Reads canonical records and checksum-verified native completed captures. Writes an isolated Git clone.
 # Never changes the Bridge, canonical archive, live.json, or website archive.
 [CmdletBinding()]
@@ -29,7 +29,7 @@ param(
 . (Join-Path $PSScriptRoot 'OwnerEventAssociations.ps1')
 $script:MMTVOwnerEventAssociations=@{}
 $lookupProfiles = -not $SkipDriverProfiles -and ($CheckDriverProfiles -or $CheckBroadcasts -or ([Environment]::CommandLine -notmatch '(?i)-NonInteractive'))
-$lookupBroadcasts = -not $SkipBroadcasts -and ($CheckBroadcasts -or ([Environment]::CommandLine -notmatch '(?i)-NonInteractive'))
+$lookupBroadcasts = -not $SkipBroadcasts
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
 $repoUrl = $RepositoryUrl
@@ -437,19 +437,32 @@ try {
         Note "[READY] $series R$round $track | #$($winner.car_number) $($winner.driver) | ID $id"
     }
     $broadcastCount=0
+    $broadcastPath=Join-Path $repo 'news\data\broadcasts.json'
     if($lookupBroadcasts){
         try {
-            $videos=@(Get-CompletedBroadcasts)
-            $broadcastPath=Join-Path $repo 'news\data\broadcasts.json'
             $broadcasts=[IO.File]::ReadAllText($broadcastPath) | ConvertFrom-Json
-            $broadcastCount=Add-BroadcastLinks $broadcasts $allEvents $videos $Competition $SeasonYear
+            $stateName=if($Publish){'broadcast-state.json'}else{'broadcast-state-dry-run.json'}
+            $broadcastState=Join-Path $WorkRoot ('Website Publisher\'+$stateName)
+            $broadcastEvents=@(Get-MMTVBroadcastEvents -RepositoryPath $repo -Events $allEvents)
+            $videoUpdate=Invoke-MMTVBroadcastWorkflow -Index $broadcasts -Events $broadcastEvents -Competition $Competition -Year $SeasonYear -StatePath $broadcastState -ForceCheck:$CheckBroadcasts
+            $broadcastCount=$videoUpdate.added
             if($broadcastCount -gt 0){
                 JsonSave $broadcastPath $broadcasts
                 $allowed.Add('news/data/broadcasts.json')
             }
-            Note "[BROADCASTS] $broadcastCount new subsession link(s); existing mappings retained."
-        } catch { Note ('[YOUTUBE SKIP] '+$_.Exception.Message) }
+            Note ('[BROADCASTS] '+$videoUpdate.status+'; '+$videoUpdate.message+' Pending: '+$videoUpdate.pending)
+        } catch { Note ('[YOUTUBE SKIP] Race publication continues. '+$_.Exception.Message) }
     }
+    try {
+        $broadcasts=[IO.File]::ReadAllText($broadcastPath) | ConvertFrom-Json
+        foreach($event in @($allEvents | Group-Object subsession_id | ForEach-Object {$_.Group | Select-Object -Last 1})){
+            $videoProperty=$broadcasts.events.PSObject.Properties[[string]$event.subsession_id]
+            $videoStatus='VIDEO PENDING'
+            if($videoProperty -and $videoProperty.Value.video_id -match '^[A-Za-z0-9_-]{11}$'){$videoStatus='VIDEO LINKED'}
+            Note ('['+$videoStatus+'] '+$event.subsession_id+' '+$event.series+' R'+$event.round)
+        }
+    }catch{Note ('[VIDEO PENDING] Video index unavailable: '+$_.Exception.Message)}
+
     $profileChanged=$false
     $autoDriverDiscovery=$false
     if(-not $SkipDriverProfiles -and (Test-Path -LiteralPath $DriverSettingsPath)){
@@ -515,11 +528,13 @@ finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 
 
 
+
+
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB1jXjSMS0IZ24f
-# Sld3ndNnYaEKR/Ubt1QNsjeox5J4+aCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAv0GVqqAFURUnK
+# 7fMMVsDCT4yVMCwWryXXTWNzfTWMhqCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -545,14 +560,14 @@ finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCARscCaiLiRJbXiNw0iTbktfbuKH776Rri9VvjK6ltL
-# 0TANBgkqhkiG9w0BAQEFAASCAYBw3YC0JlRJQNfZmmWVwFXSf+94v/OEp267g3T0
-# I987pvK6QskkQCRXNEtoRLyKsyIHOIDRdBA+TVCQDnh5/zRHhG+/Li+v0lnTi6w6
-# wBbd0pmtv5tbH9+8sTRDLjT0z3vaRbeUvm9GFQT6QdtDER4Xe55zWB9A6tk2hZQU
-# bcLWpz7D/mb8neXo4bpIBkri0kFjPiP20tN0ZGdulSmSpQR9YxdBgGV9uPiHZoRd
-# crSrMPAv9QObBFuFk4EVkxYuu0auHLX6Ako/ipJA07JLop9SZSQg4rG0gBXezt8z
-# rIkL76ggVgAUnN2W6kNS3XN1WTa99NS/forsgoNeORSjMA7KBJcjww4tzMWvEwy7
-# TmeeCWIJ1ZoedZKu2jxRkT80itArTLqSsLaTmkMmINEtLoOcWMrbE02Bbg4CLuQS
-# +nyth6vBhtunAxqJY/HKrI9+8hMwnCwpah7toprwwzZDKCQiJbABUS0vfMhiDmxl
-# cTOqmBj1mC3bSXyIBfMenyciTrU=
+# MC8GCSqGSIb3DQEJBDEiBCArlAypyOSSglM6FnRS9C5CrAXWmade7aOew595JNXq
+# YzANBgkqhkiG9w0BAQEFAASCAYAPDBPqrdhO42huPIp1AMQmsr3scCjKG0EnzW5K
+# wEkXHBgcSAgHedwx0n+HeR5VbsOlTOBNN9wRJ0o3R1gWNMPg+EWlr60qQZ7ExMsh
+# AS9RTL7/hpSyWAG/dGWkePMzZLZsUrRhjJdJqXmSyGpvUlst2u7LdXKaaZgzLFHi
+# JOq51n1zEu0jbYSxm0wCpVw6A3FVHKOiY93tOnxiEH3oJ06Ozw7nUMyiJ4oiAYGx
+# nW0oLzYCY5G4dBpUMYcjMinhdSo4sgqdDFx3blbmanFp3RdA/xRFn+Hwhcy6+xF6
+# hJq3LvIisUzzi3L3DzqNbEhfISxqrddAmuyqAcB5/St1Y3V/eW1PQrnZQ1D96paA
+# jsd/WjE69uIpb+IUJEOZ543+sFAdWhCTKjBFbXDZ/DJawaR7HIMnNfPzLwycEppf
+# UXjdMjkQoImSnbUDubKlmKR1+XBHq9g5wY5+FbDbW3/cf4mw62yX/qYpasEdXK8/
+# g+0An3RBYzeNIWiFsXRX34zD7dg=
 # SIG # End signature block
