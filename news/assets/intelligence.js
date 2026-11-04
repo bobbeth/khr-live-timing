@@ -74,7 +74,10 @@ window.MMTVIntelligence=(()=>{
  function enrichMeeting(meeting){
   if(!model||!detailReady.has(Number(meeting.subsession_id)))return meeting;
   const source=model.races.races.find(r=>r.entry.subsession_id===Number(meeting.subsession_id));if(!source)return meeting;
-  return {...meeting,sessions:meeting.sessions.map(session=>{const verified=source.sessions.find(s=>Number(s.simsession_number)===Number(session.simsession_number)&&(s.kind===session.kind||/^WARM/i.test(s.name)&&/^WARM/i.test(session.name)));return verified?{...session,classification_difference:verified.classification_difference,classification:(session.classification||[]).map(row=>enrichRow(row,verified.classification))}:session;})};
+  const result={...meeting,sessions:meeting.sessions.map(session=>{const verified=source.sessions.find(s=>Number(s.simsession_number)===Number(session.simsession_number)&&(s.kind===session.kind||/^WARM/i.test(s.name)&&/^WARM/i.test(session.name)));return verified?{...session,classification_difference:verified.classification_difference,classification:(session.classification||[]).map(row=>enrichRow(row,verified.classification))}:session;})};
+  // New native non-race tables require their own verified source; existing classifications stay intact.
+  for(const session of source.sessions){if(['practice','qualifying','warmup'].includes(session.kind)&&session.source?.source_kind==='sha_verified_native_session_info'&&!result.sessions.some(s=>Number(s.simsession_number)===Number(session.simsession_number)))result.sessions.push({...session,classification:session.classification.map(row=>({...row}))});}
+  result.sessions.sort((a,b)=>Number(a.simsession_number)-Number(b.simsession_number));return result;
  }
  const raceLink=(id,text)=>`<a href="#race/${Number(id)}">${esc(text||'Race report')} ↗</a>`;
  function recoverySources(r){
