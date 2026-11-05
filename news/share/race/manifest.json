@@ -1,0 +1,1269 @@
+{
+  "schema": "MMTV-race-share-v1",
+  "recipe": "6cb4cb79e338fd73709a75873ae1ccf2ae5b56a8e27ba31e478daa6b1dad505c",
+  "source": {
+    "kind": "verified_website_package_inputs"
+  },
+  "events": {
+    "88961208": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/88961208/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/88961208",
+      "headline": "Reavis Charges from Fourteenth to Win Bomber Stocks Opener at Oswego",
+      "description": "Bomber Stocks Round 1 at Oswego Speedway. Twin Feature 2 winner: Jim Reavis #57. The #57 produces a 13-place climb in the second twin feature as Craig Schmidt leads the most laps.",
+      "winner": "Jim Reavis #57",
+      "graphic_key": "e6264590d6147f98fce4585d31bcb398fc37e82e41c6c8f35657dd4ea72f5aa7",
+      "page": "news/share/race/88961208/index.html",
+      "page_sha256": "031f20f54c90aae377b78de9093d5b51b22eef50c938ce3b74eb1ec75a830a2e",
+      "image": "news/share/race/88961208/preview.png",
+      "image_sha256": "7522bba53e6b4ae4fa132febea9fa6bee926ec3962e0d03d59401495d8f8774f",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/88961208.json",
+          "sha256": "dc29f699cdf8ae2b95abde719ed0ca46ee4c1c56d54d36ee6f4314895b578900"
+        },
+        {
+          "path": "news/data/meetings/88961208.json",
+          "sha256": "f031530cc3515435febb16af0b4484c477f2b79c91dd95867c8c9360abab367c"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "88962942": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/88962942/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/88962942",
+      "headline": "Roberts Controls Eldora Opener as Angell and Mcdonald Storm onto Podium",
+      "description": "Cushion Kings Round 1 at Eldora Speedway. Feature winner: Josh Roberts3 #42. Josh Roberts3 leads 35 of 41 laps while two rivals climb eight positions apiece.",
+      "winner": "Josh Roberts3 #42",
+      "graphic_key": "1ef6edd749afa9469f65483637dbe8cfbd84fc213d599a103f7713b11c88d93c",
+      "page": "news/share/race/88962942/index.html",
+      "page_sha256": "5807ed4c84d41cac74b228990b143bb42d7516fc835b6ed71432a72a07ec3787",
+      "image": "news/share/race/88962942/preview.png",
+      "image_sha256": "1d6d676bf2a32b5d5251da4a20dea3dd1d6349b74b6e75f26fc070c594332fe9",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/88962942.json",
+          "sha256": "ee04feaa5ed4350c9f8d99bc96fa424e25bed84895cb30e78c46e5dabc45e620"
+        },
+        {
+          "path": "news/data/meetings/88962942.json",
+          "sha256": "5bb5b4aba2e934cb018935f489a1d9bfe023281a1d600f7b8d5f84e47635f358"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "88985308": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/88985308/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/88985308",
+      "headline": "Mixter Wins from Ninth in 60-Lap Mini Menaces Opener at Millbridge",
+      "description": "Mini Menaces Round 1 at Millbridge Speedway. Feature winner: Mikey Mixter #69. An eight-position climb carries the #69 to victory in a 13-caution Feature.",
+      "winner": "Mikey Mixter #69",
+      "graphic_key": "0780402b5817b462410e4fceb71dca858d6316668128fd1f403f1abb92d98acf",
+      "page": "news/share/race/88985308/index.html",
+      "page_sha256": "fabf98334f8a274076acb95816eea0a5f8afa5ae0724785226938de33ce180df",
+      "image": "news/share/race/88985308/preview.png",
+      "image_sha256": "de0305ce9c5b9ccf5188c0dc3cf359dc409392a7c661b26ba1eafe63427084df",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/88985308.json",
+          "sha256": "2a25166f3a0c6ccb82947e4df12522141fa639c429a5aa1ea0a59dc29a086014"
+        },
+        {
+          "path": "news/data/meetings/88985308.json",
+          "sha256": "d31580fdda8d2ff1be95d1ac612c0a437ccec7bf5e25751c7749df578a7ae6d0"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "88987054": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/88987054/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/88987054",
+      "headline": "McClain Opens Yota Outlawz Season with South Boston Victory",
+      "description": "Yota Outlawz Round 1 at South Boston Speedway. Feature winner: Kent McClain #75. The #75 leads 24 of 30 laps in a caution-free championship opener.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "5ce47c77980f9035d4269c5b39e94ac2be855dd162be2915875b1aa76cfcf3ea",
+      "page": "news/share/race/88987054/index.html",
+      "page_sha256": "a44bb15965babb0730765200da6b4649d9edcd83b7f59faaf3314239ff7d55af",
+      "image": "news/share/race/88987054/preview.png",
+      "image_sha256": "8ae7b21dbbe30eacd29554e49aeaded53cc5136a21c94d3cbbc3007f653f0c7a",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/88987054.json",
+          "sha256": "53274b7579efaf9b8ef28cd41fd9833fd3d2c41ba2e53ca1e811294293d36b31"
+        },
+        {
+          "path": "news/data/meetings/88987054.json",
+          "sha256": "e9e8d8dbd2b4d19bc0dbb93da66824f19312f82812a1214d17c6716679854903"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89009401": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89009401/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89009401",
+      "headline": "McClain Completes Round 1 Double in Wide Open Revival at Lucas Oil",
+      "description": "Wide Open Revival Round 1 at Lucas Oil Speedway. Feature winner: Kent McClain #75. A 36-lap lead and fastest lap put the #75 on top in the Dirt Pro Late Models.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "88e1b1662b038445d3e409329bdbdb35c9a7fb7429ebecc4a81e5b23767026d6",
+      "page": "news/share/race/89009401/index.html",
+      "page_sha256": "1a656a2cf69ea562ed04afa047f8848ee1cb9c0753ac964284a329f1f11bcddc",
+      "image": "news/share/race/89009401/preview.png",
+      "image_sha256": "4a30bc9be63d7c23a59a008c377b9f84b73e3720bac9f8b65d39f3948ca893f3",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89009401.json",
+          "sha256": "9a52b0b2198419b327ae32d4713bd99bfe7f60a7943e68d983944ada12c4dfcd"
+        },
+        {
+          "path": "news/data/meetings/89009401.json",
+          "sha256": "d00c038248cba936144430d4b19f921686d3352bfc594ede580b9bb9da789834"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89130026": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89130026/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89130026",
+      "headline": "Puterbaugh Comes from Twelfth for Fairbury Bomber Stocks Victory",
+      "description": "Bomber Stocks Round 2 at Fairbury Speedway. Twin Feature 2 winner: Chad Puterbaugh #20. The #20 takes Round 2 ahead of Vanderwood and Mixter after gaining 11 positions.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "eb3884cf66638c8fbce7c34d0252444febd52fcd89ba8bae69648b9f894d2308",
+      "page": "news/share/race/89130026/index.html",
+      "page_sha256": "513534d15e5c2f5780d2e34f13d121b577a7d549cccfea7b14fec7abe936ce6b",
+      "image": "news/share/race/89130026/preview.png",
+      "image_sha256": "5853858b762d3b0030f4380251a77539927d720f1422636bf5f568c91d4b5af6",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89130026.json",
+          "sha256": "5cd35bfba592061e723edab3cce26a7bfc7251a35f5e61de0502906aac5858ac"
+        },
+        {
+          "path": "news/data/meetings/89130026.json",
+          "sha256": "bf063514d3a5a24350a63e8e972ae7246fdf6e1c13e6f7596d9ee7b2bfd99d24"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89131794": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89131794/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89131794",
+      "headline": "McClain Leads 32 Laps to Claim Cushion Kings Round 2 at Limaland",
+      "description": "Cushion Kings Round 2 at Limaland Motorsports Park. Feature winner: Kent McClain #75. A win from pole for the #75, with a ten-place charge by Mcdonald2.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "67aebcc5c38a4802c8d7a64b9b67c4b280a28cd75f7a91057962e86142177ebf",
+      "page": "news/share/race/89131794/index.html",
+      "page_sha256": "f7a718bceecc08f06d09ac578f162cb796fc78e386b5b4dbe974b55e7c34cb9e",
+      "image": "news/share/race/89131794/preview.png",
+      "image_sha256": "efc6272067419f609486255be3aff1c1fc7640e9cc5175a153e46b8695dcb9ed",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89131794.json",
+          "sha256": "ede0ba5abfc6ee09d006af6f882fbffe6b313b2448496e4a073e43c0c309f3db"
+        },
+        {
+          "path": "news/data/meetings/89131794.json",
+          "sha256": "0730bbe2e61d8706bfe10b39f9c298300f160ca9394b25d0b399ff650dc67d94"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89153778": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89153778/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89153778",
+      "headline": "Mcdonald2 Wins from Ninth as Mini Menaces Visit Limaland",
+      "description": "Mini Menaces Round 2 at Limaland Motorsports Park. Feature winner: Travis Mcdonald #88. Travis Mcdonald2 takes Round 2, despite Wayne Bridges leading more than half the race.",
+      "winner": "Travis Mcdonald #88",
+      "graphic_key": "d7885722c6cb11bfc024c9b9aca9ecac5a388ad33d311e89a3f5be92a0fb6fca",
+      "page": "news/share/race/89153778/index.html",
+      "page_sha256": "4f2d3ec57f02a5941168536481ad73b051f585412918c7d394e619b1aef7843d",
+      "image": "news/share/race/89153778/preview.png",
+      "image_sha256": "ec0a5575c895ff02fb91eeb19299664f11a9685d022fc93fec1bfa065a89be2f",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89153778.json",
+          "sha256": "ddd5678d7bc8f629d12865899ae35252993cb97b6992b1db104d2b9e4ac25cec"
+        },
+        {
+          "path": "news/data/meetings/89153778.json",
+          "sha256": "fabd795747c5bb7b95c87a96e733863d254e2582fda98100e33c915d11b2d247"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89155471": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89155471/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89155471",
+      "headline": "Puterbaugh Takes Yota Outlawz Round 2 from Tenth at Lanier",
+      "description": "Yota Outlawz Round 2 at Lanier National Speedway. Feature winner: Chad Puterbaugh #20. A nine-place recovery wins the Feature after Kent McClain leads 31 laps.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "d0ae9f37c0bb1b59128b25b75c620f3ce27c94a801e972b7cc6270f20f8eba5e",
+      "page": "news/share/race/89155471/index.html",
+      "page_sha256": "745716d07cc15da46f1fc1e36a2a175d5fbf0b71d8d67f8d3a161cb3671c23a1",
+      "image": "news/share/race/89155471/preview.png",
+      "image_sha256": "8fc480eb1c30e487c4996b85dafa097b93345c2f3c1c990cddefa13242acc7bd",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89155471.json",
+          "sha256": "0a699f323a955b2f7cba5096574272e0734f074a88953db8b9526b10c2e7b378"
+        },
+        {
+          "path": "news/data/meetings/89155471.json",
+          "sha256": "165ab27c1dcfb71a0a9c9ae26d504bcd510babf4656600763cd4416a8abe3867"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89178640": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89178640/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89178640",
+      "headline": "Reavis Commands Port Royal Wide Open Revival with 44 Laps Led",
+      "description": "Wide Open Revival Round 2 at Port Royal Speedway. Feature winner: Jim Reavis #57. The #57 wins Round 2 from second on the grid and sets the fastest Feature lap.",
+      "winner": "Jim Reavis #57",
+      "graphic_key": "18722d4ffa55d0e4471164dec26038d0254da61a6a933b5a7dfa3a9591f68cd5",
+      "page": "news/share/race/89178640/index.html",
+      "page_sha256": "2c7228f2c92bf2e0e30ceb2856c7b560529628640d5c61954b1fdbbfd1ca0985",
+      "image": "news/share/race/89178640/preview.png",
+      "image_sha256": "80dc33bf4ab5fefec80888d4b0571e1e9f4532eb0cd60ce80ba1e562f5223a63",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89178640.json",
+          "sha256": "200dc5b8afb5e41ff8506ad8e7977ec38f862e72771349bb658c356a10812cd8"
+        },
+        {
+          "path": "news/data/meetings/89178640.json",
+          "sha256": "fef95728fe42f4cbeda07224eac2f09b768aaec239522d6fe4f7d21c61a6669f"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89302439": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89302439/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89302439",
+      "headline": "Puterbaugh Makes It Back-to-Back Bomber Stocks Wins at Huset’s",
+      "description": "Bomber Stocks Round 3 at Huset's Speedway. Twin Feature 2 winner: Chad Puterbaugh #20. A seven-to-first move and 21 laps led secure another Round 3 result for the #20.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "4711346a7eb59d0f6eae727b86ad12d0d868d482833577b28c6ea916dadc1e47",
+      "page": "news/share/race/89302439/index.html",
+      "page_sha256": "7db1af7c4a7fe10e2a54d1c10062125fb19fbf85a9bbe5f3fbc6eaf73af86888",
+      "image": "news/share/race/89302439/preview.png",
+      "image_sha256": "4d70fb86b798d61a16b2fa0eb551a1343f6c828f52f17d6fda959985c0a95b15",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89302439.json",
+          "sha256": "09bad92dfba90b2969b8c28620b4b563b06bfa5dcc0ef3875b2757382b2eb0aa"
+        },
+        {
+          "path": "news/data/meetings/89302439.json",
+          "sha256": "ffdc026b5a2db2f612d7324f631d195754f74497e1cbf48d0508fa5bbcdc8e9d"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89303933": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89303933/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89303933",
+      "headline": "McClain Adds Charlotte Victory to Cushion Kings Campaign",
+      "description": "Cushion Kings Round 3 at The Dirt Track at Charlotte. Feature winner: Kent McClain #75. The #75 leads 36 of 45 laps while Bryce Fries climbs seven places to second.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "884a769fc1f4c3472d7846eccd9791146ba2bddab1e559919dd7635e88da7f90",
+      "page": "news/share/race/89303933/index.html",
+      "page_sha256": "04788f25864725f270a35ed666226b0c9626f88c1d12bb165749cb9a6acf61b5",
+      "image": "news/share/race/89303933/preview.png",
+      "image_sha256": "0d5518e47c85a266b4e61abb9124b9459ed805d91fa2401ef0fa168555cfa7be",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89303933.json",
+          "sha256": "512844b348ebed082680efd1d98871c653f0a47b54452f4da3993b8e318446a0"
+        },
+        {
+          "path": "news/data/meetings/89303933.json",
+          "sha256": "ab6e303482a218b78e8b5dbaa8df798b94e0aec4f6b6d8a41739388cdb471e54"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89327096": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89327096/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89327096",
+      "headline": "Puterbaugh Leads 33 Laps to Take Mini Menaces Round 3 at Lanier",
+      "description": "Mini Menaces Round 3 at Lanier National Speedway. Feature winner: Chad Puterbaugh #20. The #20 starts first, finishes first and sets the Feature’s quickest lap.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "7611793083679ecb9608b3a047a9cd4d25ba03b9046859a8777e4f72a21e64bd",
+      "page": "news/share/race/89327096/index.html",
+      "page_sha256": "a2090f2b09eceb1e3882981a3c5f8f3cf53fe789c56ef28fc57427526e9b2cca",
+      "image": "news/share/race/89327096/preview.png",
+      "image_sha256": "13d579598afae02ee2eda56b7bf9c25c63f0c1ec4a24677e320337880104ebaa",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89327096.json",
+          "sha256": "1333fbd2a9c102d9e812f192e3f0911749ffafeaa0fc14b0c99a7c9af4d6a928"
+        },
+        {
+          "path": "news/data/meetings/89327096.json",
+          "sha256": "147dc1241f2f160feafea10aa6db7a4059dbe455ba5f37d7de1c7913284d5439"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89328837": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89328837/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89328837",
+      "headline": "Puterbaugh Wins Again as Yota Outlawz Tackles Concord",
+      "description": "Yota Outlawz Round 3 at Concord Speedway. Feature winner: Chad Puterbaugh #20. The #20 leads 18 laps and moves from second to first in an 11-caution Feature.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "a6e151ce3262c58a650280e6f1ef4320c67d594b3355f308f56ed5353ff26482",
+      "page": "news/share/race/89328837/index.html",
+      "page_sha256": "b2aefe96ff3e14c6cfbdc13ae41bbff924730d0af2a9560ec68eed82f92303e1",
+      "image": "news/share/race/89328837/preview.png",
+      "image_sha256": "dc331ca35b9e31f6ed42a5f4670d94aa28e1262024fadc24ec98254a495c3d74",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89328837.json",
+          "sha256": "5f663adebbd8e68cff02b1e864be6aa18d589fa0a6fa2240e18ed890feb86bee"
+        },
+        {
+          "path": "news/data/meetings/89328837.json",
+          "sha256": "c24b1bfc54136e7bd466b84e9d25e9f539631babcc9f39e5a1a5f1a62c66012a"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89351486": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89351486/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89351486",
+      "headline": "McClain Leads 40 of 45 to Conquer Wide Open Revival at Weedsport",
+      "description": "Wide Open Revival Round 3 at Weedsport Speedway. Feature winner: Kent McClain #75. A pole-start victory and fastest Feature lap define Round 3 for the #75.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "013f9d6bcdfb867c8cc82292ef8a0cb400166e4387cfeb7ad74ac6107a5c1311",
+      "page": "news/share/race/89351486/index.html",
+      "page_sha256": "e777b43cab148b40b5be57e265bd75938e3acfb0a8e445f0a5d78c09259a5bd4",
+      "image": "news/share/race/89351486/preview.png",
+      "image_sha256": "648fb24f8d2b229bd833955d1b50d1e325f352a8bd1c743110658c5b24dc3f3e",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89351486.json",
+          "sha256": "b394ad4da6b17a8c8c7be88362a2faf9bba268ea80ee7c09e87047feb1cbd004"
+        },
+        {
+          "path": "news/data/meetings/89351486.json",
+          "sha256": "f0bc6b3392db14cbfe4562fd2fe84e1e991a5e45c5433f4c88a1cc42638f3e85"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89471712": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89471712/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89471712",
+      "headline": "Puterbaugh Extends Bomber Stocks Run with USA International Victory",
+      "description": "Bomber Stocks Round 4 at USA International Speedway. Twin Feature 2 winner: Chad Puterbaugh #20. A ten-to-first charge delivers a third consecutive Feature win for the #20.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "4bda9ff921fd5a9561b33ab742cd89aacfc4573f62766074680dbeb2669a9cc1",
+      "page": "news/share/race/89471712/index.html",
+      "page_sha256": "e4ba1b4efe929a83cc3cfa08c300fb9c89ba9cc98cdc3682f0a29a2aac7db4a6",
+      "image": "news/share/race/89471712/preview.png",
+      "image_sha256": "e7e64ca85b4d0b90315cb9b8973937faf9a081e6ca56b0eb044cb317cbb1d25b",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89471712.json",
+          "sha256": "a8adb56599c00168af2fdfacd6167709a458ce42c06c396d6e1ab8887bbab010"
+        },
+        {
+          "path": "news/data/meetings/89471712.json",
+          "sha256": "8c692ee512b9fabab3103f843efbfa6a5cafcc4e29d565002273445ff966d7ca"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89473591": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89473591/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89473591",
+      "headline": "Angell Takes Lanier Cushion Kings Win with 36 Laps Led",
+      "description": "Cushion Kings Round 4 at Lanier National Speedway. Feature winner: Brian Angell #7. Angell leads 36 laps from pole, with Mixter second and Parrotta third.",
+      "winner": "Brian Angell #7",
+      "graphic_key": "89b1a2add69ae8321e84b3fc48d1ebe496854120a6c774802b7dbca01ed3212e",
+      "page": "news/share/race/89473591/index.html",
+      "page_sha256": "9e1f335d33cedbe6e0b791988f3f4e3515ed83bd90c6f246758fb17005bfd16d",
+      "image": "news/share/race/89473591/preview.png",
+      "image_sha256": "07030e1075372464e999e8aa49b52af10e033f0aaf2b2c1e5255fb118be911cf",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89473591.json",
+          "sha256": "f08e3a16189d32446f0a0afc9ac58e4243427e5f8a55f4744d19448b614d0bff"
+        },
+        {
+          "path": "news/data/meetings/89473591.json",
+          "sha256": "fde75d14edeef10a79b175cde1c3f6fc7484d91949c3b90b7c96251efa2a23c0"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89495168": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89495168/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89495168",
+      "headline": "Angell Claims Chili Bowl Mini Menaces Feature in Round 4",
+      "description": "Mini Menaces Round 4 at Chili Bowl. Feature winner: Brian Angell #7. A 35-lap lead and victory from second on the grid for the #7.",
+      "winner": "Brian Angell #7",
+      "graphic_key": "17e25b094a57d662caed2b53fda44496c98fe81a31050ab20fa92386f66d6f95",
+      "page": "news/share/race/89495168/index.html",
+      "page_sha256": "e0081fae6a5eb62f067bd3de1d547e6ab4d816afe8d804a6da7cd8d12d0d5c02",
+      "image": "news/share/race/89495168/preview.png",
+      "image_sha256": "895144fb69eff8045fd8fdd7758eecd0d5699d80b29f768890a5920ebfc484ec",
+      "sources": [
+        {
+          "path": "archive/index.json",
+          "sha256": "69f99046c41445a9d729cd4048b340dc35ab29021ee59e93e8adc1ff84d089fa"
+        },
+        {
+          "path": "archive/events/89495168.json",
+          "sha256": "c3ee75db892b5a8364c22aff97d2b1ba2997dde6b5b4907b42a4b085bd7b6b26"
+        },
+        {
+          "path": "news/data/meetings/89495168.json",
+          "sha256": "bcc9366b20cf296c91f49c34a44e761c65a643a475bf00db809ff54e6331d5e9"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89496902": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89496902/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89496902",
+      "headline": "Puterbaugh takes Yota Outlawz Round 4 at Limaland",
+      "description": "Yota Outlawz Round 4 at Limaland Motorsports Park. Feature winner: Chad Puterbaugh #20. The #20 wins from pole as Mixter and Brewer climb onto the podium.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "22a99351b28794da7a0db7d24a6c9756a277a0103e5836af762fc7cdabe44b47",
+      "page": "news/share/race/89496902/index.html",
+      "page_sha256": "3969bdb32c7847610e15e116c78170b17bc8853cc199830020adc1029ca56d9d",
+      "image": "news/share/race/89496902/preview.png",
+      "image_sha256": "c59c5cfb7f8570b44df68995d6f1809a688c7f7d8951fa81696190beed5804f6",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89496902.json",
+          "sha256": "37ef2ee12992172bb03df22163327aec57c5ad2711b2b860c762993407ba7cac"
+        },
+        {
+          "path": "news/data/live/meetings/89496902.json",
+          "sha256": "d2c51f7547bbaa0cb85bccb73b76a039984f47570e03bd5a9a28dae4410116d7"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89519810": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89519810/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89519810",
+      "headline": "Puterbaugh Climbs from Seventh to Win Volusia Wide Open Revival",
+      "description": "Wide Open Revival Round 4 at Volusia Speedway Park. Feature winner: Chad Puterbaugh #20. The #20 comes from seventh to take Round 4 ahead of Angell and Mixter.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "166be56b407485a5f9576fd74aef027b669df779e4cc98c85797faebe9867c63",
+      "page": "news/share/race/89519810/index.html",
+      "page_sha256": "a6c6a1699579c27472b88293a97cbb601596156b31be2c9bda214f5f0bc434ae",
+      "image": "news/share/race/89519810/preview.png",
+      "image_sha256": "01f40fa055a518dbdfad6eca72b36cc9d504c62b117d8b2dac6742266d20b696",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89519810.json",
+          "sha256": "62af915d2cb5b7273b7331d0ad910b3e86654f3ca65188314fc8c3f2a03c2193"
+        },
+        {
+          "path": "news/data/live/meetings/89519810.json",
+          "sha256": "ccd13a3dd1595881559272dd760b1b47d2d4a119f506a48c183f566c8ed60c5d"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89643227": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89643227/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89643227",
+      "headline": "Mcdonald Wins Limaland Bomber Stocks Round 5 as McClain Rises from Rear",
+      "description": "Bomber Stocks Round 5 at Limaland Motorsports Park. Twin Feature 2 winner: Travis Mcdonald #88. Mcdonald takes the win as McClain gains eleven places to finish second.",
+      "winner": "Travis Mcdonald #88",
+      "graphic_key": "9210767a648ce446dc5ba6740f3c3665e5f16f3a8c789970cae2dedada56f742",
+      "page": "news/share/race/89643227/index.html",
+      "page_sha256": "2305360af8c543c475ecd53cf2f6dfe07a642963562cd251bbae204a185ae7a3",
+      "image": "news/share/race/89643227/preview.png",
+      "image_sha256": "95f5be1d2e69922ad3c887fbf1f61bb7c3da04259e32adc148ea655048f4eabf",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89643227.json",
+          "sha256": "194cd8bf6cf6a8d4b11f650e37c4bfec2dd0ddff71cddff276e4b6f70999dc80"
+        },
+        {
+          "path": "news/data/live/meetings/89643227.json",
+          "sha256": "eecfb95a83b3bad27845fcdffc26fa84cd6e01b549436a0385ef54128225a43e"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89644712": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89644712/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89644712",
+      "headline": "Mcdonald doubles up with Cushion Kings win at Volusia",
+      "description": "Cushion Kings Round 5 at Volusia Speedway Park. Feature winner: Travis Mcdonald #88. The #88 adds a second Round 5 victory ahead of McClain and Puterbaugh.",
+      "winner": "Travis Mcdonald #88",
+      "graphic_key": "84f785e3a7d6b5c4c6059dc35a1165dba24244c179a2d056b3af81cea8a16aef",
+      "page": "news/share/race/89644712/index.html",
+      "page_sha256": "89963b881e0235cf866ad7ff1b8029a49523e792506c3f1e4dc6476d7ae2fe2a",
+      "image": "news/share/race/89644712/preview.png",
+      "image_sha256": "e36f1c9e69fd7b725ea511b1ba7228b2c26e01e3428fa73d6451e727c5bcdb4c",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89644712.json",
+          "sha256": "20b60c508369b5f193b644918604486c9e8140c7ab78c14647f3366d86016848"
+        },
+        {
+          "path": "news/data/live/meetings/89644712.json",
+          "sha256": "7f148c17af423ec7f9fbfaff3346e4cd0dc1f124e8488ddf9e22dff3f17c450c"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89666377": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89666377/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89666377",
+      "headline": "Mathew Land Leads 22 Laps to Win Langley Yota Outlawz Round 5",
+      "description": "Yota Outlawz Round 5 at Langley Speedway. Feature winner: Mathew Land #091. Land leads 22 laps, with Schmidt coming from ninth to second.",
+      "winner": "Mathew Land #091",
+      "graphic_key": "88c57c3cbf71873871a373bd35950152e1ab1f063529f3ffe4fcc3e879a797eb",
+      "page": "news/share/race/89666377/index.html",
+      "page_sha256": "01ad11d3503b42a7670ccf2e31dedc4a0a5c2a3f6f5fc86e4f4c0e023f78257e",
+      "image": "news/share/race/89666377/preview.png",
+      "image_sha256": "65f99d123ffa4490f3fb022ef934b4ed687a800c604146b93f0df04674ecae18",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89666377.json",
+          "sha256": "59295eb6a82f5e0e453157cbf5e51a54dde39639437e60f1b86ad556d817c4aa"
+        },
+        {
+          "path": "news/data/live/meetings/89666377.json",
+          "sha256": "0c7430cbf112000cbbb062a1da97b02b382f0201da87300ca2f2da7a6aee9bab"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89668025": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89668025/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89668025",
+      "headline": "Tom Land Wins Millbridge Mini Menaces Round 5 from Pole",
+      "description": "Mini Menaces Round 5 at Millbridge Speedway. Feature winner: Tom Land #91. Land takes the win and fastest lap as Fries climbs from tenth to fourth.",
+      "winner": "Tom Land #91",
+      "graphic_key": "bd0d2c0ef13cc528a528ccee46a31035c1443610731bb358cb60c78927baab5a",
+      "page": "news/share/race/89668025/index.html",
+      "page_sha256": "ca7622a8e18390ea908d953ee5bd6e2b01dedae45dcd657656e2837c7d1ed4df",
+      "image": "news/share/race/89668025/preview.png",
+      "image_sha256": "d11301889242bcd0e80696b16ff41d866e23bf6171f31ee07f868054068fdafd",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89668025.json",
+          "sha256": "6f2d5090aea25cf061997232073ec70ef6769e5b1d61b662bcf2b97c45e5cc15"
+        },
+        {
+          "path": "news/data/live/meetings/89668025.json",
+          "sha256": "2a99f46e7c4aea99ba57488c9e0c1fa1662cac20d9d965873de0f0d990079389"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89690728": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89690728/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89690728",
+      "headline": "Hurst Tops Lernerville Wide Open Revival Round 5 Feature",
+      "description": "Wide Open Revival Round 5 at The Lernerville Speedway. Feature winner: Blake Hurst2 #15. Hurst takes the win ahead of Mcdonald, with Puterbaugh gaining eight places for third.",
+      "winner": "Blake Hurst2 #15",
+      "graphic_key": "621b6f99ae2848ca63a40a3c24597b844549a9d2c6d6e4eafe74996ef4b90539",
+      "page": "news/share/race/89690728/index.html",
+      "page_sha256": "6ab72e8cec2796e407817b25e3fd2661ea2b6036a3df77f9866b55338f0d57a7",
+      "image": "news/share/race/89690728/preview.png",
+      "image_sha256": "9c47e84bc8366eb62e312c38201d225b2be7b97a0c74550e688749c3237ecc47",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89690728.json",
+          "sha256": "6a1ddc4a4033f56710c2d2fdf1f936cbb52a0dfcf3a04f00528add6a4dee4ac4"
+        },
+        {
+          "path": "news/data/live/meetings/89690728.json",
+          "sha256": "e36a5094364e8162d25985d375fa2699b2b34f13e4d3c96d49fbc5dcfbbcde73"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89810317": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89810317/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89810317",
+      "headline": "Puterbaugh comes from eleventh to take Kern Raceway win",
+      "description": "Bomber Stocks Round 6 at Kevin Harvick's Kern Raceway. Twin Feature 2 winner: Chad Puterbaugh #20. Ten places gained for the #20, with Jordan Mackie second and Brian Angell charging from thirteenth to third.",
+      "winner": "Chad Puterbaugh #20",
+      "graphic_key": "78ac94b0a277fd3296b671ce2fb18efdedd8b6ab47746af4ebed9b3121c96afc",
+      "page": "news/share/race/89810317/index.html",
+      "page_sha256": "66165c01333552dbd42a3b465a8056491e8e2d3f6f4cc2d7020c29bef01542b7",
+      "image": "news/share/race/89810317/preview.png",
+      "image_sha256": "d5ddd577e5bd64db74c5ea2be9063508d3595b355bcaa4c95e65f7ff5fc4e773",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89810317.json",
+          "sha256": "5f744fbe8c3bf0449b5ce91be83f8d8c54726ad04aae456431ba57343ef362fa"
+        },
+        {
+          "path": "news/data/live/meetings/89810317.json",
+          "sha256": "d51aef2fb48cb5ef29918b989f11da0e434bbf880ae8f388aef56d7dab6c6037"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89812470": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89812470/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89812470",
+      "headline": "McClain wins at Lucas Oil as Mcdonald and Angell charge onto the podium",
+      "description": "Cushion Kings Round 6 at Lucas Oil Speedway. Feature winner: Kent McClain #75. The #75 takes Cushion Kings Round 6, with nine-place gains for both drivers behind him.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "6eeaac87500c53059906a9602a03ef8e21a2b285279c8cc2653bd4a7ef8710fc",
+      "page": "news/share/race/89812470/index.html",
+      "page_sha256": "a74f4cfffcbcb76147d7256f48be54256b952881dff8559606c4deb05c4b23c7",
+      "image": "news/share/race/89812470/preview.png",
+      "image_sha256": "9df851a60437d1fbb508df95eca3953574ebb104dc69220136ffa63ba2dbef37",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89812470.json",
+          "sha256": "9dbde99ffee2feb1fa16a1d2bb7fc8ebf1a75bcef0fbb78a0a766d6670170251"
+        },
+        {
+          "path": "news/data/live/meetings/89812470.json",
+          "sha256": "cf448c799f325dc8c43046800c4e6c1181528bf5d53dc4ac03167331e3a746a9"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89834758": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89834758/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89834758",
+      "headline": "Mikey Mixter takes Mini Menaces Round 6 at Kevin Harvick s Kern Raceway",
+      "description": "Mini Menaces Round 6 at Kevin Harvick s Kern Raceway. Feature winner: Mikey Mixter #69. Chad Puterbaugh takes second, with Travis Mcdonald third.",
+      "winner": "Mikey Mixter #69",
+      "graphic_key": "e3cfd5ffd7b1f5a35fcce1461ccb74943f064fb3b85ad816ae354c339710dd53",
+      "page": "news/share/race/89834758/index.html",
+      "page_sha256": "1345884a24ef8f3460ae2f6d580e3dcd2ec05cf30b6cba02342ae42197952b69",
+      "image": "news/share/race/89834758/preview.png",
+      "image_sha256": "008d6b7cd9af7423146fadfb2378cb2db4d686d15a8edea8071cb1cac431d38b",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89834758.json",
+          "sha256": "ac5fc5057b9735f138e8f9a30023a28131b2f6060e6858874c2c7df030c80a7a"
+        },
+        {
+          "path": "news/data/live/meetings/89834758.json",
+          "sha256": "313458ab02277cc1179b98d7d5d836ae1b9ec0c7bb1111aa63e26fbe51a4da77"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89836161": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89836161/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89836161",
+      "headline": "Kent Mcclain takes Yota Outlawz Round 6 at Kevin Harvick s Kern Raceway",
+      "description": "Yota Outlawz Round 6 at Kevin Harvick s Kern Raceway. Feature winner: Kent McClain #75. Mikey Mixter takes second, with Chad Puterbaugh third.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "0b8e42015b324c571e8bc71af9ab36e85903a7e549c049cd255f110ca10a438a",
+      "page": "news/share/race/89836161/index.html",
+      "page_sha256": "425a2f31d62220d89fc4e99b6538df72f70771ad55ddc73be17f5bb3e7b4589a",
+      "image": "news/share/race/89836161/preview.png",
+      "image_sha256": "ccc86db24725e85345d3df6cbbde346dc4e66c61be6a3ae2a8748744231b2ccb",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89836161.json",
+          "sha256": "13bb0a2761a08cfe53cccc020560b85454c6cf8921530828f15d344aa4fc9ca2"
+        },
+        {
+          "path": "news/data/live/meetings/89836161.json",
+          "sha256": "2280d74df0824819c73673af1ca9aca3c917c1cc86040517af071b8898d2e205"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    },
+    "89859608": {
+      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89859608/",
+      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89859608",
+      "headline": "McClain takes the Knoxville win in Wide Open Revival Round 6",
+      "description": "Wide Open Revival Round 6 at Knoxville Raceway. Feature winner: Kent McClain #75. Brian Angell follows the #75 home, with Mikey Mixter completing the podium.",
+      "winner": "Kent McClain #75",
+      "graphic_key": "ab0cbb6685c0145ab961836437c23ee401eca880a2a247b11b01a3e708d2410f",
+      "page": "news/share/race/89859608/index.html",
+      "page_sha256": "40891afff369ea9be42a5fed26180ae285624b9dc169a2a8ee02208dd8e68271",
+      "image": "news/share/race/89859608/preview.png",
+      "image_sha256": "8821656e995a4d41cc4080006c1e8f18025c871a203b424eea985c2cb616ad17",
+      "sources": [
+        {
+          "path": "news/data/live/index.json",
+          "sha256": "ba35f1dbf18942461f6150b908af37f438eb9f4727d87cd51fd0c53297e187df"
+        },
+        {
+          "path": "news/data/live/events/89859608.json",
+          "sha256": "78e3e41f3d0118388c8d49a26652990c92a9aea10333096a15c246d1f252498f"
+        },
+        {
+          "path": "news/data/live/meetings/89859608.json",
+          "sha256": "8d5299580c4fb2dfa5fb9146e3861c2115a70363b9236080c465d7f7b5b281f5"
+        },
+        {
+          "path": "news/data/broadcasts.json",
+          "sha256": "c6637eb376963463d1ff947a64d1c4558d65ab111ead0e8847a97db3fa62d9ee"
+        },
+        {
+          "path": "news/data/driver-identities.json",
+          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
+        },
+        {
+          "path": "news/data/driver-profiles.json",
+          "sha256": "7fffce11f540dab705fee5c05b9923d5b4ecdf36a5a84f983482182c16131728"
+        },
+        {
+          "path": "news/assets/editorial.js",
+          "sha256": "6f8bed0fcb0aaad8d7536329f19499b8dc9191eb0bb68869b849232caef3d9ef"
+        }
+      ]
+    }
+  }
+}
