@@ -39,7 +39,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -81,7 +81,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -123,7 +123,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -165,7 +165,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -207,7 +207,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -249,7 +249,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -291,7 +291,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -333,7 +333,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -375,7 +375,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -417,7 +417,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -433,7 +433,7 @@
       "winner": "Chad Puterbaugh #20",
       "graphic_key": "4711346a7eb59d0f6eae727b86ad12d0d868d482833577b28c6ea916dadc1e47",
       "page": "news/share/race/89302439/index.html",
-      "page_sha256": "7db1af7c4a7fe10e2a54d1c10062125fb19fbf85a9bbe5f3fbc6eaf73af86888",
+      "page_sha256": "0204c0dea5f7415d47291ca34d9c0efa6e7558bd5d1374e9615cc105fb7af76a",
       "image": "news/share/race/89302439/preview.png",
       "image_sha256": "4d70fb86b798d61a16b2fa0eb551a1343f6c828f52f17d6fda959985c0a95b15",
       "sources": [
@@ -459,7 +459,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -501,7 +501,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -543,7 +543,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -585,7 +585,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -627,7 +627,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -669,7 +669,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -711,7 +711,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -753,7 +753,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -795,7 +795,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -837,7 +837,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -879,7 +879,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -921,7 +921,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -963,7 +963,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1005,7 +1005,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1047,7 +1047,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1089,7 +1089,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1131,7 +1131,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1173,7 +1173,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1215,7 +1215,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
@@ -1257,7 +1257,7 @@
         },
         {
           "path": "news/data/driver-profiles.json",
-          "sha256": "b677b02d84fb97a5a3d3d55121e632d8168ce604a734272ff846860a7cdf542b"
+          "sha256": "61381d0f89d6d271948d09eee644690cc794bd0cb09fb3987ceebf983e5fe8e3"
         },
         {
           "path": "news/assets/editorial.js",
