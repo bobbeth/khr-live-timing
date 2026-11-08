@@ -414,18 +414,18 @@
       "latest_observation": {
         "league_id": 10402,
         "subsession_id": 89351486,
-        "session_number": 9,
-        "session_name": "FEATURE",
+        "session_number": 1,
+        "session_name": "HEAT 1",
         "series_key": null,
         "car_number": "062",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-08T04:34:50.372Z",
+        "observed_at": "2026-11-08T05:02:50.453Z",
         "snapshot_sha256": [
-          "8da3394af2ec23155156072dc77a560af517e58c1872c1ba1946297a677f773d",
-          "55fe78964259eeb3dc47be74a3347cea5e934bb896d22dd37cde21c2edc8f5b7"
+          "dee9851515d6b5835dad63d2a84c53b7c3c92c29ed9d47aec90a6ebbd07c0825",
+          "a5fae0ad41bddf29825cf22589db7cf0e563e15ef61fdea45d39a8dc6949a20f"
         ]
       },
       "display_name": "Joey Brewer"
@@ -456,18 +456,18 @@
       "latest_observation": {
         "league_id": 10402,
         "subsession_id": 89351486,
-        "session_number": 9,
-        "session_name": "FEATURE",
+        "session_number": 1,
+        "session_name": "HEAT 1",
         "series_key": null,
         "car_number": "11",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-08T00:28:56.295Z",
+        "observed_at": "2026-11-08T05:02:50.453Z",
         "snapshot_sha256": [
-          "3758bb630e14dd2ca65a741050d6de923deb69e03432108a6504d80e93a48d6b",
-          "2df53e4be9080dda1d146176bf8793092e0317c30ccfabab48585c277855bd3d"
+          "dee9851515d6b5835dad63d2a84c53b7c3c92c29ed9d47aec90a6ebbd07c0825",
+          "a5fae0ad41bddf29825cf22589db7cf0e563e15ef61fdea45d39a8dc6949a20f"
         ]
       },
       "display_name": "Bryce Fries"
@@ -500,18 +500,18 @@
       "latest_observation": {
         "league_id": 10402,
         "subsession_id": 89351486,
-        "session_number": 9,
-        "session_name": "FEATURE",
+        "session_number": 1,
+        "session_name": "HEAT 1",
         "series_key": null,
         "car_number": "429",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-08T04:34:50.372Z",
+        "observed_at": "2026-11-08T05:02:50.453Z",
         "snapshot_sha256": [
-          "8da3394af2ec23155156072dc77a560af517e58c1872c1ba1946297a677f773d",
-          "55fe78964259eeb3dc47be74a3347cea5e934bb896d22dd37cde21c2edc8f5b7"
+          "dee9851515d6b5835dad63d2a84c53b7c3c92c29ed9d47aec90a6ebbd07c0825",
+          "a5fae0ad41bddf29825cf22589db7cf0e563e15ef61fdea45d39a8dc6949a20f"
         ]
       },
       "display_name": "Tim L Brown"
@@ -692,18 +692,18 @@
       "latest_observation": {
         "league_id": 10402,
         "subsession_id": 89351486,
-        "session_number": 9,
-        "session_name": "FEATURE",
+        "session_number": 1,
+        "session_name": "HEAT 1",
         "series_key": null,
         "car_number": "7",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-08T04:34:50.372Z",
+        "observed_at": "2026-11-08T05:02:50.453Z",
         "snapshot_sha256": [
-          "8da3394af2ec23155156072dc77a560af517e58c1872c1ba1946297a677f773d",
-          "55fe78964259eeb3dc47be74a3347cea5e934bb896d22dd37cde21c2edc8f5b7"
+          "dee9851515d6b5835dad63d2a84c53b7c3c92c29ed9d47aec90a6ebbd07c0825",
+          "a5fae0ad41bddf29825cf22589db7cf0e563e15ef61fdea45d39a8dc6949a20f"
         ]
       },
       "display_name": "Brian Angell"
