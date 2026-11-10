@@ -56,7 +56,25 @@
         "pictureUrl": "/images/ff6e76b44aef82a78252fcab63e4c188",
         "createdAt": "2025-08-10T20:16:07.000Z",
         "updatedAt": "2026-01-11T00:24:26.000Z"
-      }
+      },
+      "latest_observation": {
+        "league_id": 10402,
+        "subsession_id": 90006933,
+        "session_number": 2,
+        "session_name": "HEAT 1",
+        "series_key": "dirt_cheap_asphalt_fast",
+        "car_number": "85",
+        "team_name": null,
+        "multicar_team_name": "Schmidt eSports",
+        "source": "SDK session observation",
+        "participation": "observed_only",
+        "observed_at": "2026-11-10T02:04:54.544Z",
+        "snapshot_sha256": [
+          "21c3198d956e8ea183a47e997eeb737848ebf07af0f86664d946f0b74898f21d",
+          "1ab9ccb67a78f42f6ff14fd98b367a014dd6f602faa4540e8ba9084dfa72af9e"
+        ]
+      },
+      "display_name": "Craig Schmidt"
     },
     "42486": {
       "iracing_id": 42486,
@@ -83,19 +101,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90005528,
-        "session_number": 8,
-        "session_name": "CONSOLATION",
-        "series_key": "mini_menaces",
+        "subsession_id": 90006933,
+        "session_number": 2,
+        "session_name": "HEAT 1",
+        "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "8",
         "team_name": null,
         "multicar_team_name": "YotaOutlawz",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T01:02:57.742Z",
+        "observed_at": "2026-11-10T02:04:54.544Z",
         "snapshot_sha256": [
-          "a64e6df3e95dd390352919a9e6ad11b05c183ff22a6ad3c61a163168d89f24ec",
-          "f65b7c52dbe9f323165c464d4f4d28d3d15a078f95d16537122b1e9214de9cd5"
+          "21c3198d956e8ea183a47e997eeb737848ebf07af0f86664d946f0b74898f21d",
+          "1ab9ccb67a78f42f6ff14fd98b367a014dd6f602faa4540e8ba9084dfa72af9e"
         ]
       },
       "display_name": "Brent  Vanderwood"
@@ -211,19 +229,19 @@
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90005528,
-        "session_number": 8,
-        "session_name": "CONSOLATION",
-        "series_key": "mini_menaces",
+        "subsession_id": 90006933,
+        "session_number": 2,
+        "session_name": "HEAT 1",
+        "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "92",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T01:02:57.742Z",
+        "observed_at": "2026-11-10T02:04:54.544Z",
         "snapshot_sha256": [
-          "a64e6df3e95dd390352919a9e6ad11b05c183ff22a6ad3c61a163168d89f24ec",
-          "f65b7c52dbe9f323165c464d4f4d28d3d15a078f95d16537122b1e9214de9cd5"
+          "21c3198d956e8ea183a47e997eeb737848ebf07af0f86664d946f0b74898f21d",
+          "1ab9ccb67a78f42f6ff14fd98b367a014dd6f602faa4540e8ba9084dfa72af9e"
         ]
       },
       "display_name": "Wayne Bridges"
@@ -389,19 +407,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90005528,
-        "session_number": 8,
-        "session_name": "CONSOLATION",
-        "series_key": "mini_menaces",
+        "subsession_id": 90006933,
+        "session_number": 2,
+        "session_name": "HEAT 1",
+        "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "20",
         "team_name": null,
         "multicar_team_name": "DWR - Dirt Warrior Racing",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T01:02:57.742Z",
+        "observed_at": "2026-11-10T02:04:54.544Z",
         "snapshot_sha256": [
-          "a64e6df3e95dd390352919a9e6ad11b05c183ff22a6ad3c61a163168d89f24ec",
-          "f65b7c52dbe9f323165c464d4f4d28d3d15a078f95d16537122b1e9214de9cd5"
+          "21c3198d956e8ea183a47e997eeb737848ebf07af0f86664d946f0b74898f21d",
+          "1ab9ccb67a78f42f6ff14fd98b367a014dd6f602faa4540e8ba9084dfa72af9e"
         ]
       },
       "display_name": "Chad  Puterbaugh"
@@ -431,19 +449,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 89155471,
-        "session_number": 2,
-        "session_name": "HEAT 1",
+        "subsession_id": 90006933,
+        "session_number": 1,
+        "session_name": "QUALIFY",
         "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "062",
         "team_name": null,
-        "multicar_team_name": "None",
+        "multicar_team_name": "Mo Diggin Mafia",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-09T22:46:54.661Z",
+        "observed_at": "2026-11-10T02:00:57.075Z",
         "snapshot_sha256": [
-          "977b7b283fc77d135f35876ea1847b3f8cb01ca8bfb5c470a4f9876f45a44e6d",
-          "276fb21c45846345aed0e97c65ea0f5ed92135ec77f7936dfa45b578e0265656"
+          "a6d95b11c7a1702faf041badcee2a77f1cdc14408e0d14fb40590e2fc0a07e1a",
+          "e49919a82b547250460db0cd796576de9fdee2f60a06dc010fc9ef6ab7512008"
         ]
       },
       "display_name": "Joey Brewer"
@@ -495,19 +513,19 @@
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90005528,
-        "session_number": 8,
-        "session_name": "CONSOLATION",
-        "series_key": "mini_menaces",
+        "subsession_id": 90006933,
+        "session_number": 1,
+        "session_name": "QUALIFY",
+        "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "88",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T01:02:57.742Z",
+        "observed_at": "2026-11-10T02:00:57.075Z",
         "snapshot_sha256": [
-          "a64e6df3e95dd390352919a9e6ad11b05c183ff22a6ad3c61a163168d89f24ec",
-          "f65b7c52dbe9f323165c464d4f4d28d3d15a078f95d16537122b1e9214de9cd5"
+          "a6d95b11c7a1702faf041badcee2a77f1cdc14408e0d14fb40590e2fc0a07e1a",
+          "e49919a82b547250460db0cd796576de9fdee2f60a06dc010fc9ef6ab7512008"
         ]
       },
       "display_name": "Travis Mcdonald"
@@ -517,19 +535,19 @@
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90005528,
-        "session_number": 8,
-        "session_name": "CONSOLATION",
-        "series_key": "mini_menaces",
+        "subsession_id": 90006933,
+        "session_number": 2,
+        "session_name": "HEAT 1",
+        "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "429",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T01:02:57.742Z",
+        "observed_at": "2026-11-10T02:04:54.544Z",
         "snapshot_sha256": [
-          "a64e6df3e95dd390352919a9e6ad11b05c183ff22a6ad3c61a163168d89f24ec",
-          "f65b7c52dbe9f323165c464d4f4d28d3d15a078f95d16537122b1e9214de9cd5"
+          "21c3198d956e8ea183a47e997eeb737848ebf07af0f86664d946f0b74898f21d",
+          "1ab9ccb67a78f42f6ff14fd98b367a014dd6f602faa4540e8ba9084dfa72af9e"
         ]
       },
       "display_name": "Tim L Brown"
@@ -727,19 +745,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90005528,
-        "session_number": 8,
-        "session_name": "CONSOLATION",
-        "series_key": "mini_menaces",
+        "subsession_id": 90006933,
+        "session_number": 1,
+        "session_name": "QUALIFY",
+        "series_key": "dirt_cheap_asphalt_fast",
         "car_number": "7",
         "team_name": null,
         "multicar_team_name": "YotaOutlawz",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T01:02:57.742Z",
+        "observed_at": "2026-11-10T02:00:57.075Z",
         "snapshot_sha256": [
-          "a64e6df3e95dd390352919a9e6ad11b05c183ff22a6ad3c61a163168d89f24ec",
-          "f65b7c52dbe9f323165c464d4f4d28d3d15a078f95d16537122b1e9214de9cd5"
+          "a6d95b11c7a1702faf041badcee2a77f1cdc14408e0d14fb40590e2fc0a07e1a",
+          "e49919a82b547250460db0cd796576de9fdee2f60a06dc010fc9ef6ab7512008"
         ]
       },
       "display_name": "Brian Angell"
