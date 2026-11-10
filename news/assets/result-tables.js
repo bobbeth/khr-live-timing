@@ -17,7 +17,7 @@ window.MMTVResults=(()=>{
   if(racing.includes(k))cols.push(['start_position','START'],['positions_gained','+/-'],['laps_completed','LAPS'],['laps_led','LED'],['best_lap_seconds','BEST LAP'],['incidents','INC']);
   else if(k==='qualifying'){if((s.classification||[]).some(r=>valid(r.qual_lap_seconds)&&r.qual_lap_seconds>0))cols.push(['qual_lap_seconds','QUAL TIME']);cols.push(['best_lap_seconds','BEST LAP'],['laps_completed','LAPS'],['incidents','INC']);}
   else cols.push(['laps_completed','LAPS'],['best_lap_seconds','BEST LAP'],['incidents','INC']);
-  if(series.includes(entry?.series)&&(racing.includes(k)||k==='qualifying'))cols.push(['league_points','PTS']);return cols;
+  if((series.includes(entry?.series)||(s.classification||[]).some(r=>r.league_points_status==='saved_league'))&&(racing.includes(k)||k==='qualifying'))cols.push(['league_points','PTS']);return cols;
  }
  const gain=r=>valid(r.positions_gained)?Number(r.positions_gained):valid(r.start_position)&&valid(r.finish_position)?Number(r.start_position)-Number(r.finish_position):null;
  function sort(rows,by){const config={start:['start_position',1],gained:['gain',-1],fastest:['best_lap_seconds',1],led:['laps_led',-1]},[field,direction]=config[by]||['finish_position',1];return [...rows].sort((a,b)=>{const x=field==='gain'?gain(a):a[field],y=field==='gain'?gain(b):b[field],vx=valid(x)&&(field!=='best_lap_seconds'||x>0),vy=valid(y)&&(field!=='best_lap_seconds'||y>0);return vx!==vy?vx?-1:1:vx?(Number(x)-Number(y))*direction||Number(a.finish_position)-Number(b.finish_position):Number(a.finish_position)-Number(b.finish_position)});}

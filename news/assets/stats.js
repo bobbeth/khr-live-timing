@@ -8,7 +8,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
  const friendlyName=name=>{const n=String(name||'').trim().toLowerCase().replace(/\s+/g,' ');return preferredNames[aliases[n]||n]||displayName(name);};
  const identityKey=(name,id)=>{const n=Number(id);if(Number.isSafeInteger(n)&&n>0){const model=window.MMTVIntelligence?.model?.drivers;return model?.drivers.find(d=>Number(d.driver_id)===n)?.id||'iracing-'+n;}return key(name);};
  const slug=(name,id)=>encodeURIComponent(identityKey(name,id));
- const driverLink=(name,id)=>{if(Number(id)>0&&window.MMTVIntelligence?.model?.drivers&&!window.MMTVIntelligence.model.drivers.drivers.some(d=>Number(d.driver_id)===Number(id)))return esc(name);return `<a class="driver-link" href="#driver/${slug(name,id)}">${esc(friendlyName(name))}</a>`;};
+ const driverLink=(name,id)=>`<a class="driver-link" href="#driver/${slug(name,id)}">${esc(friendlyName(name))}</a>`;
  const valid=n=>n!==null&&n!==undefined&&n!==''&&Number.isFinite(Number(n));
  const scoringKinds=['qualifying','heat','consolation','twin_feature_1','twin_feature_2','feature'];
  function points(series,kind,p){
@@ -57,8 +57,9 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
    try{const response=await fetch('data/driver-profiles.json',{cache:'no-store'});if(response.ok){const candidate=await response.json();if(candidate.schema_version==='MMTV-driver-profiles-v1')profiles=candidate;}}catch{}
    loadedProfiles=profiles;
    const normalize=n=>String(n||'').trim().toLowerCase().replace(/\s+/g,' ');
-   if(window.MMTVIntelligence){await window.MMTVIntelligence.load();const derived=window.MMTVIntelligence.statsData(profiles);if(derived)return withProfiles(derived,profiles);}
-   const records=await Promise.all(index.map(async entry=>{
+   let derived=null,covered=new Set();
+   if(window.MMTVIntelligence){await window.MMTVIntelligence.load();derived=window.MMTVIntelligence.statsData(profiles);if(derived){covered=new Set((derived.intelligence?.subsession_ids||[]).map(Number));if(index.every(entry=>covered.has(Number(entry.subsession_id))))return withProfiles(derived,profiles);}}
+   const records=await Promise.all(index.filter(entry=>!covered.has(Number(entry.subsession_id))).map(async entry=>{
     const [event,meeting]=await Promise.all([getEvent(entry.subsession_id),getMeeting(entry.subsession_id)]);
     if(!event){failures.push(entry.subsession_id);return null;}
     return {entry,event,meeting};
@@ -73,7 +74,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
      if(!drivers.has(id))drivers.set(id,{id,name:friendlyName(name),names:new Set(),numbers:new Set(),races:[]});
      const d=drivers.get(id);d.names.add(name);
 
-     if(customerId){d.iracing_id=customerId;d.profile=profiles.drivers?.[String(customerId)]?.profile||null;}
+     if(customerId){d.iracing_id=customerId;d.profile=profiles?.drivers?.[String(customerId)]?.profile||null;}
      if(!participation.has(id))participation.set(id,{entry,finish:null,start:null,laps:null,led:null,gain:null,points:0,scored:0,estimated:0,breakdown:[],feature:false});
      return {d,r:participation.get(id)};
     };
@@ -100,6 +101,22 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
      }
     }
     for(const [id,r] of participation)drivers.get(id).races.push(r);
+   }
+   if(derived){
+    const byId=new Map(derived.drivers.filter(d=>Number(d.iracing_id)>0).map(d=>[Number(d.iracing_id),d]));
+    for(const addition of drivers.values()){
+     const n=Number(addition.iracing_id);
+     const existing=n>0?byId.get(n):derived.drivers.find(d=>d.id===addition.id);
+     if(!existing){derived.drivers.push(addition);if(n>0)byId.set(n,addition);continue;}
+     existing.names=new Set([...(existing.names||[]),...addition.names]);
+     existing.numbers=new Set([...(existing.numbers||[]),...addition.numbers]);
+     const have=new Set(existing.races.map(r=>Number(r.entry.subsession_id)));
+     for(const race of addition.races){if(!have.has(Number(race.entry.subsession_id))){existing.races.push(race);have.add(Number(race.entry.subsession_id));}}
+    }
+    derived.meetings=[...(derived.meetings||[]),...records.filter(Boolean)];
+    derived.failures=[...(derived.failures||[]),...failures];
+    derived.sessionGaps=[...new Set([...(derived.sessionGaps||[]),...sessionGaps])];
+    return withProfiles(derived,profiles);
    }
    return withProfiles({drivers:[...drivers.values()].sort((a,b)=>a.name.localeCompare(b.name)),failures,sessionGaps,meetings:records.filter(Boolean)},profiles);
   })();return cache;
