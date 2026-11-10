@@ -775,7 +775,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89496902.json",
@@ -817,7 +817,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89519810.json",
@@ -859,7 +859,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89643227.json",
@@ -901,7 +901,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89644712.json",
@@ -943,7 +943,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89666377.json",
@@ -985,7 +985,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89668025.json",
@@ -1027,7 +1027,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89690728.json",
@@ -1069,7 +1069,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89810317.json",
@@ -1111,7 +1111,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89812470.json",
@@ -1153,7 +1153,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89834758.json",
@@ -1195,7 +1195,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89836161.json",
@@ -1237,7 +1237,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89859608.json",
@@ -1279,7 +1279,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/89983608.json",
@@ -1321,7 +1321,7 @@
       "sources": [
         {
           "path": "news/data/live/index.json",
-          "sha256": "00ea923a0f37fd4d516893ead2d9075f606f28d86a7e88547830eb9b46b79d02"
+          "sha256": "737a035665e570860e03f168c27ca778f20c667e4e661376962b25b05f49a52b"
         },
         {
           "path": "news/data/live/events/90005528.json",
