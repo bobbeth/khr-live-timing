@@ -1265,48 +1265,6 @@
         }
       ]
     },
-    "89982168": {
-      "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89982168/",
-      "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89982168",
-      "headline": "Chad Puterbaugh takes Bomber Stocks Round 7 at Bristol Motor Speedway",
-      "description": "Bomber Stocks Round 7 at Bristol Motor Speedway. Twin Feature 2 winner: Chad Puterbaugh #20. Tom Land takes second, with Mathew Land third.",
-      "winner": "Chad Puterbaugh #20",
-      "graphic_key": "f358ab0520f29d8df8d7af584f7e638cd8dd698e98217067bf4b9da97138e7d6",
-      "page": "news/share/race/89982168/index.html",
-      "page_sha256": "4b107f34e8198ca0a8b404174e524f62bf51186ed8e332c6d72b8c26a652688d",
-      "image": "news/share/race/89982168/preview.png",
-      "image_sha256": "d140285c378e009ecec72ad7513acb31f5106500a1b04e4e99a89e5e3f52823a",
-      "sources": [
-        {
-          "path": "news/data/live/index.json",
-          "sha256": "17cb23db500dafc367755dd0befe9a76aa6bbe3b3303474c691a0cf290fd5415"
-        },
-        {
-          "path": "news/data/live/events/89982168.json",
-          "sha256": "27f09fae9aca558eb5191091ad080fc1fb1b6eb7d33ddbed7d847a85412d4275"
-        },
-        {
-          "path": "news/data/live/meetings/89982168.json",
-          "sha256": "1ea7236e9fa082778e6f3b31e4f2198ca8ad0794c96a718ba50aa5030651a3d8"
-        },
-        {
-          "path": "news/data/broadcasts.json",
-          "sha256": "7811e8f95355b7913e42eeeafc0a89cf57a12eb5d5bfaef0b88db2d38ebfc55b"
-        },
-        {
-          "path": "news/data/driver-identities.json",
-          "sha256": "03b25ea346d1f38f7ee0bfd1a99203c1f16534d9da4cb3021fac9b73c4efa0f6"
-        },
-        {
-          "path": "news/data/driver-profiles.json",
-          "sha256": "a7a57a2cf98028bfea3e2e0ffc3290369fa118897c83d5c55a45bff4b9e78d4f"
-        },
-        {
-          "path": "news/assets/editorial.js",
-          "sha256": "7365f1d913d320d6c53f5ab48ee2d54724cb305b86df6c2978d24ccb0254db22"
-        }
-      ]
-    },
     "89983608": {
       "url": "https://bobbeth.github.io/khr-live-timing/news/share/race/89983608/",
       "article": "https://bobbeth.github.io/khr-live-timing/news/#race/89983608",
