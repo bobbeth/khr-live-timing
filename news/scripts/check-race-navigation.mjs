@@ -45,10 +45,17 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
   const expected=await page.evaluate(()=>{const m=window.MMTVIntelligence.model,season=document.getElementById('standings-season').value,series=document.getElementById('standings-series').value;return m.championships.championships.find(c=>c.competition===season&&c.series===series)?.missing_sessions.length||0});
   const message=await page.locator('[data-coverage-warning]').count().then(n=>n?page.locator('[data-coverage-warning]').innerText():null);
   if(expected)assert.ok(message?.includes(expected+' meeting(s) in this selection'),'Warning follows selected series');else assert.equal(message,null,'Unrelated gaps do not contaminate selected series');
+  const context=page.locator('#canonical-intelligence');assert.equal(await context.locator('details').count(),1);assert.ok((await context.locator('summary').innerText()).includes(series));
  }
  await page.selectOption('#standings-series','Bomber Stocks');await page.waitForTimeout(150);
  const points=await page.locator('#app tbody').first().innerText();assert.ok(points);await page.screenshot({path:path.join(out,device+'-standings.png')});
+ const standingsText=await notice.innerText();await page.goto(base+'#records');await page.locator('#insights-series').waitFor();
+ for(const series of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlawz','Wide Open Revival','All series']){
+  await page.selectOption('#insights-series',series);await page.waitForTimeout(150);
+  const count=await page.evaluate(()=>{const m=window.MMTVIntelligence.model,season=document.getElementById('insights-season').value,series=document.getElementById('insights-series').value;return m.races.races.filter(r=>r.entry.competition===season&&(series==='All series'||r.entry.series===series)).length});
+  assert.ok((await page.locator('#canonical-intelligence').innerText()).includes(count+' source-traced race events in this selection'),'Intelligence count follows record-book filters');
+ }
  const model=await page.evaluate(()=>({intelligence:!!window.MMTVIntelligence.model?.index,analytics:window.MMTVAnalytics.status()}));assert.ok(model.intelligence,'Verified intelligence loaded');assert.equal(model.analytics.attempts,0);assert.equal(model.analytics.active,false);assert.deepEqual(errors,[],'No browser exceptions');
- evidence.push({device,standings:await notice.innerText(),model,errors,pass:true});await context.close();
+ evidence.push({device,standings:standingsText,model,errors,pass:true});await context.close();
 }}finally{await browser.close();await new Promise(r=>server.close(r));}
 fs.writeFileSync(path.join(out,'regression.json'),JSON.stringify(evidence,null,2));console.log('PASS: four race types at desktop/phone/tablet, mouse and keyboard jumps, deep links and reloads, keyboard table scrolling, unchanged result cells and sorting, driver links, special-event separation, scoped coverage, exact recorded-stat counts, provisional copy, verified intelligence and zero analytics attempts. Evidence: '+out);
