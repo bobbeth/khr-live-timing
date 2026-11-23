@@ -280,7 +280,7 @@ function fieldValue(r,key,html){
  if(!p)return `<span data-certainty="published_existing" title="Existing published value; no independent source confirmation in this export">${html}</span>`;
  if(p.certainty==='official')return `<span data-certainty="official" title="${esc('Original iRacing session field; SHA256 '+p.official_source_sha256)}">${html}</span>`;
  if(!p.source_kind)return html;
- const label=p.certainty==='confirmed_post_eol_start'?'Confirmed post-EOL start':p.certainty==='completed_telemetry_single_snapshot'?'Completed-session capture: single verified snapshot':p.certainty==='derived_from_verified_start_and_native_finish'?'Calculated from verified start and classified finish':'Corroborated completed-session captures';
+ const label=p.source_kind==='sha_verified_completed_native_race_fields'?'Native completed-race result':p.certainty==='confirmed_post_eol_start'?'Confirmed post-EOL start':p.certainty==='completed_telemetry_single_snapshot'?'Completed-session capture: single verified snapshot':p.certainty==='derived_from_verified_start_and_native_finish'?'Calculated from verified start and classified finish':'Corroborated completed-session captures';
  const title=label+'; '+(p.capture_sha256?.join(', ')||p.published_row_sha256||'native supplied field')+(p.replay_context?' · replay context '+p.replay_context:'');
  return `<span class="supplemented-value" data-certainty="${esc(p.certainty)}" title="${esc(title)}">${html}<sup>†</sup></span>`;
 }

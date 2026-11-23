@@ -7,12 +7,14 @@ import {driverAdmission} from './driver-admission.mjs';
 import {recoverSession} from './recover-session-fields.mjs';
 import {sessionCatalogue} from './session-evidence.mjs';
 import {nativeNonRaceSessions} from './native-session-evidence.mjs';
+import {finalFields,applyNativeFinal,loadNativeRecoveryIds} from './native-final-fields.mjs';
 const root=path.resolve(process.argv[2]);
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8').replace(/^\uFEFF/,''));
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])])):value;
 let input='';for await(const chunk of process.stdin)input+=chunk;
 const {history,source_event_count,source_catalogue_count,statistics:oracle,adapter_sha256,recovery:recoveryOptions={},driver_eligibility=null,driver_policy={}}=JSON.parse(input.replace(/^\uFEFF/,''));
+const nativeFinalIds=loadNativeRecoveryIds(path.join(root,'news/data/native-final-recovery.json'),recoveryOptions.native_final_ids);
 const ctx={window:{}};vm.createContext(ctx);
 for(const name of ['intelligence-core','stats','venues'])vm.runInContext(fs.readFileSync(path.join(root,`news/assets/${name}.js`),'utf8'),ctx);
 const core=ctx.window.MMTVIntelligenceCore,legacy=ctx.window.createMMTVStats({displayName:n=>n,entries:()=>[],seasonName:e=>e.competition});
@@ -83,6 +85,9 @@ for(const race of history.races){
   const publishedRows=['feature','twin_feature_2'].includes(kind)?originalEvent.feature_results:(originalMeeting?.sessions?.find(s=>Number(s.simsession_number)===Number(num))?.classification||[]);
   const recovery=official||raw.evidenceSource?null:recoverSession({canonical:catalogue.canonical,catalogueProofs:catalogue.proofs,canonicalFile:race.provenance.canonicalFile,captureRoot:race.provenance.captureRoot||null,id,raw,entry,kind,previousWinner,knownIds,exhaustive:!!recoveryOptions.exhaustive||(recoveryOptions.exhaustive_ids||[]).map(Number).includes(id),priorSourceHashes,publishedRows:publishedRows.map(r=>({...r,driver_id:r.driver_id||names[normalize(r.driver)]}))});
   if(recovery){event.recovery_audit.push(recovery.audit);sourceAudit.push({subsession_id:id,session_number:num,...recovery.audit,...recovery.details});}
+  // Explicit opt-in for reviewed current-event IDs; default export is unchanged.
+  const nativeManifest=path.join(captureRoot,'session-evidence',String(id),'index.json');
+  const nativeFinal=!official&&['feature','twin_feature_2'].includes(kind)&&nativeFinalIds.includes(id)&&fs.existsSync(nativeManifest)?finalFields({captureRoot,manifest:JSON.parse(fs.readFileSync(nativeManifest,'utf8')),id,sessionNumber:num,expectedRows:event.rows}):null;
   const source=raw.evidenceSource||{...publicSource(race,`session.${num}`),certainty:official?'official':'native_completed'};
   const session={simsession_number:num,name,kind,available:true,classification:[],source};
   for(const row of rows){
@@ -111,6 +116,7 @@ for(const race of history.races){
    if(r.positions_gained!==null&&!r.field_provenance.fields.positions_gained)r.field_provenance.fields.positions_gained=r.field_provenance.fields.start_position||source;
    r.unavailable_fields={...recovery?.details.drivers.find(d=>d.driver_id===driverId)?.unfilled_reasons};
    for(const field of ['start_position','positions_gained','laps_completed','laps_led','best_lap_seconds','qual_lap_seconds','average_lap_seconds','incidents','champ_points','league_points'])if(r[field]==null&&!r.unavailable_fields[field])r.unavailable_fields[field]=(['start_position','positions_gained','laps_led'].includes(field)&&!raceKinds.includes(kind)||field==='qual_lap_seconds'&&kind!=='qualifying'||['league_points','champ_points'].includes(field)&&!scored)?'not_applicable_to_session':official&&['best_lap_seconds','qual_lap_seconds','average_lap_seconds'].includes(field)?'original_result_has_no_valid_session_time':'not_supplied_by_session_source';
+   if(nativeFinal)Object.assign(r,applyNativeFinal(r,nativeFinal));
    if(['feature','twin_feature_2'].includes(kind)){
     const final=event.rows.find(row=>row.driver_id===driverId&&row.car_number===number);
     if(final&&!official){final.field_provenance={...final.field_provenance,fields:{...final.field_provenance.fields}};for(const field of ['start_position','positions_gained','best_lap_seconds','laps_led','incidents','champ_points'])if(final[field]==null&&r[field]!=null){final[field]=r[field];final.field_provenance.fields[field]=r.field_provenance.fields[field]||source;}
@@ -141,7 +147,15 @@ for(const race of history.races){
 }
 const expectedIds=[...entries.keys()].sort((a,b)=>a-b),ids=races.map(r=>r.entry.subsession_id).sort((a,b)=>a-b);
 assert.deepEqual(ids,expectedIds,'Every published event must have canonical intelligence; incomplete export is blocked');
-for(const stat of oracle){const d=drivers.get(String(stat.driverId));if(!d)throw Error('Canonical driver missing');const m=core.summary(d.races);for(const key of ['starts','wins','podiums'])assert.equal(m[key],stat[key]);assert.equal(m.top5,stat.top5s);assert.equal(Math.round(m.average*10000)/10000,stat.averageFinish);}
+function canonicalAverageFinish4(sum, starts) {
+  assert.ok(Number.isSafeInteger(sum) && Number.isSafeInteger(starts) && starts > 0, 'Invalid canonical average inputs');
+  const numerator = BigInt(sum) * 10000n, denominator = BigInt(starts);
+  let units = numerator / denominator;
+  const remainder = numerator % denominator;
+  if (remainder * 2n > denominator || (remainder * 2n === denominator && units % 2n !== 0n)) units++;
+  return Number(units) / 10000;
+}
+for(const stat of oracle){const d=drivers.get(String(stat.driverId));if(!d)throw Error('Canonical driver missing');const m=core.summary(d.races);for(const key of ['starts','wins','podiums'])assert.equal(m[key],stat[key]);assert.equal(m.top5,stat.top5s);assert.equal(canonicalAverageFinish4(d.races.filter(r=>r.feature&&core.valid(r.finish)&&Number(r.finish)>0).reduce((sum,r)=>sum+Number(r.finish),0),m.starts),stat.averageFinish);}
 const group=(rows,key)=>Object.fromEntries([...new Set(rows.map(key))].sort().map(k=>[k,{...core.summary(rows.filter(r=>key(r)===k)),...core.form(rows.filter(r=>key(r)===k)),source_subsessions:rows.filter(r=>key(r)===k).map(r=>r.entry.subsession_id),certainty:'derived_from_canonical_classifications'}]));
 for(const d of drivers.values()){
  d.races.sort((a,b)=>a.entry.event_date.localeCompare(b.entry.event_date)||a.entry.subsession_id-b.entry.subsession_id);

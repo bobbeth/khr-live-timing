@@ -14,6 +14,13 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
   await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor({timeout:45000});
   const snapshot=await page.evaluate(()=>({hash:location.hash,body:document.querySelector('#result-body').innerText,links:[...document.querySelectorAll('#result-body a')].map(e=>e.getAttribute('href')),tables:[...document.querySelectorAll('#race-details table')].map(e=>({session:e.dataset.sessionNumber,kind:e.dataset.sessionKind,headers:[...e.querySelectorAll('th')].map(t=>t.innerText),rows:e.querySelectorAll('tbody tr').length})),viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}));
   const fields=await page.evaluate(()=>{const rows=[...document.querySelectorAll('#result-body tr')].map(tr=>[...tr.cells].map(c=>c.textContent.replaceAll('†','').trim()));const known=(i,positive=false)=>rows.filter(r=>r[i]!=='—'&&r[i]!==''&&Number.isFinite(parseFloat(r[i]))&&(!positive||parseFloat(r[i])>0)).length;return {total:rows.length,start:known(3,true),gain:known(4),best:known(7,true),led:known(6)};});
+  if(['90313573','90315023'].includes(id)){
+   const expected=JSON.parse(fs.readFileSync(path.join(root,'news/data/intelligence/events/'+id+'.json'),'utf8')).race.rows;
+   for(const r of expected){const row=page.locator('#result-body tr').filter({has:page.locator('td:nth-child(2)',{hasText:r.car_number})});
+    const found=await page.locator('#result-body tr').evaluateAll((rows,car)=>rows.find(tr=>tr.cells[1].innerText.trim()===car)?.rowIndex,r.car_number);assert.ok(found>0);
+    const actual=page.locator('#result-body tr').nth(found-1);assert.equal((await actual.locator('td').nth(7).innerText()).replaceAll('†',''),Number(r.best_lap_seconds).toFixed(4)+'s');assert.equal((await actual.locator('td').nth(8).innerText()).replaceAll('†',''),String(r.incidents));assert.ok((await actual.locator('td').nth(7).locator('[title]').getAttribute('title')).startsWith('Native completed-race result'));
+   }
+  }
   const coverageText=await page.locator('#race-data-coverage').innerText();
   for(const [label,key]of [['starting positions','start'],['places gained','gain'],['best laps','best'],['laps led','led']])assert.ok(coverageText.includes(label+' '+fields[key]+'/'+fields.total),'Exact displayed field coverage: '+key);
   assert.ok(coverageText.includes('missing values do not mean zero'));
