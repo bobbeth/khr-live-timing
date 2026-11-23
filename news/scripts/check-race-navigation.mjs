@@ -10,6 +10,12 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
  await context.addInitScript(()=>{try{localStorage.setItem('mmtv.analytics.exclude','1');localStorage.setItem('mmtv.privateAnalytics.optout.v1','1')}catch{}});
  await context.route('**/*',r=>{const request=r.request(),u=new URL(request.url());if(request.method()!=='GET'||u.origin!==new URL(base).origin){denied.push(u.origin);return r.abort()}return r.continue()});
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ // Cold-load regression: practice-only names must not lead to nonexistent profiles.
+ await page.goto(base+'#race/88961208');await page.locator('#result-body tr').first().waitFor({timeout:45000});
+ const practice=page.locator('table[data-session-number="-7"]');
+ const unknown=practice.locator('.driver-cell').filter({hasText:/^Big Bird$/});assert.equal(await unknown.count(),1);assert.equal(await unknown.locator('a').count(),0);
+ const known=practice.locator('.driver-cell a').first();assert.ok(await known.count());const knownName=await known.innerText();await known.click();await page.getByText('RACE HISTORY',{exact:true}).first().waitFor({timeout:45000});assert.ok(!(await page.locator('#app').innerText()).includes('DRIVER NOT FOUND'));
+ evidence.push({device,fixture:'practice-driver-links',unknownName:'Big Bird',unknownLinks:0,knownName,knownProfileResolved:true,pass:true});
  for(const id of ['90313573','90315023','90197399','89982168']){
   await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor({timeout:45000});
   const snapshot=await page.evaluate(()=>({hash:location.hash,body:document.querySelector('#result-body').innerText,links:[...document.querySelectorAll('#result-body a')].map(e=>e.getAttribute('href')),tables:[...document.querySelectorAll('#race-details table')].map(e=>({session:e.dataset.sessionNumber,kind:e.dataset.sessionKind,headers:[...e.querySelectorAll('th')].map(t=>t.innerText),rows:e.querySelectorAll('tbody tr').length})),viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}));

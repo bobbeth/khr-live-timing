@@ -23,13 +23,25 @@ const context={URL,TextEncoder,Uint8Array,crypto:crypto.webcrypto,setInterval:()
 }};
 vm.createContext(context);
 for(const name of ['result-tables','seed','editorial','intelligence-core','intelligence','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await text(`news/assets/${name}.js`),context);
-const appSource=await text('news/assets/app.js');
+const appSource=(await text('news/assets/app.js')).replace(/\r\n/g,'\n');
 vm.runInContext(appSource.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues,getEvent,getMeeting,stageTable,rankSort};\n})();'),context);
 await context.window.MMTVIntelligence.loadAll();
 await context.window.tests.init();
 const intelligence=context.window.MMTVIntelligence,core=context.window.MMTVIntelligenceCore;
 assert.ok(intelligence.model,'Static export must pass SHA256/schema validation');
-const data=await context.window.tests.driverStats.load();
+const loadedData=await context.window.tests.driverStats.load();
+// Canonical intelligence and the separate Winter archive have different coverage.
+const data={...loadedData,drivers:loadedData.drivers.map(d=>({...d,races:d.races.filter(r=>ids.includes(Number(r.entry.subsession_id)))})).filter(d=>d.races.length)};
+const winterEntries=(await read('news/data/historical/index.json')).events;
+const winterEvent=await read('archive/events/'+winterEntries[0].subsession_id+'.json');
+const winterMeeting=await read('news/data/meetings/'+winterEntries[0].subsession_id+'.json');
+const coldStats=context.window.createMMTVStats({displayName:n=>n,esc:String,entries:()=>[],seasonName:e=>e.competition});
+coldStats.rememberRace(winterEvent,winterMeeting);
+for(const r of winterEvent.feature_results)assert.ok(coldStats.driverLink(r.driver,r.driver_id,{requireKnownProfile:true}).includes('<a '),'Cold historical classified profile remains available');
+coldStats.rememberRace({feature_results:[]},{sessions:[{kind:'practice',available:true,classification:[{driver:'Big Bird',driver_id:9707}]}]});
+assert.equal(coldStats.driverLink('Big Bird',9707,{requireKnownProfile:true}),'Big Bird');
+assert.equal(coldStats.hasProfile('Big Bird',9707),false);
+assert.ok(winterEntries.length>0);assert.ok(loadedData.drivers.some(d=>d.races.some(r=>winterEntries.some(e=>e.subsession_id===r.entry.subsession_id))));
 assert.equal(data.intelligence.revision,index.revision);
 const events=intelligence.model.races.races;
 assert.equal(events.length,ids.length);
@@ -78,13 +90,16 @@ for(const event of events){
  const live=(await read('news/data/live/index.json')).events.some(e=>e.subsession_id===event.entry.subsession_id);
  const p=live?`news/data/live/meetings/${event.entry.subsession_id}.json`:`news/data/meetings/${event.entry.subsession_id}.json`;
  const meeting=await read(p),enriched=intelligence.enrichMeeting(meeting);
- assert.equal(enriched.sessions.length,meeting.sessions.length);
- for(const [i,s] of meeting.sessions.entries()){
-  savedSessionCount++;savedRowCount+=s.classification.length;for(const [j,row]of s.classification.entries()){const id=enriched.sessions[i].classification[j].driver_id,resolved=data.drivers.some(d=>Number(d.iracing_id)===Number(id)||d.id===context.window.tests.driverStats.key(row.driver)),link=context.window.tests.driverStats.driverLink(row.driver,id);if(resolved)assert.ok(link.includes('<a '),'Verified competitor remains clickable: '+row.driver);else{assert.ok(['practice','warmup'].includes(s.kind),'Unverified non-practice driver must not be hidden');assert.ok(!link.includes('<a '),'Noncompetitor history remains plain text: '+row.driver);}}
-  assert.equal(enriched.sessions[i].classification.length,s.classification.length);
-  for(const [j,row] of s.classification.entries())for(const [key,value] of Object.entries(row))if(value!=null)assert.deepEqual(enriched.sessions[i].classification[j][key],value);
-  const html=context.window.tests.stageTable(enriched.sessions[i],event.entry);
-  if(s.classification.length){const k=/^WARM/i.test(s.name)?'warmup':s.kind;const expected=['practice','warmup'].includes(k)?6:k==='qualifying'?(enriched.sessions[i].classification.some(r=>r.qual_lap_seconds>0)?8:7):10;assert.equal((html.match(/<th>/g)||[]).length,expected,k);for(const body of html.matchAll(/<tr>(.*?)<\/tr>/gs))if(body[1].includes('<td'))assert.equal((body[1].match(/<td(?:>| )/g)||[]).length,expected);}
+ const addedSessions=enriched.sessions.filter(s=>!meeting.sessions.some(old=>Number(old.simsession_number)===Number(s.simsession_number)));
+ for(const added of addedSessions){assert.ok(['practice','qualifying','warmup'].includes(added.kind));assert.equal(added.source.source_kind,'sha_verified_native_session_info');assert.ok(added.source.capture_sha256.length);assert.match(added.source.native_session_info_sha256,/^[a-f0-9]{64}$/);}
+ assert.equal(enriched.sessions.length,meeting.sessions.length+addedSessions.length);
+ for(const s of meeting.sessions){
+  const enrichedSession=enriched.sessions.find(n=>Number(n.simsession_number)===Number(s.simsession_number));assert.ok(enrichedSession);
+  savedSessionCount++;savedRowCount+=s.classification.length;for(const [j,row]of s.classification.entries()){const id=enrichedSession.classification[j].driver_id,resolved=loadedData.drivers.some(d=>Number(d.iracing_id)===Number(id)||d.id===context.window.tests.driverStats.key(row.driver)),link=context.window.tests.driverStats.driverLink(row.driver,id,{requireKnownProfile:['practice','warmup'].includes(s.kind)});if(resolved)assert.ok(link.includes('<a '),'Verified competitor remains clickable: '+row.driver);else{assert.ok(['practice','warmup'].includes(s.kind),'Unverified non-practice driver must not be hidden');assert.ok(!link.includes('<a '),'Noncompetitor history remains plain text: '+row.driver);}}
+  assert.equal(enrichedSession.classification.length,s.classification.length);
+  for(const [j,row] of s.classification.entries())for(const [key,value] of Object.entries(row))if(value!=null)assert.deepEqual(enrichedSession.classification[j][key],value);
+  const html=context.window.tests.stageTable(enrichedSession,event.entry);
+  if(s.classification.length){const k=/^WARM/i.test(s.name)?'warmup':s.kind;const expected=['practice','warmup'].includes(k)?6:k==='qualifying'?(enrichedSession.classification.some(r=>r.qual_lap_seconds>0)?8:7):10;assert.equal((html.match(/<th>/g)||[]).length,expected,k);for(const body of html.matchAll(/<tr>(.*?)<\/tr>/gs))if(body[1].includes('<td'))assert.equal((body[1].match(/<td(?:>| )/g)||[]).length,expected);}
  }
  if(event.source.certainty!=='official'){
   const max=Math.max(...event.rows.map(r=>r.laps_completed));assert.ok(event.rows.reduce((n,r)=>n+(r.laps_led||0),0)<=max);

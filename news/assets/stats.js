@@ -3,12 +3,27 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
  // Explicit identity matches; Davis and Butler variants confirmed by the owner.
  const aliases={'travis mcdonald':'travis mcdonald2','tina davis':'tina davis3','mike davis':'mike maddog davis','michael butler14':'michael butler','mike butler':'michael butler'};
  let loadedProfiles=null;
+ const knownProfileIds=new Set(),knownProfileNames=new Set();
  const key=name=>{const n=String(name||'').trim().toLowerCase().replace(/\s+/g,' '),model=window.MMTVIntelligence?.model?.drivers,id=model?.names?.[n]||loadedProfiles?.names?.[n],verified=id?model?.drivers?.find(d=>d.driver_id===Number(id)):null;return verified?.id||(id?'iracing-'+id:aliases[n]||n);};
  const preferredNames={'mike maddog davis':'Mike Maddog Davis','michael butler':'Michael Butler'};
  const friendlyName=name=>{const n=String(name||'').trim().toLowerCase().replace(/\s+/g,' ');return preferredNames[aliases[n]||n]||displayName(name);};
  const identityKey=(name,id)=>{const n=Number(id);if(Number.isSafeInteger(n)&&n>0){const model=window.MMTVIntelligence?.model?.drivers;return model?.drivers.find(d=>Number(d.driver_id)===n)?.id||'iracing-'+n;}return key(name);};
  const slug=(name,id)=>encodeURIComponent(identityKey(name,id));
- const driverLink=(name,id)=>`<a class="driver-link" href="#driver/${slug(name,id)}">${esc(friendlyName(name))}</a>`;
+ function rememberDrivers(rows){
+  for(const row of rows||[]){if(row.is_ai)continue;const id=Number(row.driver_id??row.iracing_id);if(Number.isSafeInteger(id)&&id>0)knownProfileIds.add(id);for(const name of row.names||[row.driver||row.name])if(name)knownProfileNames.add(key(name));if(row.id)knownProfileNames.add(row.id);}
+ }
+ function rememberRace(event,meeting){
+  rememberDrivers(event?.feature_results);
+  for(const session of meeting?.sessions||[])if(session.available&&scoringKinds.includes(session.kind))rememberDrivers(session.classification);
+ }
+ function hasProfile(name,id){
+  const model=window.MMTVIntelligence?.model?.drivers,n=String(name||'').trim().toLowerCase().replace(/\s+/g,' '),explicit=Number.isSafeInteger(Number(id))&&Number(id)>0;
+  const customer=explicit?Number(id):Number(model?.names?.[n]||loadedProfiles?.names?.[n]);
+  const supplied=loadedProfiles?.drivers?.[String(customer)];
+  return knownProfileIds.has(customer)||!!model?.drivers?.some(d=>Number(d.driver_id)===customer)||(supplied?.identity_source==='verified_khr_competitor'&&supplied?.identity_verification?.status==='verified')||(!explicit&&knownProfileNames.has(key(name)));
+ }
+ const driverLink=(name,id,{requireKnownProfile=false}={})=>requireKnownProfile&&!hasProfile(name,id)?esc(friendlyName(name)):`<a class="driver-link" href="#driver/${slug(name,id)}">${esc(friendlyName(name))}</a>`;
+
  const valid=n=>n!==null&&n!==undefined&&n!==''&&Number.isFinite(Number(n));
  const scoringKinds=['qualifying','heat','consolation','twin_feature_1','twin_feature_2','feature'];
  function points(series,kind,p){
@@ -25,7 +40,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
  }
  function withProfiles(data,profiles){
   data.drivers=data.drivers.filter(d=>d.races?.length||profiles?.drivers?.[String(d.iracing_id)]?.identity_verification?.status==='verified');
-  if(!profiles?.drivers)return data;
+  if(!profiles?.drivers){rememberDrivers(data.drivers);return data;}
   const byId=new Map(data.drivers.filter(d=>Number(d.iracing_id)>0).map(d=>[Number(d.iracing_id),d]));
   for(const [id,p] of Object.entries(profiles.drivers)){
    if(!/^[1-9]\d{0,9}$/.test(id)||Number(p.iracing_id)!==Number(id))continue;
@@ -39,7 +54,7 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
    const o=p.latest_observation;
    if(o?.league_id===10402&&o.participation==='observed_only'&&Number(o.subsession_id)>0){d.latest_observation=o;if(!d.races.length&&o.car_number)d.numbers.add(String(o.car_number));}
   }
-  data.drivers.sort((a,b)=>a.name.localeCompare(b.name)||String(a.id).localeCompare(String(b.id)));return data;
+  data.drivers.sort((a,b)=>a.name.localeCompare(b.name)||String(a.id).localeCompare(String(b.id)));rememberDrivers(data.drivers);return data;
  }
  function observationDetails(d){
   const o=d.latest_observation;if(!o)return '';
@@ -203,5 +218,5 @@ window.createMMTVStats = function({app,entries,seasonName,esc,displayName,getEve
   const progressionGroups=[...new Map(races.map(r=>[seasonName(r.entry)+' / '+r.entry.series,{season:seasonName(r.entry),series:r.entry.series}])).values()];
   window.MMTVProgression.mount({element:document.getElementById('profile-progression'),data,groups:progressionGroups,driverId:d.id,seasonName,esc});
  }
- return {coverage,identityKey,standings,roster,profile,driverLink,load,points,metrics,key,championshipLeaders,safeProfileUrl,profileDetails,rankings,withProfiles,observationDetails};
+ return {rememberRace,hasProfile,coverage,identityKey,standings,roster,profile,driverLink,load,points,metrics,key,championshipLeaders,safeProfileUrl,profileDetails,rankings,withProfiles,observationDetails};
 };
