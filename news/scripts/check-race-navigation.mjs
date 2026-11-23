@@ -13,6 +13,11 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
  for(const id of ['90313573','90315023','90197399','89982168']){
   await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor({timeout:45000});
   const snapshot=await page.evaluate(()=>({hash:location.hash,body:document.querySelector('#result-body').innerText,links:[...document.querySelectorAll('#result-body a')].map(e=>e.getAttribute('href')),tables:[...document.querySelectorAll('#race-details table')].map(e=>({session:e.dataset.sessionNumber,kind:e.dataset.sessionKind,headers:[...e.querySelectorAll('th')].map(t=>t.innerText),rows:e.querySelectorAll('tbody tr').length})),viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}));
+  const fields=await page.evaluate(()=>{const rows=[...document.querySelectorAll('#result-body tr')].map(tr=>[...tr.cells].map(c=>c.textContent.replaceAll('†','').trim()));const known=(i,positive=false)=>rows.filter(r=>r[i]!=='—'&&r[i]!==''&&Number.isFinite(parseFloat(r[i]))&&(!positive||parseFloat(r[i])>0)).length;return {total:rows.length,start:known(3,true),gain:known(4),best:known(7,true),led:known(6)};});
+  const coverageText=await page.locator('#race-data-coverage').innerText();
+  for(const [label,key]of [['starting positions','start'],['places gained','gain'],['best laps','best'],['laps led','led']])assert.ok(coverageText.includes(label+' '+fields[key]+'/'+fields.total),'Exact displayed field coverage: '+key);
+  assert.ok(coverageText.includes('missing values do not mean zero'));
+  if(id!=='89982168'){assert.ok(!(await page.locator('#race-meeting').innerText()).includes('The complete race meeting'));}
   assert.ok(snapshot.pageWidth<=snapshot.viewport,device+' page overflow');assert.ok(!/\b(undefined|null|NaN)\b/.test(snapshot.body));
   if(id!=='89982168'){
    const jump=page.locator('[data-race-jump="race-meeting"]');assert.equal(await jump.count(),1);
@@ -30,13 +35,20 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
   if(width===390){const start=await final.evaluate(e=>({left:e.scrollLeft,width:e.clientWidth,full:e.scrollWidth}));assert.ok(start.full>start.width);await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');await page.waitForTimeout(200);assert.ok(await final.evaluate(e=>e.scrollLeft)>start.left,'Keyboard reaches remaining result columns');}
   const end=await page.locator('#result-body').innerText();assert.equal(end,snapshot.body,'Navigation preserves every displayed result cell');
   await page.selectOption('#table-sort','start');await page.selectOption('#table-sort','finish');assert.equal(await page.locator('#result-body').innerText(),snapshot.body,'Sorting retains classification');
-  const driver=page.locator('#result-body .driver-link').first();if(await driver.count()){await driver.click();await page.getByText('RACE HISTORY',{exact:true}).first().waitFor({timeout:45000});assert.ok((await page.locator('#app').innerText()).includes('RACE HISTORY'));}
+  const driver=page.locator('#result-body .driver-link').first();if(await driver.count()){await driver.click();await page.getByText('RACE HISTORY',{exact:true}).first().waitFor({timeout:45000});assert.ok((await page.locator('#app').innerText()).includes('RACE HISTORY'));assert.ok(!(await page.locator('#app').innerText()).includes('Drops follow Round 8.'));assert.ok((await page.locator('#app').innerText()).includes('No drops are applied here'));}
   await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor();await page.locator('#classification').scrollIntoViewIfNeeded();if(id==='90313573')await page.screenshot({path:path.join(out,device+'-results.png')});
-  evidence.push({device,id,...snapshot,pass:true});
+  evidence.push({device,id,...snapshot,coverage:fields,coverageText,pass:true});
  }
  await page.goto(base+'#standings');await page.locator('#standings-series').waitFor();const notice=page.locator('.section-head + .stats-notice');assert.ok((await notice.innerText()).includes('no drops are applied'));assert.ok((await notice.innerText()).includes('until the league drop policy is confirmed'));assert.ok(!(await notice.innerText()).includes('Drops are applied after Round 8.'));
+ for(const series of await page.locator('#standings-series option').evaluateAll(es=>es.map(e=>e.value))){
+  await page.selectOption('#standings-series',series);await page.waitForTimeout(150);
+  const expected=await page.evaluate(()=>{const m=window.MMTVIntelligence.model,season=document.getElementById('standings-season').value,series=document.getElementById('standings-series').value;return m.championships.championships.find(c=>c.competition===season&&c.series===series)?.missing_sessions.length||0});
+  const message=await page.locator('[data-coverage-warning]').count().then(n=>n?page.locator('[data-coverage-warning]').innerText():null);
+  if(expected)assert.ok(message?.includes(expected+' meeting(s) in this selection'),'Warning follows selected series');else assert.equal(message,null,'Unrelated gaps do not contaminate selected series');
+ }
+ await page.selectOption('#standings-series','Bomber Stocks');await page.waitForTimeout(150);
  const points=await page.locator('#app tbody').first().innerText();assert.ok(points);await page.screenshot({path:path.join(out,device+'-standings.png')});
  const model=await page.evaluate(()=>({intelligence:!!window.MMTVIntelligence.model?.index,analytics:window.MMTVAnalytics.status()}));assert.ok(model.intelligence,'Verified intelligence loaded');assert.equal(model.analytics.attempts,0);assert.equal(model.analytics.active,false);assert.deepEqual(errors,[],'No browser exceptions');
  evidence.push({device,standings:await notice.innerText(),model,errors,pass:true});await context.close();
 }}finally{await browser.close();await new Promise(r=>server.close(r));}
-fs.writeFileSync(path.join(out,'regression.json'),JSON.stringify(evidence,null,2));console.log('PASS: four race types at desktop/phone/tablet, mouse and keyboard jumps, deep links and reloads, keyboard table scrolling, unchanged result cells and sorting, driver links, special-event separation, provisional copy, verified intelligence and zero analytics attempts. Evidence: '+out);
+fs.writeFileSync(path.join(out,'regression.json'),JSON.stringify(evidence,null,2));console.log('PASS: four race types at desktop/phone/tablet, mouse and keyboard jumps, deep links and reloads, keyboard table scrolling, unchanged result cells and sorting, driver links, special-event separation, scoped coverage, exact recorded-stat counts, provisional copy, verified intelligence and zero analytics attempts. Evidence: '+out);

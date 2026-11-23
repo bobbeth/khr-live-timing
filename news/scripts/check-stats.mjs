@@ -22,6 +22,11 @@ const script=(await read('news/assets/app.js')).replace(/\r\n/g,'\n');
 vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues};\n})();'),context);
 await context.window.tests.init();
 const stats=context.window.tests.driverStats;
+assert.deepEqual(JSON.parse(JSON.stringify(stats.coverage({failures:[1,2,2],sessionGaps:[3,4,4]},[{subsession_id:2},{subsession_id:4}]))),{failures:[2],sessionGaps:[4]});
+assert.deepEqual(JSON.parse(JSON.stringify(stats.coverage({failures:[1],sessionGaps:[3]},[{subsession_id:99}]))),{failures:[],sessionGaps:[]});
+const fieldCoverage=context.window.MMTVResults.coverage;
+assert.deepEqual(JSON.parse(JSON.stringify(fieldCoverage([{start_position:1,finish_position:1,positions_gained:0,best_lap_seconds:12.3,laps_led:0},{start_position:null,finish_position:2,positions_gained:null,best_lap_seconds:null,laps_led:null},{start_position:'',finish_position:3,best_lap_seconds:0,laps_led:-1}]))),{total:3,start:1,gain:1,best:1,led:1});
+assert.deepEqual(JSON.parse(JSON.stringify(fieldCoverage([]))),{total:0,start:0,gain:0,best:0,led:0});
 const insights=context.window.tests.raceInsights;
 const data=await stats.load();
 assert.equal(data.failures.length,0);
@@ -134,6 +139,8 @@ assert.ok(node('driver-grid').innerHTML.includes('Chad Puterbaugh'));
 for(const d of data.drivers){
  context.location.hash='#driver/'+encodeURIComponent(d.id);await stats.profile(d.id);
  assert.ok(node('app').innerHTML.includes('RACE HISTORY'));
+ assert.ok(!node('app').innerHTML.includes('Drops follow Round 8.'));
+ assert.ok(node('app').innerHTML.includes('No drops are applied here'));
  const i=data.drivers.indexOf(d),previous=data.drivers[(i+data.drivers.length-1)%data.drivers.length],next=data.drivers[(i+1)%data.drivers.length];
  assert.equal((node('app').innerHTML.match(/aria-label="Driver profiles"/g)||[]).length,2);
  assert.ok(node('app').innerHTML.includes('class="profile-previous')||node('app').innerHTML.includes('profile-neighbour profile-previous'));
@@ -143,7 +150,7 @@ for(const d of data.drivers){
  for(const race of d.races)assert.ok(node('app').innerHTML.includes(`#race/${race.entry.subsession_id}`));
 }
 context.location.hash='#driver/unknown';await stats.profile('unknown');assert.ok(node('app').innerHTML.includes('DRIVER NOT FOUND'));
-for(const id of allRaces){context.location.hash='#race/'+id;await context.window.tests.race(String(id));assert.ok(node('race-details').innerHTML.includes('FINAL FEATURE RESULTS'));assert.ok(node('result-body').innerHTML.includes('#driver/'));}
+for(const id of allRaces){context.location.hash='#race/'+id;await context.window.tests.race(String(id));assert.ok(node('race-details').innerHTML.includes('FINAL FEATURE RESULTS'));assert.ok(node('race-details').innerHTML.includes('race-data-coverage'));assert.ok(!node('race-details').innerHTML.includes('THE COMPLETE EVENT'));assert.ok(node('race-details').innerHTML.includes('QUICKEST RECORDED LAP'));assert.ok(node('result-body').innerHTML.includes('#driver/'));}
 // A failed result fetch is reported, not silently treated as a zero-point round.
 const broken=context.window.createMMTVStats({app:node('app'),entries:()=>[{subsession_id:1,series:'Bomber Stocks'}],seasonName:()=> 'Fall Fest 2026',esc:String,displayName:String,getEvent:async()=>null,getMeeting:async()=>null});
 assert.equal((await broken.load()).failures.length,1);

@@ -21,7 +21,11 @@ window.MMTVResults=(()=>{
  }
  const gain=r=>valid(r.positions_gained)?Number(r.positions_gained):valid(r.start_position)&&valid(r.finish_position)?Number(r.start_position)-Number(r.finish_position):null;
  function sort(rows,by){const config={start:['start_position',1],gained:['gain',-1],fastest:['best_lap_seconds',1],led:['laps_led',-1]},[field,direction]=config[by]||['finish_position',1];return [...rows].sort((a,b)=>{const x=field==='gain'?gain(a):a[field],y=field==='gain'?gain(b):b[field],vx=valid(x)&&(field!=='best_lap_seconds'||x>0),vy=valid(y)&&(field!=='best_lap_seconds'||y>0);return vx!==vy?vx?-1:1:vx?(Number(x)-Number(y))*direction||Number(a.finish_position)-Number(b.finish_position):Number(a.finish_position)-Number(b.finish_position)});}
+ function coverage(rows){
+  const count=predicate=>rows.filter(predicate).length;
+  return {total:rows.length,start:count(r=>valid(r.start_position)&&Number(r.start_position)>0),gain:count(r=>gain(r)!==null),best:count(r=>valid(r.best_lap_seconds)&&Number(r.best_lap_seconds)>0),led:count(r=>valid(r.laps_led)&&Number(r.laps_led)>=0)};
+ }
  const printable=v=>valid(v)?String(v):'—';
  const copy=(entry,rows,displayName,source)=>entry.series+' R'+entry.round+' | '+entry.track+'\n'+sort(rows,'finish').map(r=>r.finish_position+'. #'+r.car_number+' '+displayName(r.driver)+' (start '+printable(r.start_position)+', laps '+printable(r.laps_completed)+', led '+printable(r.laps_led)+')').join('\n')+'\nSource: '+source;
- return {valid,kind,racing,applicable,score,columns,gain,sort,copy};
+ return {valid,kind,racing,applicable,score,columns,gain,sort,copy,coverage};
 })();
