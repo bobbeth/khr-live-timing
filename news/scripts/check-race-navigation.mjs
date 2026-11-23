@@ -1,0 +1,42 @@
+// Browser regression: run with Playwright installed or MMTV_PLAYWRIGHT_MODULE set.
+import http from 'node:http';import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),{chromium}=require(process.env.MMTV_PLAYWRIGHT_MODULE||'playwright');
+const root=path.resolve(import.meta.dirname,'../..'),out=process.env.MMTV_QA_OUTPUT||fs.mkdtempSync(path.join(os.tmpdir(),'mmtv-race-navigation-'));fs.mkdirSync(out,{recursive:true});
+const server=http.createServer((req,res)=>{let p=path.resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!p.startsWith(root+path.sep))return res.writeHead(403).end();if(fs.existsSync(p)&&fs.statSync(p).isDirectory())p=path.join(p,'index.html');try{res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg'})[path.extname(p)]||'application/octet-stream');res.end(fs.readFileSync(p))}catch{res.writeHead(404).end()}});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));const local='http://127.0.0.1:'+server.address().port+'/news/',base=process.env.MMTV_AUDIT_URL||local;
+const browser=await chromium.launch({headless:true,...(process.env.MMTV_CHROME_PATH?{executablePath:process.env.MMTV_CHROME_PATH}:{})}),evidence=[];
+try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],['tablet',1024,600]]){
+ const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'}),errors=[],denied=[];
+ await context.addInitScript(()=>{try{localStorage.setItem('mmtv.analytics.exclude','1');localStorage.setItem('mmtv.privateAnalytics.optout.v1','1')}catch{}});
+ await context.route('**/*',r=>{const request=r.request(),u=new URL(request.url());if(request.method()!=='GET'||u.origin!==new URL(base).origin){denied.push(u.origin);return r.abort()}return r.continue()});
+ const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ for(const id of ['90313573','90315023','90197399','89982168']){
+  await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor({timeout:45000});
+  const snapshot=await page.evaluate(()=>({hash:location.hash,body:document.querySelector('#result-body').innerText,links:[...document.querySelectorAll('#result-body a')].map(e=>e.getAttribute('href')),tables:[...document.querySelectorAll('#race-details table')].map(e=>({session:e.dataset.sessionNumber,kind:e.dataset.sessionKind,headers:[...e.querySelectorAll('th')].map(t=>t.innerText),rows:e.querySelectorAll('tbody tr').length})),viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}));
+  assert.ok(snapshot.pageWidth<=snapshot.viewport,device+' page overflow');assert.ok(!/\b(undefined|null|NaN)\b/.test(snapshot.body));
+  if(id!=='89982168'){
+   const jump=page.locator('[data-race-jump="race-meeting"]');assert.equal(await jump.count(),1);
+   await jump.click();assert.equal(await page.evaluate(()=>location.hash),'#race/'+id);assert.equal(await page.evaluate(()=>document.activeElement.id),'race-meeting');
+   const last=page.locator('[data-stage-jump]').last(),target=await last.getAttribute('data-race-jump'),href=await last.getAttribute('href');
+   await last.focus();await page.keyboard.press('Enter');assert.equal(await page.evaluate(()=>location.hash),'#race/'+id);assert.equal(await page.evaluate(()=>document.activeElement.id),target);
+   assert.ok(await page.locator('#classification').count());
+   await page.goto(base+href);await page.locator('#result-body tr').first().waitFor();assert.equal(await page.evaluate(()=>document.activeElement.id),target,'Deep link focuses session');
+   await page.reload();await page.locator('#result-body tr').first().waitFor();assert.equal(await page.evaluate(()=>document.activeElement.id),target,'Reload retains session target');
+  }else{
+   assert.equal(snapshot.tables.at(-1).kind,'special_event');assert.ok(await page.locator('#classification').innerText().then(s=>s.includes('Championship points are not shown')));
+  }
+  const final=page.locator('#classification .table-wrap');await final.scrollIntoViewIfNeeded();await final.focus();
+  assert.equal(await final.getAttribute('role'),'region');assert.ok((await final.getAttribute('aria-label')).includes('results'));
+  if(width===390){const start=await final.evaluate(e=>({left:e.scrollLeft,width:e.clientWidth,full:e.scrollWidth}));assert.ok(start.full>start.width);await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');await page.waitForTimeout(200);assert.ok(await final.evaluate(e=>e.scrollLeft)>start.left,'Keyboard reaches remaining result columns');}
+  const end=await page.locator('#result-body').innerText();assert.equal(end,snapshot.body,'Navigation preserves every displayed result cell');
+  await page.selectOption('#table-sort','start');await page.selectOption('#table-sort','finish');assert.equal(await page.locator('#result-body').innerText(),snapshot.body,'Sorting retains classification');
+  const driver=page.locator('#result-body .driver-link').first();if(await driver.count()){await driver.click();await page.getByText('RACE HISTORY',{exact:true}).first().waitFor({timeout:45000});assert.ok((await page.locator('#app').innerText()).includes('RACE HISTORY'));}
+  await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor();await page.locator('#classification').scrollIntoViewIfNeeded();if(id==='90313573')await page.screenshot({path:path.join(out,device+'-results.png')});
+  evidence.push({device,id,...snapshot,pass:true});
+ }
+ await page.goto(base+'#standings');await page.locator('#standings-series').waitFor();const notice=page.locator('.section-head + .stats-notice');assert.ok((await notice.innerText()).includes('no drops are applied'));assert.ok((await notice.innerText()).includes('until the league drop policy is confirmed'));assert.ok(!(await notice.innerText()).includes('Drops are applied after Round 8.'));
+ const points=await page.locator('#app tbody').first().innerText();assert.ok(points);await page.screenshot({path:path.join(out,device+'-standings.png')});
+ const model=await page.evaluate(()=>({intelligence:!!window.MMTVIntelligence.model?.index,analytics:window.MMTVAnalytics.status()}));assert.ok(model.intelligence,'Verified intelligence loaded');assert.equal(model.analytics.attempts,0);assert.equal(model.analytics.active,false);assert.deepEqual(errors,[],'No browser exceptions');
+ evidence.push({device,standings:await notice.innerText(),model,errors,pass:true});await context.close();
+}}finally{await browser.close();await new Promise(r=>server.close(r));}
+fs.writeFileSync(path.join(out,'regression.json'),JSON.stringify(evidence,null,2));console.log('PASS: four race types at desktop/phone/tablet, mouse and keyboard jumps, deep links and reloads, keyboard table scrolling, unchanged result cells and sorting, driver links, special-event separation, provisional copy, verified intelligence and zero analytics attempts. Evidence: '+out);

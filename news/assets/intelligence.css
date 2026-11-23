@@ -3,3 +3,6 @@
 /* Six-column non-race tables fit small screens; race tables retain horizontal scrolling. */
 table[data-session-kind="practice"],table[data-session-kind="warmup"]{min-width:0}
 @media(max-width:600px){table[data-session-kind="practice"] th,table[data-session-kind="warmup"] th{padding:11px 5px;font-size:9px;letter-spacing:.3px}table[data-session-kind="practice"] td,table[data-session-kind="warmup"] td{padding:12px 5px;font-size:11px}table[data-session-kind="practice"] .driver-cell,table[data-session-kind="warmup"] .driver-cell{white-space:normal;overflow-wrap:anywhere;min-width:65px}}
+
+/* Named result regions can be reached and scrolled using the keyboard. */
+#race-details .table-wrap:focus-visible{outline:3px solid #ff9a68;outline-offset:4px}

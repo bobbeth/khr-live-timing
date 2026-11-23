@@ -11,12 +11,14 @@ const node=id=>{
  return elements.get(id);
 };
 const context={URL,setInterval:()=>0,clearInterval(){},window:{scrollTo(){},addEventListener(){}},location:{protocol:'https:',hash:'#home'},document:{getElementById:node,querySelectorAll(){return [];},addEventListener(){}},navigator:{},console,fetch:async url=>{
+ // This suite exercises Fall Fest fixtures; Winter Fest has separate published coverage.
+ if(url==='data/historical/index.json')return {ok:false};
  try {const rel=url.startsWith('../')?url.slice(3):'news/'+url;return {ok:true,json:async()=>JSON.parse(await read(rel))};}
  catch{return {ok:false};}
 }};
 vm.createContext(context);
 for(const name of ['result-tables','seed','editorial','progression','stats','broadcasts','newsroom','race-insights','venues','round-reviews','commentary'])vm.runInContext(await read(`news/assets/${name}.js`),context);
-const script=await read('news/assets/app.js');
+const script=(await read('news/assets/app.js')).replace(/\r\n/g,'\n');
 vm.runInContext(script.replace('init();\n})();','window.tests={driverStats,race,init,championships,raceInsights,roundReviews,route,commentary,venues};\n})();'),context);
 await context.window.tests.init();
 const stats=context.window.tests.driverStats;
@@ -102,6 +104,9 @@ assert.equal(score({position:1,champ_points:99},{series:'Bomber Stocks'},{kind:'
 assert.deepEqual(JSON.parse(JSON.stringify(score({position:1,league_points:0,league_points_status:'saved_league',league_points_provenance:proof},{series:'Bomber Stocks'},{kind:'heat'},stats.points))),{value:0,status:'saved_league',proof});
 context.location.hash='#standings';await stats.standings();
 assert.ok(node('app').innerHTML.includes('BEFORE DROPS'));
+assert.ok(node('app').innerHTML.includes('no drops are applied'));
+assert.ok(node('app').innerHTML.includes('until the league drop policy is confirmed'));
+assert.ok(!node('app').innerHTML.includes('Drops are applied after Round 8.'));
 assert.ok(node('app').innerHTML.includes('*'));
 for(const series of ['Bomber Stocks','Cushion Kings','Mini Menaces','Yota Outlawz','Wide Open Revival']){
  await node('standings-series').onchange({target:{value:series}});
@@ -149,7 +154,8 @@ const reviews=context.window.tests.roundReviews;
 const entries=[...new Map([...historical,...live].map(e=>[e.subsession_id,e])).values()];
 const schedule=JSON.parse(await read('news/data/schedule.json'));
 const rounds=reviews.build(entries,schedule,data,'Fall Fest 2026');
-assert.equal(rounds.length,6);
+const publishedRounds=new Set(entries.map(e=>Number(e.round)));
+assert.equal(rounds.length,publishedRounds.size);
 const six=rounds.find(r=>r.round===6),sixCount=entries.filter(e=>Number(e.round)===6).length;assert.equal(six.events.length,sixCount);assert.equal(six.missing.length,5-sixCount);assert.equal(six.expected.length,5);assert.equal(six.book.movers[0].gain,10);
 for(const round of rounds){
  assert.equal(round.statsComplete,true);
@@ -159,16 +165,16 @@ for(const round of rounds){
 assert.equal(reviews.build([...entries,...entries],schedule,data,'Fall Fest 2026').find(r=>r.round===6).events.length,sixCount);
 assert.equal(reviews.build(entries,schedule,data,'Other season').length,0);
 assert.equal(reviews.build(entries,schedule,{...data,failures:[89810317]},'Fall Fest 2026').find(r=>r.round===6).statsComplete,false);
-context.location.hash='#rounds';await reviews.index();assert.equal((node('app').innerHTML.match(/class="round-review-card"/g)||[]).length,6);
+context.location.hash='#rounds';await reviews.index();assert.equal((node('app').innerHTML.match(/class="round-review-card"/g)||[]).length,publishedRounds.size);
 for(const round of [1,5,6]){context.location.hash='#round/Fall%20Fest%202026/'+round;await reviews.review(round,'Fall Fest 2026');
  assert.equal((node('app').innerHTML.match(/class="round-series-report"/g)||[]).length,round===6?sixCount:5);
  assert.ok(node('app').innerHTML.includes('THE BROADCASTS'));assert.ok(!node('app').innerHTML.includes('undefined'));
- if(round===6){assert.equal(node('app').innerHTML.includes('Reports still to come:'),sixCount<5);assert.ok(node('app').innerHTML.includes('#broadcast/IyXQ4OjSR3Y'));assert.ok(!node('app').innerHTML.includes('/7'));}
+ if(round===6){assert.equal(node('app').innerHTML.includes('Reports still to come:'),sixCount<5);assert.ok(node('app').innerHTML.includes('#broadcast/IyXQ4OjSR3Y'));assert.equal(node('app').innerHTML.includes('href="#round/Fall%20Fest%202026/7"'),publishedRounds.has(7));}
  if(round===1)assert.ok(!node('app').innerHTML.includes('/0'));
 }
 context.location.hash='#round/Fall%20Fest%202026/99';await reviews.review(99,'Fall Fest 2026');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
 context.location.hash='#round/Unknown/1';await reviews.review(1,'Unknown');assert.ok(node('app').innerHTML.includes('ROUND NOT FOUND'));
-console.log('PASS: six round reviews, source-based round completeness, source-scoped climbs, broadcast links, deduplication, missing-data states and previous/next boundaries.');
+console.log('PASS: published round reviews, source-based round completeness, source-scoped climbs, broadcast links, deduplication, missing-data states and previous/next boundaries.');
 
 // Commentary briefings must exclude the selected round and all later results.
 const desk=context.window.tests.commentary;
