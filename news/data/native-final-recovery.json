@@ -1,1 +1,7 @@
-{"schema":"MMTV-native-final-recovery-v1","enabled":true,"subsession_ids":[90313573,90315023]}
+{
+  "schema": "MMTV-native-final-recovery-v1",
+  "enabled": true,
+  "mode": "published_from_date",
+  "competition": "Fall Fest 2026",
+  "from_event_date": "2026-11-23"
+}

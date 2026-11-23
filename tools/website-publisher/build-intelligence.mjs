@@ -7,14 +7,14 @@ import {driverAdmission} from './driver-admission.mjs';
 import {recoverSession} from './recover-session-fields.mjs';
 import {sessionCatalogue} from './session-evidence.mjs';
 import {nativeNonRaceSessions} from './native-session-evidence.mjs';
-import {finalFields,applyNativeFinal,loadNativeRecoveryIds} from './native-final-fields.mjs';
+import {finalFields,applyNativeFinal,loadNativeRecoveryPolicy,nativeRecoveryEligible} from './native-final-fields.mjs';
 const root=path.resolve(process.argv[2]);
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8').replace(/^\uFEFF/,''));
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])])):value;
 let input='';for await(const chunk of process.stdin)input+=chunk;
 const {history,source_event_count,source_catalogue_count,statistics:oracle,adapter_sha256,recovery:recoveryOptions={},driver_eligibility=null,driver_policy={}}=JSON.parse(input.replace(/^\uFEFF/,''));
-const nativeFinalIds=loadNativeRecoveryIds(path.join(root,'news/data/native-final-recovery.json'),recoveryOptions.native_final_ids);
+const nativeFinalPolicy=loadNativeRecoveryPolicy(path.join(root,'news/data/native-final-recovery.json'),recoveryOptions.native_final_ids);
 const ctx={window:{}};vm.createContext(ctx);
 for(const name of ['intelligence-core','stats','venues'])vm.runInContext(fs.readFileSync(path.join(root,`news/assets/${name}.js`),'utf8'),ctx);
 const core=ctx.window.MMTVIntelligenceCore,legacy=ctx.window.createMMTVStats({displayName:n=>n,entries:()=>[],seasonName:e=>e.competition});
@@ -85,9 +85,9 @@ for(const race of history.races){
   const publishedRows=['feature','twin_feature_2'].includes(kind)?originalEvent.feature_results:(originalMeeting?.sessions?.find(s=>Number(s.simsession_number)===Number(num))?.classification||[]);
   const recovery=official||raw.evidenceSource?null:recoverSession({canonical:catalogue.canonical,catalogueProofs:catalogue.proofs,canonicalFile:race.provenance.canonicalFile,captureRoot:race.provenance.captureRoot||null,id,raw,entry,kind,previousWinner,knownIds,exhaustive:!!recoveryOptions.exhaustive||(recoveryOptions.exhaustive_ids||[]).map(Number).includes(id),priorSourceHashes,publishedRows:publishedRows.map(r=>({...r,driver_id:r.driver_id||names[normalize(r.driver)]}))});
   if(recovery){event.recovery_audit.push(recovery.audit);sourceAudit.push({subsession_id:id,session_number:num,...recovery.audit,...recovery.details});}
-  // Explicit opt-in for reviewed current-event IDs; default export is unchanged.
+  // Recovery scope is explicit policy; every selected race still needs exact native-source validation.
   const nativeManifest=path.join(captureRoot,'session-evidence',String(id),'index.json');
-  const nativeFinal=!official&&['feature','twin_feature_2'].includes(kind)&&nativeFinalIds.includes(id)&&fs.existsSync(nativeManifest)?finalFields({captureRoot,manifest:JSON.parse(fs.readFileSync(nativeManifest,'utf8')),id,sessionNumber:num,expectedRows:event.rows}):null;
+  const nativeFinal=!official&&['feature','twin_feature_2'].includes(kind)&&nativeRecoveryEligible(entry,nativeFinalPolicy)&&fs.existsSync(nativeManifest)?finalFields({captureRoot,manifest:JSON.parse(fs.readFileSync(nativeManifest,'utf8')),id,sessionNumber:num,expectedRows:event.rows}):null;
   const source=raw.evidenceSource||{...publicSource(race,`session.${num}`),certainty:official?'official':'native_completed'};
   const session={simsession_number:num,name,kind,available:true,classification:[],source};
   for(const row of rows){

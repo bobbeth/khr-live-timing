@@ -1,4 +1,4 @@
-// Read-only candidate. No production imports, writes or execution side effects.
+// Read-only native final-result supplementation; source evidence is never modified.
 import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';
 import {parseNativeSessionInfo} from './native-session-evidence.mjs';
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),yes=v=>/^(1|true)$/i.test(String(v));
@@ -46,9 +46,20 @@ export function applyNativeFinal(row,result){
  return out;
 }
 
-export function loadNativeRecoveryIds(file,override){
+const dateOnly=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value+'T00:00:00Z'))&&new Date(value+'T00:00:00Z').toISOString().slice(0,10)===value;
+export function loadNativeRecoveryPolicy(file,override){
  const policy=override===undefined?(fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):null):{schema:'MMTV-native-final-recovery-v1',enabled:true,subsession_ids:override};
- if(!policy||policy.enabled===false)return [];
- if(policy.schema!=='MMTV-native-final-recovery-v1'||policy.enabled!==true||!Array.isArray(policy.subsession_ids)||policy.subsession_ids.some(id=>!Number.isSafeInteger(id)||id<=0))throw Error('Invalid native final recovery policy');
- return [...new Set(policy.subsession_ids)];
+ if(!policy||policy.enabled===false)return {enabled:false,subsession_ids:[]};
+ if(policy.schema!=='MMTV-native-final-recovery-v1'||policy.enabled!==true)throw Error('Invalid native final recovery policy');
+ if(policy.mode==='published_from_date'){
+  if(typeof policy.competition!=='string'||!policy.competition.trim()||!dateOnly(policy.from_event_date))throw Error('Invalid native final recovery policy');
+  return {...policy};
+ }
+ if((policy.mode&&policy.mode!=='explicit_ids')||!Array.isArray(policy.subsession_ids)||policy.subsession_ids.some(id=>!Number.isSafeInteger(id)||id<=0))throw Error('Invalid native final recovery policy');
+ return {...policy,mode:'explicit_ids',subsession_ids:[...new Set(policy.subsession_ids)]};
+}
+export const loadNativeRecoveryIds=(file,override)=>loadNativeRecoveryPolicy(file,override).subsession_ids||[];
+export function nativeRecoveryEligible(entry,policy){
+ if(!policy?.enabled||!Number.isSafeInteger(Number(entry.subsession_id))||Number(entry.subsession_id)<=0)return false;
+ return policy.mode==='published_from_date'?entry.competition===policy.competition&&dateOnly(entry.event_date)&&entry.event_date>=policy.from_event_date:policy.subsession_ids.includes(Number(entry.subsession_id));
 }
