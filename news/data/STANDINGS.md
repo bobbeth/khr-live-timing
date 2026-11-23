@@ -4,7 +4,7 @@ The standings and roster are generated in the browser from the archive index, li
 
 Current policy, confirmed by the owner: add points as they stand; no drops before the end of Round 8. The website does not currently apply drops, penalties, manual championship adjustments or league tie-breaks. Tables remain provisional until reconciled with league leaderboards. Equal totals share a position.
 
-For each scoring session, use its saved `champ_points` when present (including zero). Otherwise calculate points from the existing scoring functions in the 131DB championship deployment. Calculated totals carry an asterisk, and profiles expose each race's session breakdown. Practice and warmup do not score. Bomber opening twins score as a feature; other consolation races use the standard consolation table. Do not add a second copy of final-feature points from the event record when a final-feature session is already present.
+For each scoring session, use verified saved `league_points` for league 10402 when provenance confirms the field (including zero). Raw `champ_points` alone does not establish league scoring. Otherwise calculate points from the existing scoring functions in the 131DB championship deployment. Calculated totals carry an asterisk, and profiles expose each race's session breakdown. Practice and warmup do not score. Bomber opening twins score as a feature; other consolation races use the standard consolation table. Do not add a second copy of final-feature points from the event record when a final-feature session is already present.
 
 Fallback scoring:
 
@@ -24,3 +24,5 @@ Names use whitespace/case normalization and a small explicit alias list in `asse
 Run `node news/scripts/check-stats.mjs` from the repository root to verify scoring boundaries, saved points, aliases, all profiles and races, search, links and fetch failures.
 
 Owner-confirmed identity matches: Mike Davis = Mike Maddog Davis; Michael Butler = Michael Butler14 = mike butler. These names share points, stats and race histories. Profile display names are Mike Maddog Davis and Michael Butler; source result names remain intact.
+
+Practice and warmup tables keep names visible but link only to profiles established by classified results or verified competitor records. Canonical intelligence QA covers its own published feed separately from the historical Winter archive and matches sessions by native session number.
