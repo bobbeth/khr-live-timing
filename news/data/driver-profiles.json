@@ -31,7 +31,8 @@
     "tom land": 269885,
     "travis mcdonald": 820109,
     "travis mcdonald2": 820109,
-    "wayne bridges": 342917
+    "wayne bridges": 342917,
+    "tye dalman": 316406
   },
   "drivers": {
     "18629": {
@@ -185,19 +186,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90315023,
-        "session_number": 1,
-        "session_name": "HEAT 1",
-        "series_key": "cushion_kings",
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "69",
         "team_name": null,
         "multicar_team_name": "Bottom Feeder Speed Co",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-23T02:02:49.711Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "edac0beb3c8742f29ec375cb4eeb073b60aac24e523ca354e0dce25b732a3867",
-          "5b9409c3a0fb28ae81dc4587476fe4d31597e1d73eb412e69bec2990a5e4aaeb"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Mikey Mixter"
@@ -224,24 +225,71 @@
       },
       "display_name": "Tom Land"
     },
+    "316406": {
+      "iracing_id": 316406,
+      "profile": {
+        "id": 316406,
+        "firstName": "Tye",
+        "lastName": "Dalman",
+        "suffix": "",
+        "country": "United States",
+        "hometown": "Portland,Michigan ",
+        "team": "Dirty Boyz Motorsports ",
+        "header": "",
+        "info": "",
+        "bio": "",
+        "latestNews": "",
+        "website": "",
+        "youtube": "",
+        "twitter": "",
+        "twitch": "",
+        "facebook": "",
+        "pictureUrl": "/images/9e46f8bb59f0d58411f435c53dafb8ba",
+        "createdAt": "2022-02-21T00:07:05.000Z",
+        "updatedAt": "2022-02-21T00:42:08.000Z"
+      },
+      "display_name": "Tye Dalman",
+      "identity_source": "verified_khr_competitor",
+      "identity_verification": {
+        "status": "verified",
+        "basis": "owner_approved"
+      },
+      "latest_observation": {
+        "league_id": 10402,
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
+        "car_number": "24",
+        "team_name": null,
+        "multicar_team_name": "Dirty Boyz Motorsports",
+        "source": "SDK session observation",
+        "participation": "observed_only",
+        "observed_at": "2026-11-24T00:44:53.688Z",
+        "snapshot_sha256": [
+          "f35ad476c2edec072d38c683a27df8e64fc206e80c17c7672dfff175a3e47ac8",
+          "3515e780fbec20a168744aa040cc2e95813fbb4492341bfadfc744e9d7a80695"
+        ]
+      }
+    },
     "342917": {
       "iracing_id": 342917,
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90313573,
-        "session_number": 1,
-        "session_name": "HEAT 1",
-        "series_key": "bomber_stocks",
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "92",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-23T00:48:51.674Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "9243016fb6ff9bb87e632f94e2be80f4f19bc57c711b68f4e110a668d1e5244e",
-          "f97432761665075d2b2ebf09345ef0482c9750481dfc9f7c136e844b76184bd6"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Wayne Bridges"
@@ -275,19 +323,19 @@
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90197399,
-        "session_number": 9,
-        "session_name": "FEATURE",
-        "series_key": null,
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "091",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-18T02:02:55.197Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "a8f9f33f3855a1403aa9b56513e46864c56d4c7e992f7afc9e1b94a47083623c",
-          "5ffd61352cabf4791708dbc2a9fa59445252313fa1545243f0a381c7bc44760e"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Mathew Land"
@@ -341,19 +389,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 89178640,
-        "session_number": 2,
-        "session_name": "HEAT 1",
-        "series_key": null,
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "99",
-        "team_name": null,
-        "multicar_team_name": "None",
+        "team_name": "Mike Maddog Davis",
+        "multicar_team_name": "Mo Diggin Mafia",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-08T11:08:53.255Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "07cbdc44b4d2a840cbbc1561cfae1a719d41c2ee9d7c4d8fefef85323c46d76f",
-          "0eeedff535778081d2da2cac79ff13c1bee2f92988dc35b603ec9a6fd5c4f645"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Mike Maddog Davis"
@@ -407,19 +455,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90313573,
-        "session_number": 2,
-        "session_name": "HEAT 2",
-        "series_key": "bomber_stocks",
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "20",
         "team_name": null,
         "multicar_team_name": "DWR - Dirt Warrior Racing",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-23T00:52:49.685Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "1d74faa20647112c934b279d576d0e8123ad2138cc10580365160a8b73ce8b7a",
-          "1f0c5bf69d4762f43914048b8d71c6d31e52ef01c0d2228179c3daf4a161d933"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Chad  Puterbaugh"
@@ -449,19 +497,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90313573,
-        "session_number": 4,
-        "session_name": "HEAT 4",
-        "series_key": "bomber_stocks",
+        "subsession_id": 90336974,
+        "session_number": 1,
+        "session_name": "QUALIFY",
+        "series_key": "mini_menaces",
         "car_number": "062",
         "team_name": null,
         "multicar_team_name": "Mo Diggin Mafia",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-23T01:00:50.608Z",
+        "observed_at": "2026-11-24T00:50:52.539Z",
         "snapshot_sha256": [
-          "e6c0203e7cf81efad53619b53de16910f617ad9e72b5b188a64c3a111e90bc87",
-          "53001a80f9fc666af273583952cae9e7242b4eec4f1009e7212b3ac363bcebe5"
+          "e1c0c5edd966a070ba3e49a4fcea18e5cec6c06b062d62dcbb6a2aebd0fc54e6",
+          "dc479b1673e60944d818227f3b29760ce4e0e7a2bb319f05ce50b131f1252dde"
         ]
       },
       "display_name": "Joey Brewer"
@@ -513,19 +561,19 @@
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90197399,
-        "session_number": 9,
-        "session_name": "FEATURE",
-        "series_key": null,
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "88",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-18T02:02:55.197Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "a8f9f33f3855a1403aa9b56513e46864c56d4c7e992f7afc9e1b94a47083623c",
-          "5ffd61352cabf4791708dbc2a9fa59445252313fa1545243f0a381c7bc44760e"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Travis Mcdonald"
@@ -535,19 +583,19 @@
       "profile": null,
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90006933,
-        "session_number": 2,
-        "session_name": "HEAT 1",
-        "series_key": "dirt_cheap_asphalt_fast",
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "429",
         "team_name": null,
         "multicar_team_name": "None",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-10T02:04:54.544Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "21c3198d956e8ea183a47e997eeb737848ebf07af0f86664d946f0b74898f21d",
-          "1ab9ccb67a78f42f6ff14fd98b367a014dd6f602faa4540e8ba9084dfa72af9e"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Tim L Brown"
@@ -745,19 +793,19 @@
       },
       "latest_observation": {
         "league_id": 10402,
-        "subsession_id": 90313573,
-        "session_number": 4,
-        "session_name": "HEAT 4",
-        "series_key": "bomber_stocks",
+        "subsession_id": 90336974,
+        "session_number": 0,
+        "session_name": "PRACTICE",
+        "series_key": "mini_menaces",
         "car_number": "7",
         "team_name": null,
         "multicar_team_name": "YotaOutlawz",
         "source": "SDK session observation",
         "participation": "observed_only",
-        "observed_at": "2026-11-23T01:00:50.608Z",
+        "observed_at": "2026-11-24T00:38:54.435Z",
         "snapshot_sha256": [
-          "e6c0203e7cf81efad53619b53de16910f617ad9e72b5b188a64c3a111e90bc87",
-          "53001a80f9fc666af273583952cae9e7242b4eec4f1009e7212b3ac363bcebe5"
+          "94cbe72a29e876ccde7db62d390d0a6015934e3721caa81e681fc45ec9648b5c",
+          "617c92bef83f687a9e1e6503dc28e518b16b9311a2b6515f407727a742ab8c81"
         ]
       },
       "display_name": "Brian Angell"
