@@ -10,6 +10,11 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
  await context.addInitScript(()=>{try{localStorage.setItem('mmtv.analytics.exclude','1');localStorage.setItem('mmtv.privateAnalytics.optout.v1','1')}catch{}});
  await context.route('**/*',r=>{const request=r.request(),u=new URL(request.url());if(request.method()!=='GET'||u.origin!==new URL(base).origin){denied.push(u.origin);return r.abort()}return r.continue()});
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ // A malformed copied URL must still open a usable newsroom.
+ await page.goto(base+'#race/%E0%A4%A');
+ await page.waitForFunction(()=>location.hash==='#home'&&!!document.querySelector('#app h1'),{},{timeout:4000});
+ assert.deepEqual(errors,[],'Malformed URL did not throw');
+ evidence.push({device,fixture:'malformed-route',homeRecovered:true});
  // Cold-load regression: practice-only names must not lead to nonexistent profiles.
  await page.goto(base+'#race/88961208');await page.locator('#result-body tr').first().waitFor({timeout:45000});
  const practice=page.locator('table[data-session-number="-7"]');
