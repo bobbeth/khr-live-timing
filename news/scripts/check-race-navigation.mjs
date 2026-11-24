@@ -18,6 +18,23 @@ try{for(const [device,width,height]of [['desktop',1440,1000],['phone',390,844],[
  evidence.push({device,fixture:'practice-driver-links',unknownName:'Big Bird',unknownLinks:0,knownName,knownProfileResolved:true,pass:true});
  for(const id of ['90313573','90315023','90197399','89982168']){
   await page.goto(base+'#race/'+id);await page.locator('#result-body tr').first().waitFor({timeout:45000});
+  if(id==='90313573'){
+   const button=page.locator('#copy-results');
+   await page.evaluate(()=>{
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new Error('Clipboard denied')}}});
+    document.execCommand=()=>false;
+   });
+   await button.click();
+   await page.waitForFunction(()=>document.querySelector('#copy-results-status')?.textContent==='Could not copy results.',{},{timeout:3000});
+   assert.equal(await page.locator('textarea').count(),0);
+   await page.evaluate(()=>{document.execCommand=command=>command==='copy'&&document.activeElement.value.includes('90313573')});
+   await button.click();
+   await page.waitForFunction(()=>document.querySelector('#copy-results-status')?.textContent==='Results copied.',{},{timeout:3000});
+   await page.evaluate(()=>{navigator.clipboard.writeText=async text=>{window.mmtvCopiedResults=text};document.execCommand=()=>{throw new Error('Fallback should not run')}});
+   await button.click();
+   await page.waitForFunction(()=>window.mmtvCopiedResults?.includes('90313573'));
+   evidence.push({device,fixture:'copy-results',deniedTruthful:true,fallbackWorks:true,modernWorks:true});
+  }
   const snapshot=await page.evaluate(()=>({hash:location.hash,body:document.querySelector('#result-body').innerText,links:[...document.querySelectorAll('#result-body a')].map(e=>e.getAttribute('href')),tables:[...document.querySelectorAll('#race-details table')].map(e=>({session:e.dataset.sessionNumber,kind:e.dataset.sessionKind,headers:[...e.querySelectorAll('th')].map(t=>t.innerText),rows:e.querySelectorAll('tbody tr').length})),viewport:innerWidth,pageWidth:document.documentElement.scrollWidth}));
   const fields=await page.evaluate(()=>{const rows=[...document.querySelectorAll('#result-body tr')].map(tr=>[...tr.cells].map(c=>c.textContent.replaceAll('†','').trim()));const known=(i,positive=false)=>rows.filter(r=>r[i]!=='—'&&r[i]!==''&&Number.isFinite(parseFloat(r[i]))&&(!positive||parseFloat(r[i])>0)).length;return {total:rows.length,start:known(3,true),gain:known(4),best:known(7,true),led:known(6)};});
   if(['90313573','90315023'].includes(id)){
