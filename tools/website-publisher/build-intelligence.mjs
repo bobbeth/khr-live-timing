@@ -205,8 +205,10 @@ const revision=hash(Object.values(serialized).join(''));
 const indexPath='news/data/intelligence/index.json';let prior;try{prior=read(indexPath)}catch{}
 const manifest={...common,generated_utc:prior?.revision===revision?prior.generated_utc:new Date().toISOString(),revision,source_event_count:source_event_count??history.archiveCount,source_catalogue_count:source_catalogue_count??history.catalogueCount,published_event_count:ids.length,subsession_ids:ids,adapter_sha256:adapter_sha256.toLowerCase(),coverage:{official_events:races.filter(r=>r.source.certainty==='official').length,native_events:races.filter(r=>r.source.certainty==='native_completed').length,metadata_supplemented:races.filter(r=>r.metadata_source!=='canonical').length,laps_led:{known:races.filter(r=>r.coverage.laps_led.known>0).length,total:races.length},unverified_driver_rows:0},files:Object.fromEntries(Object.entries(serialized).map(([key,value])=>[key+'.json',{sha256:hash(value)}])),counting:'One final Feature per subsession; opening Bomber twins are distinct scoring sessions, not extra events. Starts are classified appearances; DNS is excluded.',delivery:{version:1,catalogue:'catalogue.json',events:Object.fromEntries(ids.map(id=>[id,'events/'+id+'.json']))},privacy:'Public derived fields only; no local paths or raw captures.'};
 serialized.index=JSON.stringify(stable(manifest))+'\n';
-const changed=[];for(const [name,value] of Object.entries(serialized)){
+for(const [name,value] of Object.entries(serialized)){
  if(/(?:[A-Za-z]:[\\/]|\\\\Users\\|KHR_GITHUB_TOKEN|nativeHistoricalResults|carPaint|birthDate|source_path)/i.test(value))throw Error('Public export privacy check failed: '+name);
+}
+const changed=[];for(const [name,value] of Object.entries(serialized)){
  const rel=`news/data/intelligence/${name}.json`,dest=path.join(root,rel);let old;try{old=fs.readFileSync(dest,'utf8')}catch{}if(old!==value){fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,value);changed.push(rel);}
 }
 if(recoveryOptions.audit_output){fs.writeFileSync(recoveryOptions.audit_output,JSON.stringify({exhaustive:!!recoveryOptions.exhaustive,adapter_sha256,events:ids,sourceAudit},null,2)+'\n');}

@@ -320,7 +320,11 @@ function Publish-WebsiteCommit([string]$Git,[string]$Repository,[string]$Base,[s
         foreach($line in $output){Note ([string]$line)}
         if($exit -eq 0){Note "[PUSH PASS] Published after attempt $attempt.";return}
         $message=$output -join [Environment]::NewLine
-        Require ($message -match '\[rejected\].*(fetch first|non-fast-forward)') 'GitHub push failed for a reason other than concurrent updates; prepared publication retained.'
+        $isNonFastForward=$message -match '\[rejected\].*(fetch first|non-fast-forward)'
+        $isMainRefRace=$message -match "(?im)\[remote rejected\]\s+HEAD\s+->\s+main\s+\(cannot lock ref 'refs/heads/main': is at [0-9a-f]{40} but expected [0-9a-f]{40}\)"
+        # Some Git servers emit the ref-lock detail on a separate remote stderr line.
+        $isSplitMainRefRace=($message -match "(?im)remote: error: cannot lock ref 'refs/heads/main': is at [0-9a-f]{40} but expected [0-9a-f]{40}") -and ($message -match '(?im)\[remote rejected\]\s+HEAD\s+->\s+main\s+\((incorrect old value provided|failed to update ref)\)')
+        Require ($isNonFastForward -or $isMainRefRace -or $isSplitMainRefRace) 'GitHub push failed for a reason other than concurrent updates; prepared publication retained.'
         if($attempt -lt 4){Note "[RETRY] Remote advanced during push; refreshing ($attempt/4).";Start-Sleep -Seconds $attempt}
     }
     throw 'Remote kept advancing after four bounded attempts; prepared publication retained. No force push attempted.'
@@ -499,6 +503,7 @@ try {
     $allowed.Add('news/data/live/index.json');$allowed.Add('news/assets/editorial.js');$allowed.Add('news/index.html')
     }
     $intelligence=Write-MMTVIntelligence -RepositoryPath $repo -CanonicalPath $CanonicalPath -AdapterSourcePath $AdapterSourcePath -NodePath $NodePath -MinStableSeconds $MinStableSeconds -DriverSettingsPath $DriverSettingsPath -EventAssociationsPath $EventAssociationsPath -EventSnapshotsPath $EventSnapshotsPath
+    Require ((PathValue $intelligence 'status') -ne 'waiting_for_stable_canonical_archive') 'Intelligence export deferred while canonical evidence settles; publication held for the next run.'
     foreach($path in @($intelligence.changed_paths)){Require ($path -match '^news/data/intelligence/((index|drivers|races|venues|championships|catalogue)\.json|events/[0-9]{6,12}\.json)$') "Unapproved intelligence output: $path";if($path -match '/events/(\d+)\.json$'){Require (@($intelligence.subsession_ids) -contains [long]$Matches[1]) "Unknown intelligence event output: $path"};$allowed.Add($path)}
     Note "[INTELLIGENCE] $($intelligence.event_count) canonical race events; $(@($intelligence.changed_paths).Count) changed derived files."
     if($allowed.Count -eq 0){Note '[PASS] No new races, broadcasts, driver profiles or intelligence changes to publish.';return}
@@ -530,44 +535,41 @@ finally {if($locked){$mutex.ReleaseMutex()};$mutex.Dispose()}
 
 
 
+
+
+
+
 # SIG # Begin signature block
-# MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# MIIF1AYJKoZIhvcNAQcCoIIFxTCCBcECAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAv0GVqqAFURUnK
-# 7fMMVsDCT4yVMCwWryXXTWNzfTWMhqCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
-# mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
-# c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
-# MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
-# 9w0BAQEFAAOCAY8AMIIBigKCAYEA0KKkBodSOLNMxbrvEKCaBPzCWy+OCdhF8pV5
-# W2Kg3T7mMw9FjbGdMXqamhA0edqSj8H463I6NK8bIYYc1i2HS2Jh+jbUe02+aLT+
-# MYPakVjKgaqs8Hd5MYhsKv1JQxl92SVpGlL7NK3m2i4umT67Gl4ZzBzQCCL+03R1
-# 3vD7SCymEU3uVTQHc8+hdPXnvUeyTYy9jvC8QlfEX4zEKlO9ESmU6Yjk4fXmsEEg
-# 8cTrmqSw3EeDfn9xvZJ6z+tk9iDLLeJTnK03pXvPJJoCldVE377mPfdij3l7BEu1
-# SC8h7IL8nRq7JkbArXC6L6Yfyk0xRtDMRnYWM9BAaoTQH9WC5NtsDHs0Ztg6cuxL
-# TrUctaUgRHcDVW+pWndwEosK4QMeSMSSKJ+HNKQtfUCw0zYRHSICKD02F2s/qm2K
-# H43uGrtUp+w1ryc8C9tzznX8gia0UGPTYMI/OBSbaVOJUTCtjQGsuneZ2r19yRF+
-# /nxseWw3VpiclujlL0/Q/0L9zTd5AgMBAAGjRjBEMA4GA1UdDwEB/wQEAwIHgDAT
-# BgNVHSUEDDAKBggrBgEFBQcDAzAdBgNVHQ4EFgQUlPv7zz5U5NgsxT/dh2xfMvWZ
-# 9dswDQYJKoZIhvcNAQELBQADggGBAK3zXDI/sEffqGOv8+9vjmVrHcId8WR36D7G
-# JNxxA3Y3KKmnq2QtV88Vnu/zgM4wFZHjru56h9XTNWLNfEtgA17V9UXlmgMEqUvh
-# Rp0eIkaZeRpnuJwybSQFijx0Djt19T4N4/sm/22l0u2uRTl9AZ9wkq2Udu42vi8x
-# QCmWOspU1srAcKOJZNIlvxZKFsfiN8LKMaKiKweSSRsnplFimiCoatfJFHzKmxhu
-# zyHab1jVH08/Zi8zSvDtSh+d34PO9hX+HF8ZMAJLj6Bnn5nK+98GMAaDOa5/PARl
-# sbXXlcAybeyODLw6pQjapZlotot5VAirWzKO5zkmiCX+ym+zCsPvWzU2/8YOZJto
-# MslBns4Yz4rdiGTHsLO+GyV6VFLcGvZhA7llttIG9B5aSCvZMwnDcQsgb4YKIo7A
-# HXMkadUbyjqL78Docj57LWog0/NAH1dO1simWtkH0z9GUuijebxzkk0VlQXGZBGR
-# hRjYXqaUj8R62vAr5K2SI3HGmi3bYjGCAmowggJmAgEBMDgwJDEiMCAGA1UEAwwZ
-# S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
-# hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
-# DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCArlAypyOSSglM6FnRS9C5CrAXWmade7aOew595JNXq
-# YzANBgkqhkiG9w0BAQEFAASCAYAPDBPqrdhO42huPIp1AMQmsr3scCjKG0EnzW5K
-# wEkXHBgcSAgHedwx0n+HeR5VbsOlTOBNN9wRJ0o3R1gWNMPg+EWlr60qQZ7ExMsh
-# AS9RTL7/hpSyWAG/dGWkePMzZLZsUrRhjJdJqXmSyGpvUlst2u7LdXKaaZgzLFHi
-# JOq51n1zEu0jbYSxm0wCpVw6A3FVHKOiY93tOnxiEH3oJ06Ozw7nUMyiJ4oiAYGx
-# nW0oLzYCY5G4dBpUMYcjMinhdSo4sgqdDFx3blbmanFp3RdA/xRFn+Hwhcy6+xF6
-# hJq3LvIisUzzi3L3DzqNbEhfISxqrddAmuyqAcB5/St1Y3V/eW1PQrnZQ1D96paA
-# jsd/WjE69uIpb+IUJEOZ543+sFAdWhCTKjBFbXDZ/DJawaR7HIMnNfPzLwycEppf
-# UXjdMjkQoImSnbUDubKlmKR1+XBHq9g5wY5+FbDbW3/cf4mw62yX/qYpasEdXK8/
-# g+0An3RBYzeNIWiFsXRX34zD7dg=
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCpaKcYjxiCbNiL
+# JVAz0sUc2SMr1CcFz4mSVAh1QOXsOKCCAzQwggMwMIICGKADAgECAhA5sj4SFmYa
+# i0e89BUO0vgZMA0GCSqGSIb3DQEBCwUAMDAxLjAsBgNVBAMMJUtIUiBCcm9hZGNh
+# c3QgRGV2ZWxvcG1lbnQgUmVwbGFjZW1lbnQwHhcNMjYxMTE1MDYyNjA5WhcNMjcx
+# MTE1MDY0NjA5WjAwMS4wLAYDVQQDDCVLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50
+# IFJlcGxhY2VtZW50MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvfd+
+# ydfNm9B0JnJZBmW/i7GnAdn+EskjTNs73ePQrZbEIdXXq/vphkIJYL3YhTQH7cew
+# OEXwyoR0Jb28RebqYZym0WlgqS3mTXLBLofyIlh0YhPZWzaEilJUD0Cjj0Br/Tph
+# L6lyPH4OlVbRgblAEW7Krd2PfXa4ocxfypxc2UtBT63+1nxO2oUH7R0K9/0gj5Gj
+# BFw5SFB/wC30AeJQNVuj4N3GFdRSxaqr1OP6oXSfr/3qzBnoxY6xAS7BzJcJ+zEa
+# iJsm3K2ec2g9POh+T+Q9eOelEVTkgBd6/LzvqtaDNwCB6gB98UjoheJbeYX/7xs8
+# tWPQNL2FZ4TrM0nyZQIDAQABo0YwRDAOBgNVHQ8BAf8EBAMCB4AwEwYDVR0lBAww
+# CgYIKwYBBQUHAwMwHQYDVR0OBBYEFJtFtOVU5VYz7EoLQiSdT3bMRjk9MA0GCSqG
+# SIb3DQEBCwUAA4IBAQA1P+sWpxdue16gl2kKfBTPBotVPujYNnfmSupehcaV+oRm
+# w0/9g6aTOfNqCNx6og0etciXuimew/219x8lYGeAnFOppotm2XQ0KYsDm2txKdZl
+# S5BR7E+e4ia/B60F7fzM+VX926qfMs6X1uNqX6fPJPMqX3zmYhJrdAS0URF/5mbH
+# LRyz/jAxIfWmGDzHA/jkUdMWv2eHCQ8lqvhQBDKxqppShOBKGLpgMvhCxPU/h8YH
+# g3WFG/QHFNjtoLpv8/UN22uNQ+un6O2q7U3LJhSDGBSWdPW0khoXgKoJ73Ms/vZe
+# oWDzrGRKNBTtMJ8sHvlgpEEkiJGY9rsb85QULHf6MYIB9jCCAfICAQEwRDAwMS4w
+# LAYDVQQDDCVLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50IFJlcGxhY2VtZW50AhA5
+# sj4SFmYai0e89BUO0vgZMA0GCWCGSAFlAwQCAQUAoIGEMBgGCisGAQQBgjcCAQwx
+# CjAIoAKAAKECgAAwGQYJKoZIhvcNAQkDMQwGCisGAQQBgjcCAQQwHAYKKwYBBAGC
+# NwIBCzEOMAwGCisGAQQBgjcCARUwLwYJKoZIhvcNAQkEMSIEICaePa/xa/MCOuAb
+# 6jCka9bkaMccDWj8SHweOEQEbcWkMA0GCSqGSIb3DQEBAQUABIIBAC+LNyu5FKxe
+# keUJnz0XydMROXWjxQI4wXL6IkRC46iawYWG10UL0YiIRrvURRaVRdbtx9zEJdmU
+# +7DMn7qnSzkdjBYkI084u0LXmGnYo8LpX9Loist1Ccn9M7E0jg6ny7AgpNT0SitJ
+# iFd/SZL6KiR4W0KHbPk1HsOwfDhuFGHxv7NbBTkQXNDfg8JChF1eulakRkjQ63Vq
+# fI098gkutK5YKt68swLE8r+CUv79kb9C461Lf+lkmJCPISk3VfNcslOv8cut+bOd
+# wDlq/JCSRd0HbZpJuZgC/guV2QAimKv6NEsvyYyn3Ux/7SjFQ5NKYU+z41g+pB9V
+# FnwCQNsuSio=
 # SIG # End signature block

@@ -53,11 +53,49 @@ function Write-MMTVIntelligence {
  $previousEncoding=$OutputEncoding
  try{
   $OutputEncoding=New-Object Text.UTF8Encoding($false)
-  $result=(ConvertTo-Json -InputObject $payload -Depth 45 -Compress) | & $NodePath (Join-Path $PSScriptRoot 'build-intelligence.mjs') $RepositoryPath
-  if($LASTEXITCODE -ne 0){throw 'Static canonical intelligence export failed; no publication permitted.'}
-  return (($result -join [Environment]::NewLine) | ConvertFrom-Json)
+  $builder=Join-Path $PSScriptRoot 'build-intelligence.mjs'
+  $inputJson=ConvertTo-Json -InputObject $payload -Depth 45 -Compress
+  $priorPreference=$ErrorActionPreference
+  try{
+   $ErrorActionPreference='Continue'
+   $output=@($inputJson | & $NodePath $builder $RepositoryPath 2>&1)
+   $exitCode=$LASTEXITCODE
+  }finally{$ErrorActionPreference=$priorPreference}
+  $diagnostic=@($output | Where-Object {$_ -is [System.Management.Automation.ErrorRecord]} | ForEach-Object {[string]$_})
+  $stdout=@($output | Where-Object {$_ -isnot [System.Management.Automation.ErrorRecord]}) -join [Environment]::NewLine
+  if($exitCode -ne 0){
+   $detail=($diagnostic | Where-Object {$_ -match '\b(?:Error|Exception|ENOENT|EACCES|EPERM|EBUSY)\b'} | Select-Object -First 3) -join ' | '
+   if(-not $detail){$detail=if($diagnostic.Count){$diagnostic[0]}else{'No stderr captured'}}
+   $detail=$detail -replace '[\r\n]+',' '
+   if($detail.Length -gt 1000){$detail=$detail.Substring(0,1000)}
+   throw "Static canonical intelligence export failed (Node exit $exitCode): $detail. Publication held; the next run rebuilds from the current remote."
+  }
+  try{$summary=ConvertFrom-Json -InputObject $stdout -ErrorAction Stop}catch{throw 'Intelligence exporter returned invalid summary JSON; publication held.'}
+  if($null -eq $summary -or $summary.revision -notmatch '^[0-9a-f]{64}$' -or $null -eq $summary.changed_paths -or $null -eq $summary.subsession_ids -or $summary.event_count -ne @($summary.subsession_ids).Count){
+   throw 'Intelligence exporter returned an incomplete summary; publication held.'
+  }
+  $ids=@($summary.subsession_ids)
+  if(@($ids | Where-Object {$_ -notmatch '^[1-9][0-9]{6,11}$'}).Count -or @($ids | Sort-Object -Unique).Count -ne $ids.Count){
+   throw 'Intelligence exporter returned invalid or duplicate subsession IDs; publication held.'
+  }
+  $indexPath=Join-Path $RepositoryPath 'news\data\intelligence\index.json'
+  $manifest=[IO.File]::ReadAllText($indexPath) | ConvertFrom-Json
+  if($manifest.schema_version -ne 'MMTV-canonical-intelligence-v1' -or $manifest.revision -ne $summary.revision -or $manifest.published_event_count -ne $summary.event_count -or (@($manifest.subsession_ids) -join ',') -ne (@($summary.subsession_ids) -join ',')){
+   throw 'Intelligence manifest and exporter summary disagree; publication held.'
+  }
+  $manifestPaths=@('races.json','drivers.json','venues.json','championships.json','catalogue.json')+@($summary.subsession_ids | ForEach-Object {"events/$_.json"})
+  foreach($name in $manifestPaths){
+   $property=$manifest.files.PSObject.Properties[$name]
+   $file=Join-Path (Split-Path -Parent $indexPath) $name
+   if($null -eq $property -or $property.Value.sha256 -notmatch '^[a-f0-9]{64}$' -or -not (Test-Path -LiteralPath $file -PathType Leaf) -or (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash -ne $property.Value.sha256){
+    throw "Intelligence artifact missing or checksum mismatch: $name; publication held."
+   }
+  }
+  return $summary
  }finally{$OutputEncoding=$previousEncoding}
 }
+
+
 
 
 
@@ -66,8 +104,8 @@ function Write-MMTVIntelligence {
 # SIG # Begin signature block
 # MIIHMAYJKoZIhvcNAQcCoIIHITCCBx0CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA4stUu8F0FYT11
-# giEM17je/37ZlhA3Ya+vo+dtVIrLoKCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCD8f79GXFsQQ6Y
+# Cam+gvz3LfDCxzRkVDGNr/wI0nXPKqCCBBwwggQYMIICgKADAgECAhBjgsjexbsj
 # mENaXQ9gFq0HMA0GCSqGSIb3DQEBCwUAMCQxIjAgBgNVBAMMGUtIUiBCcm9hZGNh
 # c3QgRGV2ZWxvcG1lbnQwHhcNMjYxMDI4MDIyNTEyWhcNMjkxMDI4MDIzNTEyWjAk
 # MSIwIAYDVQQDDBlLSFIgQnJvYWRjYXN0IERldmVsb3BtZW50MIIBojANBgkqhkiG
@@ -93,14 +131,14 @@ function Write-MMTVIntelligence {
 # S0hSIEJyb2FkY2FzdCBEZXZlbG9wbWVudAIQY4LI3sW7I5hDWl0PYBatBzANBglg
 # hkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3
 # DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEV
-# MC8GCSqGSIb3DQEJBDEiBCB8SvZ+ipMn87YzzMjbqX8H70SEaY1p58E0/i+R8trL
-# YTANBgkqhkiG9w0BAQEFAASCAYCJFGi2MqnfwqnvHbe7WCps7NFAxY9VpC9r4cQc
-# cs7zKyV6/OFW2iGwEA9QDepHQ2st9xpNC5LLWAjqXeF8TZqP0Cx+fQDZ7/07XCg4
-# wMzfJSA7bk/eE6Zg4eORnUFSg5maBEa0I6WkVTngY1enjKM3K8Xj8aT4kw/3V7GQ
-# GHMpk0eKNWgKndvzUvGUmnoadbt8ZG7A9sDO+9ZRVs2FYKeUKw2zpg7i256Y63Kf
-# ESgewUBk9IaED9Hl/o0zbQ2e2zFmJiin09tG+g29HvpWOp4jQlcZadjswvgtsQrS
-# zZksw/cenTreawAemC1x6uyzhDfc+6GJz5cdXF7dSCXEvA44z46OmVoBufy3AExf
-# /mUXyEujVXATuEZ4D8KKh+BVhwDW9R0FeRAPXCHSc7k3RP9+C56el5iDENdvFac4
-# HTdWPX1n/1qMNpOvlp+zqTqhZqXHjoereoSdL1GTncggiDn2mYPByXKxrioQ7ONr
-# 2JR1WnI03q+c4/5E00ShcCTTHuM=
+# MC8GCSqGSIb3DQEJBDEiBCAjIQQqb/M7JZnoIok+GE9RNZ5BTKIFm5magVtqcW5j
+# LDANBgkqhkiG9w0BAQEFAASCAYDDQYu7L46WqiJwsJGH0/dKoNdftD6Y1SSzh2R7
+# 3I51pkUCtYykZIoLgqxBdwTxO+nq6vgHJWvKEC6UmdrXuC8Vk32HaPsXU71s6y2l
+# ayQRLCBrKa/LDvfFwdx7Z4G0vEZvsyz34VSM3ucmFhX4E3vioCc96lCzyvUaKqiz
+# zEAKuNcj+s2aB+w8mF2GmaLafju8QPCWo3n51oxQYD/qSGWxVGEn7BT+xLv9LFby
+# Y0DS/mfjV3ldPKUbH0MwRDkuvyosagKV/TdnxJOpKnAIlWHKRUdSI4OwuWt0L8Zf
+# sVz0KwAcR04gXJULuJgxmEqDKA7jBDDQbLCmWMcDn6x0T4TvZYgScG+SIIabAQn4
+# sXUjqSG19fzQ2WTSAZJv0JwR0ZPTk2aUgTLHhwppNzXlF9/gKoz9b924e5X8qbaL
+# r/4oTu9UIt7I+iaPbhV5LGvKT7HFwnnE+NVHN4iTT/sKBoGnMkhHSv8Pq5UGcbdM
+# WUOJ7yMkYFVlyShfGCSg1Pe7xqA=
 # SIG # End signature block
