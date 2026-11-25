@@ -10,22 +10,22 @@ on:
     types: [completed]
     branches: [main]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      artifact_name: ${{ steps.artifact-name.outputs.name }}
+      artifact_id: ${{ steps.upload.outputs.artifact_id }}
     steps:
       - name: Checkout current website
         uses: actions/checkout@v6
@@ -34,10 +34,53 @@ jobs:
           persist-credentials: false
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Name artifact for this upload attempt
+        id: artifact-name
+        shell: bash
+        run: echo "name=github-pages-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
       - name: Upload static website
+        id: upload
         uses: actions/upload-pages-artifact@v4
         with:
+          name: ${{ steps.artifact-name.outputs.name }}
           path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Wait for uploaded artifact metadata
+        timeout-minutes: 2
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ needs.build.outputs.artifact_id }}
+          ARTIFACT_NAME: ${{ needs.build.outputs.artifact_name }}
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[0-9]+$ || -z "$ARTIFACT_NAME" ]]; then
+            echo "::error::Pages upload returned no valid artifact identity."
+            exit 1
+          fi
+          for attempt in {1..8}; do
+            if name="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" --jq 'select(.expired == false) | .name')" && [[ "$name" == "$ARTIFACT_NAME" ]]; then
+              echo "Artifact $ARTIFACT_ID ($ARTIFACT_NAME) is available on check $attempt."
+              exit 0
+            fi
+            if (( attempt < 8 )); then
+              sleep 5
+            fi
+          done
+          echo "::error::Pages artifact $ARTIFACT_ID ($ARTIFACT_NAME) did not become available after 8 checks."
+          exit 1
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ needs.build.outputs.artifact_name }}
