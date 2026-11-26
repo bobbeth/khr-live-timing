@@ -13,7 +13,10 @@ window.createMMTVNewsroom=function({app,entries,seasonName,esc,fmtDay,cards,edit
  function dualTime(instant){
   if(!instant||!Number.isFinite(Date.parse(instant)))return '';
   const options={weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit',timeZoneName:'short'};
-  return `<span><b>US EASTERN</b> ${esc(new Intl.DateTimeFormat('en-US',{...options,timeZone:'America/New_York'}).format(new Date(instant)))}</span><span><b>HOBART</b> ${esc(new Intl.DateTimeFormat('en-AU',{...options,timeZone:'Australia/Hobart'}).format(new Date(instant)))}</span>`;
+  const date=new Date(instant);
+  const eastern=new Intl.DateTimeFormat('en-US',{...options,timeZone:'America/New_York'}).format(date);
+  const hobart=new Intl.DateTimeFormat('en-AU',{...options,timeZone:'Australia/Hobart'}).format(date);
+  return `<dl class="newsroom-times"><dt>US Eastern</dt><dd><time datetime="${esc(instant)}">${esc(eastern)}</time></dd><dt>Hobart</dt><dd><time datetime="${esc(instant)}">${esc(hobart)}</time></dd></dl>`;
  }
  const empty=(text,href,label)=>`<p class="result-note">${text}</p>${href?`<a class="text-link" href="${href}">${label} ↗</a>`:''}`;
  function featureStory(entry,headline,article,video){
@@ -39,7 +42,7 @@ window.createMMTVNewsroom=function({app,entries,seasonName,esc,fmtDay,cards,edit
   const leadHeadline=article?.headline||(lead?`${winner(lead)} takes ${lead.series} Round ${lead.round}`:'The next chapter starts here.');
   app.innerHTML=`<section class="newsroom-hero"><div class="container newsroom-hero-grid"><div class="newsroom-lead" id="newsroom-featured-story">${featureStory(lead,leadHeadline,article)}</div><aside id="newsroom-latest-broadcast">${empty('Find race broadcasts and recordings.','#broadcasts','BROWSE BROADCASTS')}</aside></div></section>
 <div class="container newsroom-content">
-<section class="newsroom-next newsroom-section" id="newsroom-up-next"><h2>UP NEXT</h2><p>Checking the race calendar…</p></section>
+<section class="newsroom-next" id="newsroom-up-next" aria-labelledby="newsroom-up-next-title"><h2 id="newsroom-up-next-title">UP NEXT</h2><p class="result-note">Checking the race calendar…</p></section>
 <section class="newsroom-section"><div class="section-head"><h2>LATEST HEADLINES</h2><a class="text-link" href="#news">ALL NEWS ↗</a></div><div class="story-grid">${recent.length?cards(recent):empty('Race reports will appear here as the season gets underway.')}</div></section>
 <section class="newsroom-section"><div class="section-head"><h2>CHAMPIONSHIP CENTRAL</h2><a class="text-link" href="#championships">EXPLORE THE CHAMPIONSHIPS ↗</a></div><div class="ff-championship-grid">${posterCards(events)}</div><div id="newsroom-leaders" class="newsroom-leaders"><p class="result-note">Loading championship leaders…</p></div><p class="result-note">Provisional totals before drops. * Includes points calculated from the scoring rules.</p></section>
 <section class="newsroom-section" id="newsroom-spotlight"><h2>DRIVER SPOTLIGHT</h2><p class="result-note">Loading the driver spotlight…</p></section>
@@ -51,9 +54,33 @@ window.createMMTVNewsroom=function({app,entries,seasonName,esc,fmtDay,cards,edit
   const calendarTask=(async()=>{
    const schedule=await getSchedule(),box=target('newsroom-up-next');if(!box)return;
    const next=upcoming(schedule,events);
-   box.innerHTML='<span class="eyebrow">GET READY FOR THE NEXT ONE</span><h2>UP NEXT</h2>'+(next.length?`<p class="newsroom-next-date">${esc(fmtDay(next[0].date))} <small>Hobart date</small></p>${next.map(e=>`<div class="newsroom-next-race"><span>ROUND ${e.round}</span><h3>${esc(e.series)}</h3><p>${e.track_id?`<a href="#track/${encodeURIComponent(e.track_id)}">${esc(e.track)} ↗</a>`:esc(e.track)}</p>${e.start_at?`<div class="newsroom-times">${dualTime(e.start_at)}</div>`:'<p class="result-note">US Eastern & Hobart start times to be confirmed.</p>'}</div>`).join('')}<p id="newsroom-countdown" class="newsroom-countdown" role="timer"></p><a class="button-link" href="https://www.youtube.com/@bobbethTV/streams" target="_blank" rel="noopener noreferrer">BOBBETH TV CHANNEL</a><p><a class="text-link" href="#calendar">FULL SEASON CALENDAR ↗</a></p><p class="result-note">${schedule.status==='weekly_schedule'?'Based on the weekly season schedule. Check league announcements for changes.':'Season race schedule.'}</p>`:empty(schedule?'No upcoming races are listed. Watch for the next league announcement.':'The next race details are being confirmed.','https://www.youtube.com/@bobbethTV/streams','BOBBETH TV CHANNEL'));
-   const start=next.map(e=>e.start_at).filter(v=>v&&Number.isFinite(Date.parse(v))).sort((a,b)=>Date.parse(a)-Date.parse(b))[0];
-   if(start){const tick=()=>{if(!alive()){clearInterval(timer);timer=null;return;}const left=Math.max(0,Math.floor((Date.parse(start)-Date.now())/1000));const node=document.getElementById('newsroom-countdown');if(node)node.textContent=left?`${Math.floor(left/86400)}d ${Math.floor(left%86400/3600)}h ${Math.floor(left%3600/60)}m ${left%60}s to the next start`:'Scheduled start reached — check the channel for coverage.';if(!left){clearInterval(timer);timer=null;}};timer=setInterval(tick,1000);tick();}
+   const start=next.find(e=>Number.isFinite(Date.parse(e.start_at)))?.start_at;
+   const day=next[0]?.date;
+   const header=`<header class="newsroom-next-header"><h2 id="newsroom-up-next-title">UP NEXT</h2>${day?`<p class="newsroom-next-date"><time datetime="${esc(day)}">${esc(fmtDay(day))}</time> in Hobart</p>`:''}</header>`;
+   const races=next.map(e=>{
+    const track=e.track_id?`<a href="#track/${encodeURIComponent(e.track_id)}">${esc(e.track)}</a>`:esc(e.track);
+    const times=dualTime(e.start_at)||'<p>Start times to be confirmed.</p>';
+    return `<article class="newsroom-next-race"><span>Round ${esc(e.round)}</span><h3>${esc(e.series)}</h3><p>${track}</p>${times}</article>`;
+   }).join('');
+   const status=next.length
+    ? (schedule.status==='weekly_schedule'?'Weekly schedule. Check league announcements for changes.':'')
+    : (schedule?'No upcoming races are listed.':'Race schedule currently unavailable.');
+   box.innerHTML=header
+    +(races?`<div class="newsroom-next-races">${races}</div>`:'')
+    +(status?`<p class="result-note">${status}</p>`:'')
+    +`<div class="newsroom-next-footer">${start?'<p id="newsroom-countdown" class="newsroom-countdown" role="timer"></p>':''}<a class="text-link" href="https://www.youtube.com/@bobbethTV/streams" target="_blank" rel="noopener noreferrer">BobbethTV on YouTube ↗</a><a class="text-link" href="#calendar">Full season calendar ↗</a></div>`;
+   if(start){
+    const tick=()=>{
+     if(!alive()){clearInterval(timer);timer=null;return;}
+     const left=Math.max(0,Math.ceil((Date.parse(start)-Date.now())/1000));
+     const days=Math.floor(left/86400),hours=Math.floor(left%86400/3600),minutes=Math.floor(left%3600/60);
+     const duration=[days&&days+'d',hours&&hours+'h',minutes&&minutes+'m'].filter(Boolean).join(' ');
+     const node=document.getElementById('newsroom-countdown');
+     if(node)node.textContent=left===0?'Scheduled start time reached':`Next race starts in ${duration||left+'s'}`;
+     if(!left){clearInterval(timer);timer=null;}
+    };
+    timer=setInterval(tick,1000);tick();
+   }
   })();
   const broadcastTask=(async()=>{
    let videos;try{videos=await broadcastLibrary.load();}catch{}
