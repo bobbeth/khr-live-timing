@@ -16,12 +16,35 @@ window.createMMTVNewsroom=function({app,entries,seasonName,esc,fmtDay,cards,edit
   return `<span><b>US EASTERN</b> ${esc(new Intl.DateTimeFormat('en-US',{...options,timeZone:'America/New_York'}).format(new Date(instant)))}</span><span><b>HOBART</b> ${esc(new Intl.DateTimeFormat('en-AU',{...options,timeZone:'Australia/Hobart'}).format(new Date(instant)))}</span>`;
  }
  const empty=(text,href,label)=>`<p class="result-note">${text}</p>${href?`<a class="text-link" href="${href}">${label} ↗</a>`:''}`;
+ function featureStory(entry,headline,article,video){
+  return `<span class="eyebrow">MUD MULES TV</span>${entry?`<p class="newsroom-latest-tag">${esc(entry.series)} · ROUND ${esc(entry.round)}</p>`:''}<h1>${esc(headline)}</h1><p>${esc(article?.deck||'Original dirt-track broadcasts, race reports and results.')}</p><div class="newsroom-actions">${video?`<a class="button-link" href="#broadcast/${video.id}">WATCH FULL REPLAY</a>`:''}${entry?`<a class="${video?'text-link':'button-link'}" href="#race/${entry.subsession_id}">READ RACE REPORT</a>`:''}${video?'':'<a class="text-link" href="#broadcasts">BROWSE BROADCASTS ↗</a>'}</div>${entry?`<span class="newsroom-lead-meta">${esc(fmtDay(entry.event_date))} · ${esc(entry.track)}</span>`:''}`;
+ }
+ function news(){
+  ++version;if(timer){clearInterval(timer);timer=null;}
+  const reports=[...entries()].sort((a,b)=>b.event_date.localeCompare(a.event_date)||b.subsession_id-a.subsession_id);
+  const reviews=new Map();
+  for(const entry of reports){
+   const competition=seasonName(entry),round=Number(entry.round);
+   if(competition==='Special Events'||!competition||!Number.isInteger(round)||round<1)continue;
+   const key=competition+'/'+round;
+   if(!reviews.has(key))reviews.set(key,{competition,round});
+  }
+  const recentReviews=[...reviews.values()].slice(0,6);
+  app.innerHTML=`<section class="page-banner"><div class="container"><h1>NEWS</h1><p class="deck">Race reports and round reviews from Mud Mules TV.</p></div></section><div class="container newsroom-content"><section class="newsroom-section"><div class="section-head"><h2>RACE REPORTS</h2><a class="text-link" href="#results">RESULTS &amp; ARCHIVE ↗</a></div><div class="story-grid">${reports.length?cards(reports.slice(0,12)):empty('Race reports will appear here after publication.')}</div></section><section class="newsroom-section"><div class="section-head"><h2>ROUND REVIEWS</h2><a class="text-link" href="#rounds">ALL ROUND REVIEWS ↗</a></div><ul class="newsroom-review-links">${recentReviews.map(r=>`<li><a href="#round/${encodeURIComponent(r.competition)}/${r.round}">${esc(r.competition)} · Round ${r.round} ↗</a></li>`).join('')}</ul></section></div>`;
+ }
  async function home(){
   const current=++version;if(timer){clearInterval(timer);timer=null;}
   const events=entries().filter(e=>seasonName(e)===season).sort((a,b)=>b.event_date.localeCompare(a.event_date)||b.subsession_id-a.subsession_id);
   const lead=events[0],recent=events.slice(1,4),article=lead?editorial[String(lead.subsession_id)]:null;
   const leadHeadline=article?.headline||(lead?`${winner(lead)} takes ${lead.series} Round ${lead.round}`:'The next chapter starts here.');
-  app.innerHTML=`<section class="newsroom-hero"><div class="container newsroom-hero-grid"><div class="newsroom-lead"><span class="eyebrow">MUD MULES TV / FALL FEST 2026</span><p class="newsroom-latest-tag">${lead?`LATEST REPORT · ${esc(lead.series)} · ROUND ${esc(lead.round)}`:'THE DIRT. THE DRAMA. THE DRIVERS.'}</p><h1>${esc(leadHeadline)}</h1><p>${esc(article?.deck||'Five championships. One huge season of racing.')}</p><div class="newsroom-actions">${lead?`<a class="button-link" href="#race/${lead.subsession_id}">READ THE RACE REPORT</a>`:''}<a class="text-link" href="#results">ALL RESULTS ↗</a></div>${lead?`<span class="newsroom-lead-meta">${esc(fmtDay(lead.event_date))} · ${esc(lead.track)}</span>`:''}</div><aside class="newsroom-next" id="newsroom-up-next"><span class="eyebrow">GET READY FOR THE NEXT ONE</span><h2>UP NEXT</h2><p>Checking the race calendar…</p></aside></div></section><div class="container newsroom-content"><section class="newsroom-highlights" id="newsroom-highlights" aria-label="Latest round in numbers"><p class="result-note">Loading the latest round highlights…</p></section><section class="newsroom-section"><div class="section-head"><div><span class="eyebrow">FRESH FROM THE TRACK</span><h2>LATEST HEADLINES</h2></div><a class="text-link" href="#rounds">ROUND REVIEWS ↗</a></div><div class="story-grid">${recent.length?cards(recent):empty('Race reports will appear here as the season gets underway.')}</div></section><section class="newsroom-section" id="newsroom-latest-broadcast"><div class="section-head"><div><span class="eyebrow">SETTLE IN AND HIT PLAY</span><h2>LATEST BROADCAST</h2></div><a class="text-link" href="#broadcasts">BROADCAST LIBRARY ↗</a></div><p class="result-note">Finding the latest recording…</p></section><section class="newsroom-section"><div class="section-head"><div><span class="eyebrow">EVERY POINT COUNTS</span><h2>THE CHAMPIONSHIP CHASE</h2></div><a class="text-link" href="#standings">FULL STANDINGS ↗</a></div><div id="newsroom-leaders" class="newsroom-leaders"><p class="result-note">Loading championship leaders…</p></div><p class="result-note">Provisional totals before drops. * Includes points calculated from the scoring rules.</p></section><section class="newsroom-section" id="newsroom-spotlight"><div class="section-head"><div><span class="eyebrow">THE PEOPLE BEHIND THE NUMBERS</span><h2>DRIVER SPOTLIGHT</h2></div><a class="text-link" href="#drivers">MEET THE DRIVERS ↗</a></div><p class="result-note">Loading the driver spotlight…</p></section><section class="newsroom-section"><div class="section-head"><div><span class="eyebrow">THE FALL FEST GRID</span><h2>FIVE SERIES. FIVE STORIES.</h2></div><a class="text-link" href="#championships">EXPLORE THE CHAMPIONSHIPS ↗</a></div><div class="ff-championship-grid">${posterCards(events)}</div></section></div>`;
+  app.innerHTML=`<section class="newsroom-hero"><div class="container newsroom-hero-grid"><div class="newsroom-lead" id="newsroom-featured-story">${featureStory(lead,leadHeadline,article)}</div><aside id="newsroom-latest-broadcast">${empty('Find race broadcasts and recordings.','#broadcasts','BROWSE BROADCASTS')}</aside></div></section>
+<div class="container newsroom-content">
+<section class="newsroom-next newsroom-section" id="newsroom-up-next"><h2>UP NEXT</h2><p>Checking the race calendar…</p></section>
+<section class="newsroom-section"><div class="section-head"><h2>LATEST HEADLINES</h2><a class="text-link" href="#news">ALL NEWS ↗</a></div><div class="story-grid">${recent.length?cards(recent):empty('Race reports will appear here as the season gets underway.')}</div></section>
+<section class="newsroom-section"><div class="section-head"><h2>CHAMPIONSHIP CENTRAL</h2><a class="text-link" href="#championships">EXPLORE THE CHAMPIONSHIPS ↗</a></div><div class="ff-championship-grid">${posterCards(events)}</div><div id="newsroom-leaders" class="newsroom-leaders"><p class="result-note">Loading championship leaders…</p></div><p class="result-note">Provisional totals before drops. * Includes points calculated from the scoring rules.</p></section>
+<section class="newsroom-section" id="newsroom-spotlight"><h2>DRIVER SPOTLIGHT</h2><p class="result-note">Loading the driver spotlight…</p></section>
+<section class="newsroom-section"><div class="section-head"><h2>RACE CENTRE</h2></div><div class="newsroom-quick-links"><a class="text-link" href="#results">RESULTS &amp; ARCHIVE ↗</a><a class="text-link" href="#rounds">ROUND REVIEWS ↗</a><a class="text-link" href="#records">STATS &amp; RECORDS ↗</a><a class="text-link" href="#broadcasts">BROWSE BROADCASTS ↗</a></div><div class="newsroom-highlights" id="newsroom-highlights" aria-label="Latest round in numbers"><p class="result-note">Loading the latest round highlights…</p></div></section>
+</div>`;
   const alive=()=>current===version&&['','#home'].includes(location.hash);
   const target=id=>alive()?document.getElementById(id):null;
   const getSchedule=()=>{if(!schedulePromise)schedulePromise=fetch('data/schedule.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>{schedulePromise=null;return null;});return schedulePromise;};
@@ -35,8 +58,14 @@ window.createMMTVNewsroom=function({app,entries,seasonName,esc,fmtDay,cards,edit
   const broadcastTask=(async()=>{
    let videos;try{videos=await broadcastLibrary.load();}catch{}
    const box=target('newsroom-latest-broadcast');if(!box)return;
-   const v=videos?.filter(v=>v.races.some(r=>seasonName(r.entry)===season)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id))[0];
-   box.innerHTML=`<div class="section-head"><div><span class="eyebrow">SETTLE IN AND HIT PLAY</span><h2>LATEST BROADCAST</h2></div><a class="text-link" href="#broadcasts">BROADCAST LIBRARY ↗</a></div>`+(v?`<a class="newsroom-broadcast" href="#broadcast/${v.id}"><div><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="Latest race broadcast" loading="lazy" referrerpolicy="no-referrer"><span>▶ WATCH THE REPLAY</span></div><section><span class="eyebrow">ROUND ${esc(unique(v.races.map(r=>r.entry.round)).join(' / '))}</span><h3>${esc(unique(v.races.map(r=>r.entry.series)).join(' / '))}</h3><p>${esc(unique(v.races.map(r=>r.entry.track)).join(' / '))}</p><p>Race dates: ${esc(unique(v.races.map(r=>r.entry.event_date)).map(fmtDay).join(' / '))}</p><span class="text-link">WATCH THE RECORDING ↗</span>${v.inferred?'<p class="result-note">Schedule match · Coverage not independently checked.</p>':''}</section></a>`:empty('No recording is available right now.','https://www.youtube.com/@bobbethTV/streams','VISIT BOBBETH TV'));
+   const v=videos?.filter(v=>!v.inferred&&/^[A-Za-z0-9_-]{11}$/.test(v.id)&&v.races.some(r=>seasonName(r.entry)===season)).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id))[0];
+   if(!v)return;
+   const featured=v.races.filter(r=>seasonName(r.entry)===season).sort((a,b)=>b.entry.event_date.localeCompare(a.entry.event_date)||b.entry.subsession_id-a.entry.subsession_id)[0].entry;
+   const report=editorial[String(featured.subsession_id)];
+   const story=target('newsroom-featured-story');
+   if(story)story.innerHTML=featureStory(featured,report?.headline||`${winner(featured)} takes ${featured.series} Round ${featured.round}`,report,v);
+   box.innerHTML=`<a class="newsroom-broadcast newsroom-featured-replay" href="#broadcast/${v.id}"><div><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" referrerpolicy="no-referrer"><span>▶ WATCH THE REPLAY</span></div><section><h2>${esc(featured.track)}</h2><p>${esc(fmtDay(featured.event_date))} · Full broadcast</p></section></a>`;
+
   })();
   const statsTask=(async()=>{
    let data;try{data=await driverStats.load();}catch{}
@@ -57,5 +86,5 @@ window.createMMTVNewsroom=function({app,entries,seasonName,esc,fmtDay,cards,edit
   })();
   await Promise.allSettled([calendarTask,broadcastTask,statsTask]);
  }
- return {home,upcoming,dualTime};
+ return {home,news,upcoming,dualTime};
 };

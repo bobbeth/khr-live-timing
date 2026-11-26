@@ -12,3 +12,17 @@
 @media(max-width:480px){.newsroom-lead h1{font-size:36px}.newsroom-lead>p{font-size:16px}.newsroom-spotlight{grid-template-columns:1fr}.newsroom-spotlight>img{width:160px;max-height:180px}.newsroom-leaders{grid-template-columns:1fr}.newsroom-leader p{min-height:0}.newsroom-highlights .eyebrow{font-size:8px}.newsroom-highlights strong{font-size:28px}.newsroom-times{font-size:11px}.newsroom-times b{width:83px}}
 
 .newsroom-recent-form{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:20px 0}.newsroom-recent-form>.eyebrow{width:100%;font-size:10px;color:var(--muted);margin-bottom:3px}.newsroom-recent-form>a{font-size:11px;border:1px solid var(--line);padding:6px 10px;color:#ccc}.newsroom-recent-form b{color:var(--orange2);margin-right:4px}.newsroom-recent-form>a:hover{border-color:var(--orange)}
+
+
+/* Network home and editorial index */
+.newsroom-hero-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
+.newsroom-featured-replay{display:block}
+.newsroom-featured-replay>section{padding:14px 18px}
+.newsroom-featured-replay h2,.newsroom-featured-replay p{margin:0}
+.newsroom-featured-replay h2{font:800 23px/1.2 var(--font)}
+.newsroom-content>.newsroom-next{margin-top:22px;box-shadow:none}
+.newsroom-content .ff-championship-grid+.newsroom-leaders{margin-top:24px}
+.newsroom-quick-links{display:flex;flex-wrap:wrap;gap:16px 24px}
+.newsroom-review-links{margin:0;padding-left:20px}
+.newsroom-review-links a{display:inline-block;padding:10px 0;color:var(--orange2)}
+@media(max-width:800px){.newsroom-hero-grid{grid-template-columns:minmax(0,1fr)}}

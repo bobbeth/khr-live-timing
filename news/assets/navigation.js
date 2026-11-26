@@ -7,4 +7,5 @@
  document.addEventListener('click',event=>{if(!header.contains(event.target))close();});
  document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;if(racing.open){racing.open=false;summary.focus();}else if(button.getAttribute('aria-expanded')==='true'){close();button.focus();}});
  window.addEventListener('hashchange',close);
+ matchMedia('(max-width:800px)').addEventListener('change',close);
 })();

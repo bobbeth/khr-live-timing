@@ -370,7 +370,16 @@ function route(){
   history.replaceState(history.state,'','#home');
   hash='home';
  }
- const [page,id,detail]=hash.split('/');document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('active',a.dataset.nav===(page==='race'?'results':page==='driver'?'drivers':['broadcast','commentary'].includes(page)?'broadcasts':page==='compare'?'records':['track','track-name'].includes(page)?'tracks':page==='round'?'rounds':page)));window.scrollTo({top:0,behavior:'instant'});if(page==='connect')connect();else if(page==='commentary')commentary.screen();else if(page==='rounds')roundReviews.index();else if(page==='round')roundReviews.review(/^\d+$/.test(detail||'')?Number(detail):-1,id);else if(page==='calendar')venues.calendar();else if(page==='tracks')venues.tracks();else if(page==='track'&&id)venues.track(id);else if(page==='track-name'&&id)venues.trackByName(hash.slice('track-name/'.length));else if(page==='compare')raceInsights.comparison(id);else if(page==='records')raceInsights.seasonRecords();else if(page==='broadcasts')broadcastLibrary.library();else if(page==='broadcast'&&/^[A-Za-z0-9_-]{11}$/.test(id||''))broadcastLibrary.recording(id);else if(page==='standings')driverStats.standings(id);else if(page==='drivers')driverStats.roster();else if(page==='driver'&&id)driverStats.profile(hash.slice('driver/'.length));else if(page==='results')results();else if(page==='championships')championships();else if(page==='race'&&/^\d{7,12}$/.test(id||''))race(id,detail);else home();}
+ const [page,id,detail]=hash.split('/');
+ const parents={race:'news',driver:'drivers',broadcast:'broadcasts',compare:'records',track:'tracks','track-name':'tracks',round:'rounds'};
+ const parent=parents[page]||page;
+ document.querySelectorAll('[data-nav]').forEach(link=>{
+  const active=link.dataset.nav===parent;
+  link.classList.toggle('active',active);
+  if(active)link.setAttribute('aria-current',page===parent?'page':'location');
+  else link.removeAttribute('aria-current');
+ });
+ window.scrollTo({top:0,behavior:'instant'});if(page==='connect')connect();else if(page==='news')newsroom.news();else if(page==='commentary')commentary.screen();else if(page==='rounds')roundReviews.index();else if(page==='round')roundReviews.review(/^\d+$/.test(detail||'')?Number(detail):-1,id);else if(page==='calendar')venues.calendar();else if(page==='tracks')venues.tracks();else if(page==='track'&&id)venues.track(id);else if(page==='track-name'&&id)venues.trackByName(hash.slice('track-name/'.length));else if(page==='compare')raceInsights.comparison(id);else if(page==='records')raceInsights.seasonRecords();else if(page==='broadcasts')broadcastLibrary.library();else if(page==='broadcast'&&/^[A-Za-z0-9_-]{11}$/.test(id||''))broadcastLibrary.recording(id);else if(page==='standings')driverStats.standings(id);else if(page==='drivers')driverStats.roster();else if(page==='driver'&&id)driverStats.profile(hash.slice('driver/'.length));else if(page==='results')results();else if(page==='championships')championships();else if(page==='race'&&/^\d{7,12}$/.test(id||''))race(id,detail);else home();}
 // Keep article jumps inside the race route; full hrefs also work when opened in a new tab.
 function focusRaceSection(id){
  if(!/^(race-meeting|meeting-stage-\d+)$/.test(id||''))return;
