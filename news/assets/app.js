@@ -46,7 +46,7 @@ const newsroom=window.createMMTVNewsroom({app,entries:()=>publishedIndex.events,
   return `<a class="ff-championship-card ff-${esc(s.slug)} series-go" href="#results" data-series="${esc(s.name)}" data-season="Fall Fest 2026" aria-label="Explore ${esc(s.name)} championship coverage and results">
    <div class="ff-poster-visual">
     <div class="ff-poster-placeholder" aria-hidden="true"><span class="ff-poster-khr">KNUCKLE-HEADZ <i>RACING LEAGUE</i></span><span class="ff-poster-flags">▨ ▨ ▨</span><span class="ff-poster-title">${esc(s.show)}</span><span class="ff-poster-sponsor">${esc(s.label)}</span></div>
-    <img class="ff-official-poster" src="assets/posters/${esc(s.slug)}.jpg" alt="KHR Fall Fest promotional artwork for ${esc(s.name)}" loading="lazy" decoding="async">
+    <img class="ff-official-poster" src="assets/posters/${esc(s.slug)}.jpg?v=posters-1" alt="KHR Fall Fest promotional artwork for ${esc(s.name)}" loading="lazy" decoding="async">
     <span class="ff-poster-ordinal" aria-hidden="true">0${i+1}</span>
    </div>
    <div class="ff-championship-copy"><span class="ff-championship-type">${esc(s.car)} <span aria-hidden="true">/</span> ${count} RACE REPORTS</span><h3>${esc(s.name)}</h3><p>${esc(s.label)}${s.secondary&&s.secondary!==s.name?' · '+esc(s.secondary):''}</p><span class="ff-explore">Explore championship <span aria-hidden="true">↗</span></span></div>

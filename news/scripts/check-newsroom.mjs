@@ -20,7 +20,7 @@ assert.equal(next[0].series,'Mini Menaces');assert.equal(next[1].series,'Yota Ou
 assert.equal(next[0].start_at,'2026-11-02T19:30:00-05:00');
 const local=newsroom.dualTime(next[1].start_at);
 assert.ok(local.includes('8:35'));assert.ok(local.includes('12:35'));assert.ok(local.includes('Mon'));assert.ok(local.includes('Tue'));
-assert.ok(local.includes('US EASTERN'));assert.ok(local.includes('HOBART'));
+assert.ok(local.includes('<dt>US Eastern</dt>'));assert.ok(local.includes('<dt>Hobart</dt>'));
 const secondOnly=newsroom.upcoming(schedule,races,new Date('2026-11-03T00:40:00Z'));
 assert.equal(secondOnly.length,1);assert.equal(secondOnly[0].series,'Yota Outlawz');
 assert.equal(new Date(schedule.events.find(e=>e.series==='Wide Open Revival'&&e.date==='2026-11-04').start_at).toISOString(),'2026-11-04T00:45:00.000Z');
